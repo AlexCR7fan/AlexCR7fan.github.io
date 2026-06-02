@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+<title>⛏️ Minecraft 2D — Ultimate Edition</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; user-select:none; }
+body { background:#0a0f0a; min-height:100vh; display:flex; justify-content:center; align-items:center; font-family:'Courier New',monospace; overflow:hidden; }
+#introScreen { position:fixed; inset:0; z-index:2000; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; overflow:hidden; }
+.intro-bg { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 70%, #071a07 0%, #000 65%); }
+.stars-layer { position:absolute; inset:0; }
+.star { position:absolute; background:#fff; border-radius:50%; animation:starTwinkle var(--d,3s) ease-in-out infinite var(--dl,0s); }
+@keyframes starTwinkle { 0%,100%{opacity:0.15;transform:scale(0.8);} 50%{opacity:1;transform:scale(1.2);} }
+.mountains { position:absolute; bottom:0; left:0; right:0; height:220px; }
+.aurora { position:absolute; top:0; left:0; right:0; height:40%; background:linear-gradient(180deg, transparent 0%, rgba(20,255,120,0.04) 40%, rgba(0,200,255,0.06) 70%, transparent 100%); animation:auroraShift 8s ease-in-out infinite; }
+@keyframes auroraShift { 0%,100%{opacity:0.4;transform:scaleX(1);} 50%{opacity:1;transform:scaleX(1.05);} }
+.float-block { position:absolute; width:28px; height:28px; border-radius:4px; animation:floatUp var(--fd,6s) ease-in-out infinite var(--fdl,0s); opacity:0; }
+@keyframes floatUp { 0%{opacity:0;transform:translateY(0) rotate(0deg);} 10%{opacity:0.7;} 80%{opacity:0.3;} 100%{opacity:0;transform:translateY(-250px) rotate(360deg);} }
+.intro-content { position:relative; z-index:10; text-align:center; display:flex; flex-direction:column; align-items:center; }
+.logo-eyebrow { font-size:10px; letter-spacing:6px; color:#3a7a3a; margin-bottom:10px; animation:fadeSlideUp 0.8s 0.2s both; }
+.logo-main { font-size:clamp(40px,7vw,90px); font-weight:900; letter-spacing:6px; line-height:1; margin-bottom:6px; animation:logoReveal 1s 0.4s cubic-bezier(0.16,1,0.3,1) both; background:linear-gradient(135deg, #7CFC00 0%, #ADFF2F 25%, #FFE066 55%, #FF8C00 80%, #FF4400 100%); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 40px rgba(124,252,0,0.4)); }
+.logo-sub { font-size:11px; letter-spacing:4px; color:#4a8a4a; margin-bottom:4px; animation:fadeSlideUp 0.8s 0.6s both; }
+.logo-version { font-size:9px; letter-spacing:2px; color:#2a5a2a; margin-bottom:28px; animation:fadeSlideUp 0.8s 0.7s both; }
+@keyframes logoReveal { from{opacity:0;transform:scale(0.5) translateY(30px);filter:blur(10px);} to{opacity:1;transform:scale(1) translateY(0);filter:blur(0);} }
+@keyframes fadeSlideUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+.intro-scene { width:min(600px,92vw); height:120px; position:relative; margin-bottom:28px; animation:fadeSlideUp 0.8s 0.8s both; border-radius:12px; overflow:hidden; background:linear-gradient(180deg, rgba(0,20,0,0) 0%, rgba(0,15,0,0.4) 100%); }
+.scene-ground { position:absolute; bottom:0; left:0; right:0; display:flex; }
+.scene-tile { flex:1; height:28px; border:1px solid rgba(0,0,0,0.3); }
+.scene-character { width:24px; height:28px; position:absolute; bottom:28px; animation:sceneWalk 5s 1s linear infinite; }
+@keyframes sceneWalk { 0%{left:-40px;} 100%{left:calc(100% + 40px);} }
+.char-head { width:16px; height:12px; background:#F5CBA7; margin:0 auto 1px; border-radius:2px; }
+.char-body { width:18px; height:10px; background:#3C8DBC; margin:0 auto 1px; }
+.char-legs { display:flex; gap:2px; justify-content:center; }
+.char-leg { width:7px; height:8px; background:#2A3A8C; }
+.scene-torch { position:absolute; bottom:28px; width:6px; }
+.torch-body { width:6px; height:10px; background:#A56B2F; margin:0 auto; }
+.torch-flame { width:8px; height:8px; background:#FF8800; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; margin:0 auto -2px; animation:flicker 0.3s ease-in-out infinite alternate; }
+@keyframes flicker { from{transform:scaleY(1);background:#FF8800;} to{transform:scaleY(1.2) scaleX(0.9);background:#FFD700;} }
+.features-grid { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; max-width:540px; margin-bottom:24px; animation:fadeSlideUp 0.8s 1s both; }
+.feat { background:rgba(0,255,100,0.05); border:1px solid rgba(124,252,0,0.2); color:#4a8a4a; font-size:8px; padding:3px 9px; border-radius:20px; letter-spacing:1.5px; transition:all 0.2s; }
+.feat:hover { background:rgba(0,255,100,0.12); color:#7CFC00; border-color:rgba(124,252,0,0.5); }
+.mode-cards { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; animation:fadeSlideUp 0.8s 1.1s both; }
+.mode-card { background:rgba(5,12,5,0.85); border:1.5px solid #1a3a1a; border-radius:18px; padding:20px 30px; cursor:pointer; transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1); min-width:170px; text-align:center; backdrop-filter:blur(12px); position:relative; overflow:hidden; }
+.mode-card::before { content:''; position:absolute; inset:0; opacity:0; transition:opacity 0.3s; }
+.mode-card.survival::before { background:radial-gradient(ellipse at 50% 100%, rgba(255,107,53,0.15) 0%, transparent 70%); }
+.mode-card.creative::before { background:radial-gradient(ellipse at 50% 100%, rgba(124,252,0,0.12) 0%, transparent 70%); }
+.mode-card:hover::before { opacity:1; }
+.mode-card.survival:hover { border-color:#FF6B35; transform:translateY(-6px) scale(1.02); box-shadow:0 16px 48px rgba(255,107,53,0.25); }
+.mode-card.creative:hover { border-color:#7CFC00; transform:translateY(-6px) scale(1.02); box-shadow:0 16px 48px rgba(124,252,0,0.2); }
+.mode-icon { font-size:36px; margin-bottom:10px; display:block; }
+.mode-title { font-weight:900; font-size:14px; letter-spacing:3px; margin-bottom:6px; }
+.mode-card.survival .mode-title { color:#FF8C55; }
+.mode-card.creative .mode-title { color:#7CFC00; }
+.mode-hint { color:#3a6a3a; font-size:9px; line-height:1.8; }
+.mode-badge { display:inline-block; margin-top:8px; font-size:8px; padding:2px 8px; border-radius:20px; }
+.mode-card.survival .mode-badge { background:rgba(255,107,53,0.15); color:#FF8C55; border:1px solid rgba(255,107,53,0.3); }
+.mode-card.creative .mode-badge { background:rgba(124,252,0,0.1); color:#7CFC00; border:1px solid rgba(124,252,0,0.25); }
+#introScreen.fade-out { animation:introFade 0.8s ease-in forwards; }
+@keyframes introFade { from{opacity:1;} to{opacity:0;transform:scale(1.03);} }
+#gameRoot { display:none; position:fixed; inset:0; }
+canvas { display:block; width:100%; height:100%; }
+#hud { position:fixed; top:12px; left:12px; z-index:100; display:none; flex-direction:column; gap:5px; font-family:'Courier New',monospace; }
+.hud-bar-row { display:flex; align-items:center; gap:8px; }
+.hud-bar-label { font-size:12px; width:16px; text-align:center; }
+.hud-bar-bg { width:110px; height:11px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.15); border-radius:6px; overflow:hidden; }
+.hud-bar-fill { height:100%; border-radius:6px; transition:width 0.3s; }
+#healthFill { background:linear-gradient(90deg,#ff2244,#ff6688); }
+#hungerFill { background:linear-gradient(90deg,#ff8c00,#ffd700); }
+.hud-bar-val { font-size:10px; color:rgba(255,255,255,0.6); width:28px; }
+.hud-pill { background:rgba(0,0,0,0.55); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:3px 10px; font-size:10px; color:#aaa; margin-top:1px; }
+.hud-totem { border-color:rgba(255,200,0,0.35)!important; color:#FFD700!important; }
+.hud-nether { border-color:rgba(255,80,0,0.5)!important; color:#FF6622!important; }
+#inventoryPanel { position:fixed; top:50%; right:12px; transform:translateY(-50%); z-index:100; display:none; background:rgba(8,15,8,0.97); border:2px solid #2a4a2a; border-radius:14px; padding:12px; width:210px; max-height:85vh; overflow-y:auto; backdrop-filter:blur(12px); font-family:'Courier New',monospace; }
+#inventoryPanel::-webkit-scrollbar { width:4px; }
+#inventoryPanel::-webkit-scrollbar-thumb { background:#2a4a2a; border-radius:2px; }
+.inv-title { color:#7CFC00; font-size:12px; font-weight:bold; letter-spacing:2px; margin-bottom:8px; text-align:center; border-bottom:1px solid #1a3a1a; padding-bottom:6px; }
+.inv-section { color:#4a7a4a; font-size:9px; letter-spacing:1px; margin:8px 0 4px; text-transform:uppercase; }
+.inv-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+.inv-slot { background:rgba(0,0,0,0.4); border:1px solid #1a3a1a; border-radius:6px; padding:4px 6px; display:flex; align-items:center; gap:5px; font-size:10px; }
+.inv-slot.has-item { border-color:#2a5a2a; }
+.inv-slot.enchanted { border-color:#8844ff!important; }
+.inv-slot-icon { font-size:13px; width:18px; text-align:center; }
+.inv-slot-info { flex:1; min-width:0; }
+.inv-slot-name { color:#8a9a8a; font-size:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.inv-slot-count { color:#7CFC00; font-weight:bold; font-size:11px; }
+.inv-slot.zero .inv-slot-count { color:#2a4a2a; }
+.inv-slot.zero .inv-slot-name { color:#1a2a1a; }
+#craftingPanel { position:fixed; left:12px; top:50%; transform:translateY(-50%); z-index:100; display:none; background:rgba(8,15,8,0.97); border:2px solid #2a3a5a; border-radius:14px; padding:12px; width:240px; max-height:85vh; overflow-y:auto; backdrop-filter:blur(12px); }
+#craftingPanel::-webkit-scrollbar { width:4px; }
+#craftingPanel::-webkit-scrollbar-thumb { background:#2a3a5a; border-radius:2px; }
+.craft-title { color:#FFD700; font-size:12px; font-weight:bold; letter-spacing:2px; margin-bottom:4px; text-align:center; border-bottom:1px solid #2a3a5a; padding-bottom:6px; }
+.craft-search { width:100%; background:rgba(0,0,0,0.5); border:1px solid #2a3a5a; border-radius:6px; padding:4px 7px; color:#aaa; font-size:10px; margin-bottom:6px; font-family:'Courier New',monospace; outline:none; }
+.craft-search:focus { border-color:#7FAAFF; }
+.craft-table-status { text-align:center; font-size:9px; margin-bottom:6px; padding:3px 6px; border-radius:6px; background:rgba(0,0,0,0.3); }
+.craft-category { color:#7FAAFF; font-size:9px; margin:7px 0 3px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid #1a2a4a; padding-bottom:2px; }
+.craft-recipe { background:rgba(0,0,0,0.4); margin:2px 0; padding:5px 8px; border-radius:7px; cursor:pointer; border:1px solid #2a3a5a; transition:all 0.1s; }
+.craft-recipe:hover:not(.disabled) { background:rgba(40,60,100,0.7); border-color:#7FAAFF; transform:translateX(2px); }
+.craft-recipe.disabled { opacity:0.28; cursor:not-allowed; }
+.craft-recipe.affordable { border-color:#3a5a3a; }
+.craft-recipe.affordable:hover { border-color:#7CFC00; background:rgba(20,60,20,0.6); }
+.recipe-name { color:#FFD700; font-size:10px; font-weight:bold; }
+.recipe-cost { color:#8888cc; font-size:8px; margin-top:1px; line-height:1.4; }
+.recipe-yield { color:#88ff88; font-size:8px; }
+.craft-shortcut { text-align:center; color:#334466; font-size:8px; margin-top:6px; padding-top:4px; border-top:1px solid #1a2a4a; }
+#enchantPanel { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:200; display:none; background:rgba(5,5,20,0.98); border:2px solid #5522aa; border-radius:16px; padding:16px; width:310px; max-height:80vh; overflow-y:auto; backdrop-filter:blur(16px); font-family:'Courier New',monospace; }
+#enchantPanel::-webkit-scrollbar { width:4px; }
+#enchantPanel::-webkit-scrollbar-thumb { background:#5522aa; border-radius:2px; }
+.enchant-title { color:#bb88ff; font-size:13px; font-weight:bold; letter-spacing:3px; margin-bottom:8px; text-align:center; border-bottom:1px solid #331166; padding-bottom:6px; }
+.enchant-status-bar { text-align:center; font-size:9px; margin-bottom:8px; padding:4px 6px; border-radius:6px; }
+.enchant-item-wrap { background:rgba(80,40,160,0.12); border:1px solid #331166; border-radius:8px; margin:5px 0; padding:7px 10px; }
+.enchant-item-name { color:#cc88ff; font-size:11px; font-weight:bold; margin-bottom:4px; }
+.enchant-option { background:rgba(0,0,0,0.4); border:1px solid #331166; border-radius:6px; margin:3px 0; padding:5px 8px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:all 0.15s; }
+.enchant-option:hover:not(.eo-disabled):not(.eo-applied) { border-color:#aa66ff; background:rgba(100,50,200,0.3); }
+.eo-disabled { opacity:0.3; cursor:not-allowed; }
+.eo-applied { border-color:#44ff88!important; background:rgba(20,80,40,0.3)!important; cursor:default; }
+.enchant-name { color:#bb88ff; font-size:10px; }
+.enchant-cost { color:#8888cc; font-size:8px; }
+.enchant-check { color:#44ff88; font-size:10px; }
+.enchant-close-btn { display:block; margin:10px auto 0; background:#331166; border:1px solid #5522aa; color:#cc88ff; padding:5px 20px; border-radius:8px; cursor:pointer; font-size:10px; font-family:'Courier New',monospace; }
+.enchant-close-btn:hover { background:#5522aa; }
+.grave-notif { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.88); color:#FF8844; padding:7px 18px; border-radius:20px; font-size:11px; border:1px solid #774422; z-index:350; pointer-events:none; white-space:nowrap; }
+#hotbar { position:fixed; bottom:12px; left:50%; transform:translateX(-50%); z-index:100; display:none; background:rgba(8,15,8,0.9); border:2px solid #2a4a2a; border-radius:12px; padding:8px 12px; gap:4px; align-items:center; backdrop-filter:blur(8px); }
+.notif { position:fixed; top:70px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.88); color:#FFD700; padding:7px 18px; border-radius:20px; font-size:12px; border:1px solid #554400; z-index:400; pointer-events:none; animation:notifAnim 2.8s ease-out forwards; }
+@keyframes notifAnim { 0%{opacity:0;transform:translateX(-50%) translateY(-8px);}15%{opacity:1;transform:translateX(-50%) translateY(0);}75%{opacity:1;}100%{opacity:0;} }
+.death-msg { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.93); color:#ff4444; padding:24px 40px; border-radius:16px; font-size:24px; font-weight:bold; border:3px solid #ff2222; z-index:300; animation:deathAnim 0.3s both; text-align:center; }
+@keyframes deathAnim { from{opacity:0;transform:translate(-50%,-50%) scale(0.8);}to{opacity:1;transform:translate(-50%,-50%) scale(1);} }
+.totem-flash { position:fixed; inset:0; z-index:500; background:rgba(255,200,0,0.55); pointer-events:none; animation:totemFlash 0.9s ease-out forwards; }
+@keyframes totemFlash { 0%{opacity:1;}100%{opacity:0;} }
+.lava-flash { position:fixed; inset:0; z-index:499; background:rgba(255,80,0,0.45); pointer-events:none; animation:totemFlash 0.4s ease-out forwards; }
+.water-overlay { position:fixed; inset:0; z-index:498; background:rgba(0,80,200,0.28); pointer-events:none; }
+.nether-overlay { position:fixed; inset:0; z-index:497; background:rgba(150,20,0,0.18); pointer-events:none; }
+.controls-strip { position:fixed; top:12px; right:12px; z-index:100; background:rgba(0,0,0,0.65); border:1px solid #1a3a1a; border-radius:10px; padding:6px 10px; font-size:9px; color:#3a6a3a; line-height:1.9; display:none; }
+#netherPortalFlash { position:fixed; inset:0; z-index:600; background:rgba(180,0,255,0.5); pointer-events:none; display:none; animation:netherFlash 1.2s ease-out forwards; }
+@keyframes netherFlash { 0%{opacity:1;} 100%{opacity:0;} }
+</style>
+</head>
+<body>
+<div id="introScreen">
+  <div class="intro-bg"></div>
+  <div class="stars-layer" id="starsLayer"></div>
+  <div class="aurora"></div>
+  <div class="float-block" style="left:8%;bottom:30%;background:#6BBE30;--fd:7s;--fdl:0s;"></div>
+  <div class="float-block" style="left:22%;bottom:20%;background:#6C6F6F;--fd:9s;--fdl:1.5s;"></div>
+  <div class="float-block" style="left:78%;bottom:25%;background:#FFD700;--fd:8s;--fdl:0.8s;"></div>
+  <div class="float-block" style="left:90%;bottom:35%;background:#44DDEE;--fd:6.5s;--fdl:2s;"></div>
+  <div class="float-block" style="left:50%;bottom:15%;background:#FF4400;--fd:10s;--fdl:3s;"></div>
+  <div class="float-block" style="left:65%;bottom:40%;background:#4CAF50;--fd:7.5s;--fdl:0.5s;"></div>
+  <div class="mountains">
+    <svg viewBox="0 0 1200 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet" style="width:100%;height:100%;position:absolute;bottom:0;">
+      <polygon points="0,220 180,40 360,220" fill="#0a1a0a" opacity="0.9"/>
+      <polygon points="120,220 350,20 580,220" fill="#0d200d" opacity="0.85"/>
+      <polygon points="320,220 520,60 720,220" fill="#0a1a0a" opacity="0.9"/>
+      <polygon points="500,220 700,30 900,220" fill="#0d200d" opacity="0.8"/>
+      <polygon points="700,220 900,70 1100,220" fill="#0a1a0a" opacity="0.9"/>
+      <polygon points="900,220 1100,45 1300,220" fill="#0d200d" opacity="0.85"/>
+      <rect x="0" y="195" width="1200" height="25" fill="#071407"/>
+    </svg>
+  </div>
+  <div class="intro-content">
+    <div class="logo-eyebrow">✦ PIXEL SURVIVAL ✦</div>
+    <div class="logo-main">MINECRAFT 2D</div>
+    <div class="logo-sub">ULTIMATE EDITION</div>
+    <div class="logo-version">v4.3 · NETHER UPDATE · FORTRESS · BASTION · NETHERITE · GOLDEN APPLES · ABSORPTION</div>
+    <div class="intro-scene">
+      <div class="scene-torch" style="left:18%;bottom:28px;"><div class="torch-flame"></div><div class="torch-body"></div></div>
+      <div class="scene-torch" style="left:72%;bottom:28px;"><div class="torch-flame"></div><div class="torch-body"></div></div>
+      <div class="scene-character">
+        <div class="char-head"></div>
+        <div class="char-body"></div>
+        <div class="char-legs"><div class="char-leg" style="animation:legA 0.4s ease-in-out infinite alternate;"></div><div class="char-leg" style="animation:legA 0.4s ease-in-out infinite alternate-reverse;"></div></div>
+      </div>
+      <div class="scene-ground">
+        <div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#5A9E2F;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#7DCE40;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#5A9E2F;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#7DCE40;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#5A9E2F;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#7DCE40;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#5A9E2F;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#6BBE30;"></div><div class="scene-tile" style="background:#7DCE40;"></div>
+      </div>
+    </div>
+    <style>@keyframes legA { from{transform:translateY(-3px);} to{transform:translateY(3px);} }</style>
+    <div class="features-grid">
+      <div class="feat">🌍 Infinite World</div><div class="feat">🏘️ Villages</div><div class="feat">🏰 Dungeons</div><div class="feat">⛏️ Tool Tiers</div><div class="feat">👁️ 55+ Mob Types</div><div class="feat">📋 75+ Recipes</div><div class="feat">✨ Enchanting Table</div><div class="feat">☄️ Totem of Undying</div><div class="feat">💀 Death Drops</div><div class="feat">🌊 Bucket Pickup</div><div class="feat">🔥 The Nether</div><div class="feat">🏯 Nether Fortress</div><div class="feat">🏴 Bastion Remnant</div><div class="feat">🔴 Ancient Debris</div><div class="feat">⚫ Netherite Armor</div><div class="feat">🍎🥇 Golden Apples</div><div class="feat">✨ Absorption Hearts</div><div class="feat">💎 Obsidian</div><div class="feat">🪂 Real Fall Damage</div><div class="feat">🌙 Day/Night Cycle</div>
+    </div>
+    <div class="mode-cards">
+      <div class="mode-card survival" id="survivalBtn">
+        <span class="mode-icon">🔥</span>
+        <div class="mode-title">SURVIVAL</div>
+        <div class="mode-hint">Health · Hunger · 55+ Mobs<br>Lava · Fall Damage · Nether<br>Fortress · Bastion · Netherite</div>
+        <div class="mode-badge">⚔️ HARD MODE</div>
+      </div>
+      <div class="mode-card creative" id="creativeBtn">
+        <span class="mode-icon">✨</span>
+        <div class="mode-title">CREATIVE</div>
+        <div class="mode-hint">Fly freely · No damage<br>Unlimited resources<br>Build anything you imagine</div>
+        <div class="mode-badge">🕊️ CHILL MODE</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="gameRoot"><canvas id="gameCanvas"></canvas></div>
+<div id="netherPortalFlash"></div>
+<div id="hud">
+  <div class="hud-bar-row"><div class="hud-bar-label">❤️</div><div class="hud-bar-bg"><div id="healthFill" class="hud-bar-fill" style="width:100%"></div></div><div class="hud-bar-val" id="healthVal">10/10</div></div>
+  <div class="hud-bar-row"><div class="hud-bar-label">🍗</div><div class="hud-bar-bg"><div id="hungerFill" class="hud-bar-fill" style="width:100%"></div></div><div class="hud-bar-val" id="hungerVal">10/10</div></div>
+  <div class="hud-pill" id="hudDay">☀️ Day</div>
+  <div class="hud-pill" id="hudCoords">📍 X:0 Y:0</div>
+  <div class="hud-pill hud-totem" id="hudTotem" style="display:none">☄️ Totem Ready</div>
+  <div class="hud-pill hud-nether" id="hudNether" style="display:none">🔥 THE NETHER</div>
+</div>
+<div class="controls-strip" id="controlsStrip">WASD Move | Space Jump<br>LClick Mine/Attack | RClick Place/Pickup<br>🪣 RClick water/lava with bucket to scoop!<br>1-9 Blocks | I Inventory | C Craft<br>X Enchant | E Eat | Q Potion | R Respawn<br>G = Golden Apple (+2♥) | H = Ench. Apple (Full heal!)<br>🔥 Lava burns! 🌊 Water slows! 🪂 5+ block fall = damage!<br>💎 Water+Lava=Obsidian | N=Nether Portal<br>🏯 Nether Fortress: Blaze Rods & Chests!<br>🏴 Bastion Remnant: Ancient Debris & Netherite!</div>
+<div id="inventoryPanel"><div class="inv-title">🎒 INVENTORY</div><div id="invContent"></div></div>
+<div id="craftingPanel">
+  <div class="craft-title">🔨 CRAFTING</div>
+  <input class="craft-search" id="craftSearch" placeholder="🔍 Search recipes..." type="text">
+  <div class="craft-table-status" id="tableStatus">⚠️ No Crafting Table!</div>
+  <div id="craftingRecipes"></div>
+  <div class="craft-shortcut">🤲 hand | 🪵 needs Crafting Table | Click = instant craft</div>
+</div>
+<div id="enchantPanel">
+  <div class="enchant-title">✨ ENCHANTING TABLE</div>
+  <div class="enchant-status-bar" id="enchantStatus">⚙️ Place an Anvil to enchant</div>
+  <div id="enchantContent"></div>
+  <button class="enchant-close-btn" id="enchantCloseBtn">✕ Close</button>
+</div>
+<div id="hotbar" style="display:none;flex-direction:row;"></div>
+
+<script>
+(function(){
+(function makeStars(){const c=document.getElementById('starsLayer');for(let i=0;i<100;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+0.5;s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*65}%;--d:${2+Math.random()*5}s;--dl:${Math.random()*5}s;`;c.appendChild(s);}})();
+
+let gameMode=null;
+document.getElementById('survivalBtn').onclick=()=>startGame('survival');
+document.getElementById('creativeBtn').onclick=()=>startGame('creative');
+document.getElementById('enchantCloseBtn').onclick=()=>toggleEnchant();
+
+function startGame(mode){
+  gameMode=mode;
+  const intro=document.getElementById('introScreen');
+  intro.classList.add('fade-out');
+  setTimeout(()=>{
+    intro.style.display='none';
+    document.getElementById('gameRoot').style.display='block';
+    document.getElementById('hud').style.display=mode==='survival'?'flex':'none';
+    document.getElementById('controlsStrip').style.display='block';
+    initHotbar();initGame(mode);
+  },800);
+}
+function showNotif(msg,color){let n=document.createElement('div');n.className='notif';n.innerText=msg;if(color)n.style.color=color;document.body.appendChild(n);setTimeout(()=>n.remove(),2800);}
+
+// ===== DAY/NIGHT =====
+const DAY_TICKS=7200,NIGHT_TICKS=3600,FULL_CYCLE=10800;
+let dayTimer=0;
+function isNight(){return dayTimer>=DAY_TICKS;}
+function getSkyColor(){
+  if(inNether)return'#3A0A00';
+  if(!isNight()){let t=dayTimer/DAY_TICKS;if(t<0.1)return lerpColor('#1a1a3a','#6CC3E8',t/0.1);if(t>0.9)return lerpColor('#6CC3E8','#ff7733',(t-0.9)/0.1);return '#6CC3E8';}
+  else{let t=(dayTimer-DAY_TICKS)/NIGHT_TICKS;if(t<0.1)return lerpColor('#ff7733','#0a0a2a',t/0.1);if(t>0.9)return lerpColor('#0a0a2a','#1a1a3a',(t-0.9)/0.1);return '#0a0a2a';}
+}
+function lerpColor(a,b,t){let ar=parseInt(a.slice(1,3),16),ag=parseInt(a.slice(3,5),16),ab=parseInt(a.slice(5,7),16);let br=parseInt(b.slice(1,3),16),bg=parseInt(b.slice(3,5),16),bb=parseInt(b.slice(5,7),16);return `rgb(${Math.round(ar+(br-ar)*t)},${Math.round(ag+(bg-ag)*t)},${Math.round(ab+(bb-ab)*t)})`;}
+function getNightOverlay(){if(inNether)return 0;if(!isNight())return 0;let t=(dayTimer-DAY_TICKS)/NIGHT_TICKS;if(t<0.15)return t/0.15*0.65;if(t>0.85)return(1-(t-0.85)/0.15)*0.65;return 0.65;}
+
+// ===== NETHER =====
+let inNether=false;
+let netherWorldChunks=new Map();
+let netherStructureSeeds=new Map();
+let overWorldPos={x:256,y:-100};
+
+const NETHER_MOB_POOL=['blaze','ghast','magma_cube','zombie_piglin','hoglin','piglin','wither_skeleton','strider'];
+
+function getNetherlandSurface(wx){return Math.floor(Math.sin(wx*0.06)*5+Math.cos(wx*0.13)*3+Math.sin(wx*0.04)*2)+10;}
+function generateNetherChunk(cx,cy){
+  let chunk=Array(16).fill(null).map(()=>Array(16).fill('air'));
+  for(let ly=0;ly<16;ly++){let wy=cy*16+ly;for(let lx=0;lx<16;lx++){let wx=cx*16+lx,surf=getNetherlandSurface(wx);
+    if(wy>=surf&&wy<surf+2)chunk[ly][lx]='netherrack';
+    else if(wy>=surf+2&&wy<surf+6)chunk[ly][lx]='netherrack';
+    else if(wy>=surf+6)chunk[ly][lx]='bedrock';
+    else{if(wy>surf-3&&Math.random()<0.08)chunk[ly][lx]='netherrack';
+      if(wy>surf-5&&Math.random()<0.03)chunk[ly][lx]='nether_gold_ore';
+      if(wy>surf-4&&Math.random()<0.025)chunk[ly][lx]='lava';
+      // Ancient Debris: rare, deep in netherrack, only in certain depth bands
+      if(wy>surf-7&&wy<surf-1&&Math.random()<0.006)chunk[ly][lx]='ancient_debris';
+    }}}
+  for(let lx=0;lx<16;lx++){let wx=cx*16+lx,surf=getNetherlandSurface(wx);let surfLy=surf-cy*16;if(surfLy>=1&&surfLy<16&&Math.random()<0.04)chunk[surfLy-1][lx]='lava';}
+  netherWorldChunks.set(getChunkKey(cx,cy),chunk);
+  // After chunk gen, check for structures
+  if(cy===0||cy===-1)setTimeout(()=>maybeGenerateNetherStructure(cx),0);
+}
+function getNetherBlock(wx,wy){let cx=Math.floor(wx/16),cy=Math.floor(wy/16),key=getChunkKey(cx,cy);if(!netherWorldChunks.has(key))generateNetherChunk(cx,cy);let chunk=netherWorldChunks.get(key);return chunk[((wy%16)+16)%16][((wx%16)+16)%16]||'air';}
+function setNetherBlock(wx,wy,block){let cx=Math.floor(wx/16),cy=Math.floor(wy/16),key=getChunkKey(cx,cy);if(!netherWorldChunks.has(key))generateNetherChunk(cx,cy);let chunk=netherWorldChunks.get(key);chunk[((wy%16)+16)%16][((wx%16)+16)%16]=block;}
+
+// ===== NETHER STRUCTURE GENERATION =====
+function maybeGenerateNetherStructure(cx){
+  let key=`nstruct_${cx}`;if(netherStructureSeeds.has(key))return;netherStructureSeeds.set(key,true);
+  let hash=(cx*3141592+271828)>>>0,roll=hash%100;
+  let wx=cx*16+2,sy=getNetherlandSurface(wx);
+  if(roll<18)generateNetherFortress(wx,sy);
+  else if(roll<35)generateBastionRemnant(wx,sy);
+}
+
+function generateNetherFortress(startX,sy){
+  // Nether Fortress: multi-room structure with nether brick, blaze spawners, chests
+  let x=startX,y=sy-2;
+  // Main tower base
+  let w=18,h=12;
+  for(let dx=0;dx<w;dx++){for(let dy=0;dy<h;dy++){
+    let bx=x+dx,by=y+dy;
+    if(dx===0||dx===w-1||dy===0||dy===h-1)setNB(bx,by,'nether_brick');
+    else if(dy>0&&dy<h-1&&dx>0&&dx<w-1)setNB(bx,by,'air');
+  }}
+  // Walkway bridge extending right
+  for(let dx=w;dx<w+14;dx++){setNB(x+dx,y,'nether_brick');setNB(x+dx,y-1,'nether_brick');setNB(x+dx,y+4,'nether_brick');setNB(x+dx,y+5,'nether_brick');}
+  // Second room at end of bridge
+  let x2=x+w+14;
+  for(let dx=0;dx<12;dx++){for(let dy=0;dy<9;dy++){
+    let bx=x2+dx,by=y+dy;
+    if(dx===0||dx===11||dy===0||dy===8)setNB(bx,by,'nether_brick');
+    else setNB(bx,by,'air');
+  }}
+  // Battlements on top
+  for(let dx=0;dx<w;dx+=3)setNB(x+dx,y-1,'nether_brick');
+  for(let dx=0;dx<12;dx+=3)setNB(x2+dx,y-1,'nether_brick');
+  // Loot chests inside fortress
+  setNB(x+3,y+h-2,'fortress_chest');
+  setNB(x2+3,y+7,'fortress_chest');
+  setNB(x+w-3,y+h-2,'fortress_chest');
+  // Blaze spawner blocks (decorative — blazes spawn normally from mob pool)
+  setNB(x+8,y+h-3,'blaze_spawner');
+  setNB(x2+5,y+6,'blaze_spawner');
+  // Nether wart garden
+  for(let dx=1;dx<5;dx++){setNB(x+dx,y+h-2,'soul_sand');if(Math.random()<0.6)setNB(x+dx,y+h-3,'nether_wart');}
+  showNotif("🏯 Nether Fortress discovered! Search for chests & blaze!",'#FF8800');
+}
+
+function generateBastionRemnant(startX,sy){
+  // Bastion Remnant: blackstone fortress, piglins, huge chests with netherite
+  let x=startX,y=sy-1;
+  let w=22,h=14;
+  // Outer walls in blackstone
+  for(let dx=0;dx<w;dx++){for(let dy=0;dy<h;dy++){
+    let bx=x+dx,by=y+dy;
+    if(dx===0||dx===w-1||dy===0||dy===h-1)setNB(bx,by,'bastion_block');
+    else if(dx===1||dx===w-2||dy===1||dy===h-2)setNB(bx,by,Math.random()<0.3?'bastion_block':'air');
+    else setNB(bx,by,'air');
+  }}
+  // Lava pool in center
+  for(let dx=6;dx<14;dx++){for(let dy=h-4;dy<h-1;dy++)setNB(x+dx,y+dy,'lava');}
+  // Bridge over lava
+  for(let dx=9;dx<13;dx++){setNB(x+dx,y+h-3,'bastion_block');}
+  // Huge chests with netherite loot
+  setNB(x+3,y+h-2,'bastion_chest');
+  setNB(x+w-4,y+h-2,'bastion_chest');
+  setNB(x+w/2|0,y+2,'bastion_chest');
+  // Guard towers at corners
+  for(let corner of [[0,0],[w-3,0],[0,h-4],[w-3,h-4]]){
+    for(let ty=0;ty<5;ty++){setNB(x+corner[0],y-ty-1,'bastion_block');setNB(x+corner[0]+1,y-ty-1,'bastion_block');setNB(x+corner[0]+2,y-ty-1,'bastion_block');}
+  }
+  // Soul soil floor patches
+  for(let dx=2;dx<w-2;dx+=2)setNB(x+dx,y+h-1,'soul_sand');
+  showNotif("🏴 Bastion Remnant found! Contains Ancient Debris & Netherite loot!",'#AA4444');
+}
+
+function setNB(wx,wy,block){
+  // Helper to place a block in nether without overwriting bedrock
+  let cur=getNetherBlock(wx,wy);
+  if(cur!=='bedrock')setNetherBlock(wx,wy,block);
+}
+
+function enterNether(){
+  if(inNether)return;
+  overWorldPos={x:player.x,y:player.y};
+  inNether=true;
+  player.x=8*TILE_SIZE;player.y=(getNetherlandSurface(8)-3)*TILE_SIZE;
+  player.vx=player.vy=0;entities=entities.filter(e=>false);
+  let fl=document.getElementById('netherPortalFlash');fl.style.display='block';setTimeout(()=>{fl.style.display='none';},1200);
+  document.getElementById('hudNether').style.display='block';
+  for(let i=0;i<6;i++){let sx2=player.x+(Math.random()*600-300),sy2=(getNetherlandSurface(Math.floor(sx2/TILE_SIZE))-3)*TILE_SIZE;entities.push(new Mob(sx2,sy2,NETHER_MOB_POOL[Math.floor(Math.random()*NETHER_MOB_POOL.length)]));}
+  showNotif("🔥 Welcome to The Nether! Explore for Fortress & Bastion! N to return.",'#FF4400');
+}
+function exitNether(){
+  if(!inNether)return;
+  inNether=false;
+  player.x=overWorldPos.x;player.y=overWorldPos.y;
+  player.vx=player.vy=0;entities=entities.filter(e=>false);
+  let fl=document.getElementById('netherPortalFlash');fl.style.display='block';setTimeout(()=>{fl.style.display='none';},1200);
+  document.getElementById('hudNether').style.display='none';
+  showNotif("🌍 Returned to Overworld!",'#44FF88');
+}
+function buildNetherPortal(wx,wy){
+  for(let dx=0;dx<4;dx++){forceBlock(wx+dx,wy,'obsidian');forceBlock(wx+dx,wy-4,'obsidian');}
+  for(let dy=1;dy<4;dy++){forceBlock(wx,wy-dy,'obsidian');forceBlock(wx+3,wy-dy,'obsidian');}
+  for(let dy=1;dy<4;dy++)for(let dx=1;dx<3;dx++)forceBlock(wx+dx,wy-dy,'nether_portal');
+  showNotif("🌑 Nether Portal built! Step on purple to enter.",'#AA44FF');
+}
+
+// ===== WORLD =====
+const TILE_SIZE=32,WORLD_MIN_Y=-319,WORLD_MAX_Y=319;
+let worldChunks=new Map(),structureSeeds=new Map(),entities=[],particles=[];
+function getChunkKey(cx,cy){return `${cx},${cy}`;}
+function getBlockAtWorld(wx,wy){
+  if(inNether)return getNetherBlock(wx,wy);
+  if(wy<WORLD_MIN_Y)return'air';if(wy>WORLD_MAX_Y)return'bedrock';
+  let cx=Math.floor(wx/16),cy=Math.floor(wy/16),key=getChunkKey(cx,cy);
+  if(!worldChunks.has(key))generateChunk(cx,cy);
+  let chunk=worldChunks.get(key);return chunk[((wy%16)+16)%16][((wx%16)+16)%16]||'air';
+}
+function setBlockAtWorld(wx,wy,block){
+  if(inNether){setNetherBlock(wx,wy,block);return;}
+  if(wy<WORLD_MIN_Y||wy>WORLD_MAX_Y)return;
+  let cx=Math.floor(wx/16),cy=Math.floor(wy/16),key=getChunkKey(cx,cy);
+  if(!worldChunks.has(key))generateChunk(cx,cy);
+  let chunk=worldChunks.get(key);chunk[((wy%16)+16)%16][((wx%16)+16)%16]=block;
+  checkWaterLavaMix(wx,wy);
+}
+function checkWaterLavaMix(wx,wy){
+  const dirs=[[0,-1],[0,1],[-1,0],[1,0]];
+  const b=getBlockAtWorld(wx,wy);
+  for(let[dx2,dy2] of dirs){
+    let nb=getBlockAtWorld(wx+dx2,wy+dy2);
+    if((b==='water'&&nb==='lava')||(b==='lava'&&nb==='water')){
+      setBlockAtWorld(wx,wy,'obsidian');
+      setBlockAtWorld(wx+dx2,wy+dy2,'obsidian');
+      for(let i=0;i<12;i++)particles.push(new Particle((wx+0.5)*TILE_SIZE+Math.random()*TILE_SIZE-16,(wy+0.5)*TILE_SIZE+Math.random()*TILE_SIZE-16,"#554466"));
+      particles.push(new FloatingText((wx+0.5)*TILE_SIZE,(wy-1)*TILE_SIZE,"💎 Obsidian!","#AA88FF"));
+    }
+  }
+}
+function getSurfaceHeight(wx){return Math.floor(Math.sin(wx*0.05)*3+Math.cos(wx*0.11)*2+Math.sin(wx*0.031)*1.5);}
+function generateChunk(cx,cy){
+  let chunk=Array(16).fill(null).map(()=>Array(16).fill('air'));
+  for(let ly=0;ly<16;ly++){let wy=cy*16+ly;for(let lx=0;lx<16;lx++){let wx=cx*16+lx,surf=getSurfaceHeight(wx);
+    if(wy===surf)chunk[ly][lx]='grass';
+    else if(wy>surf&&wy<=surf+3)chunk[ly][lx]='dirt';
+    else if(wy>surf+3&&wy<=WORLD_MAX_Y){chunk[ly][lx]='stone';let depth=wy-surf;
+      if(depth>3&&depth<25&&Math.random()<0.11)chunk[ly][lx]=Math.random()<0.55?'coal_ore':'iron_ore';
+      if(depth>18&&Math.random()<0.05)chunk[ly][lx]='diamond_ore';
+      if(depth>12&&Math.random()<0.06)chunk[ly][lx]='gold_ore';
+      if(depth>22&&Math.random()<0.018)chunk[ly][lx]='lava';
+      if(wy>WORLD_MAX_Y-5)chunk[ly][lx]='bedrock';
+    }
+    if(wy===surf+1&&Math.random()<0.004)chunk[ly][lx]='water';
+  }}
+  worldChunks.set(getChunkKey(cx,cy),chunk);
+  for(let lx=0;lx<16;lx++){let wx=cx*16+lx,surf=getSurfaceHeight(wx),surfLy=surf-cy*16;
+    if(surfLy>=0&&surfLy<16&&chunk[surfLy][lx]==='grass'){
+      if(Math.random()<0.10){let h=4+Math.floor(Math.random()*3);for(let i=1;i<=h;i++){let ty=surf-i,tly=ty-cy*16;if(tly>=0&&tly<16)chunk[tly][lx]='wood';else setBlockAtWorld(wx,ty,'wood');}for(let dx=-2;dx<=2;dx++)for(let dy=-h-1;dy<=-h+2;dy++){if(Math.abs(dx)+Math.abs(dy+h)<4){let lvy=surf+dy,llx2=lx+dx;if(llx2>=0&&llx2<16){let llvy=lvy-cy*16;if(llvy>=0&&llvy<16&&chunk[llvy][llx2]==='air')chunk[llvy][llx2]='leaves';}else setBlockAtWorld(wx+dx,lvy,'leaves');}}}
+      if(Math.random()<0.06){let wly=surfLy-1;if(wly>=0&&wly<16&&chunk[wly][lx]==='air')chunk[wly][lx]='wheat';}
+    }
+  }
+  worldChunks.set(getChunkKey(cx,cy),chunk);
+  if(cy===0||cy===-1)setTimeout(()=>maybeGenerateStructure(cx),0);
+}
+function forceBlock(wx,wy,block){if(!inNether&&wy>=WORLD_MIN_Y&&wy<=WORLD_MAX_Y)setBlockAtWorld(wx,wy,block);}
+function maybeGenerateStructure(cx){let key=`struct_${cx}`;if(structureSeeds.has(key))return;structureSeeds.set(key,true);let hash=(cx*2654435761+12345)>>>0,roll=hash%100,wx=cx*16+4,sy=getSurfaceHeight(wx);if(roll<10)generateVillage(wx,sy);else if(roll<18)generateDungeon(wx,sy);else if(roll<25)generateDesertTemple(wx,sy);else if(roll<33)generateMineShaft(wx,sy);else if(roll<40)generateRuins(wx,sy);}
+function generateVillage(startX,sy){let n=2+Math.floor(Math.random()*3),x=startX;for(let dy=0;dy<3;dy++)for(let dx=0;dx<3;dx++)forceBlock(x+dx,sy-dy,'well_stone');forceBlock(x+1,sy-3,'well_stone');x+=5;for(let h=0;h<n;h++){let w=5+Math.floor(Math.random()*3),ht=4+Math.floor(Math.random()*2);for(let dx=0;dx<w;dx++)forceBlock(x+dx,sy,'plank_block');for(let dy=1;dy<=ht;dy++){forceBlock(x,sy-dy,'village_wall');forceBlock(x+w-1,sy-dy,'village_wall');if(dy===ht)for(let dx=0;dx<w;dx++)forceBlock(x+dx,sy-dy,'village_wall');}for(let dx=0;dx<w;dx++)forceBlock(x+dx,sy-ht-1,'village_roof');forceBlock(x+Math.floor(w/2),sy-1,'air');forceBlock(x+Math.floor(w/2),sy-2,'air');forceBlock(x+1,sy-1,'chest_block');forceBlock(x+w-2,sy-1,'crafting_table');x+=w+3;}}
+function generateDungeon(startX,sy){let x=startX,y=sy+6,w=14,h=7;for(let dy=0;dy<h;dy++)for(let dx=0;dx<w;dx++){if(dy===0||dy===h-1||dx===0||dx===w-1)forceBlock(x+dx,y+dy,'dungeon_wall');else forceBlock(x+dx,y+dy,'air');}forceBlock(x+3,y+h-2,'chest_block');forceBlock(x+w-4,y+h-2,'chest_block');}
+function generateDesertTemple(startX,sy){let x=startX,w=11;for(let layer=0;layer<5;layer++){let lw=w-layer*2;for(let dx=0;dx<lw;dx++)forceBlock(x+layer+dx,sy-layer,'temple_wall');}for(let dy=1;dy<4;dy++)for(let dx=2;dx<w-2;dx++)forceBlock(x+dx,sy-dy,'air');forceBlock(x+5,sy-1,'chest_block');}
+function generateMineShaft(startX,sy){let x=startX,y=sy+8,len=20+Math.floor(Math.random()*15);for(let dx=0;dx<len;dx++){forceBlock(x+dx,y,'mine_support');forceBlock(x+dx,y-1,'air');forceBlock(x+dx,y-2,'air');forceBlock(x+dx,y-3,'mine_support');if(Math.random()<0.15)forceBlock(x+dx,y+1,'iron_ore');}forceBlock(x+len,y-1,'chest_block');}
+function generateRuins(startX,sy){let x=startX,w=7;for(let dy=0;dy<3;dy++)for(let dx=0;dx<w;dx++)if(Math.random()<0.6)forceBlock(x+dx,sy-dy,'cobble');forceBlock(x+3,sy-1,'chest_block');}
+
+// ===== ENCHANTMENTS =====
+let enchantments={};
+const ENCHANT_DEFS={
+  sharpness:{name:"⚔️ Sharpness",desc:"+3 damage",applies:['tool_iron_sword','tool_diamond_sword','tool_stone_sword','tool_wood_sword','tool_netherite_sword'],cost:{enchant_book:1,diamond:1},effect:{dmg:3}},
+  fire_aspect:{name:"🔥 Fire Aspect",desc:"Burns enemies",applies:['tool_iron_sword','tool_diamond_sword','tool_netherite_sword'],cost:{enchant_book:1,coal:2},effect:{fire:true}},
+  looting:{name:"💰 Looting",desc:"Extra mob drops",applies:['tool_iron_sword','tool_diamond_sword','tool_netherite_sword'],cost:{enchant_book:1,gold:2},effect:{looting:true}},
+  smite:{name:"☠️ Smite",desc:"+4 vs undead",applies:['tool_iron_sword','tool_diamond_sword','tool_stone_sword','tool_netherite_sword'],cost:{enchant_book:1,iron:2},effect:{smite:true}},
+  knockback:{name:"💨 Knockback",desc:"Pushes enemies back",applies:['tool_iron_sword','tool_diamond_sword','tool_stone_sword','tool_wood_sword','tool_netherite_sword'],cost:{enchant_book:1,planks:4},effect:{knockback:true}},
+  efficiency:{name:"⚡ Efficiency",desc:"+3 mining bonus",applies:['tool_wood_pick','tool_pickaxe','tool_iron_pick','tool_diamond_pick','tool_netherite_pick'],cost:{enchant_book:1,coal:1},effect:{efficiency:3}},
+  fortune:{name:"🍀 Fortune",desc:"Double ore drops",applies:['tool_wood_pick','tool_pickaxe','tool_iron_pick','tool_diamond_pick','tool_netherite_pick'],cost:{enchant_book:1,gold:1,diamond:1},effect:{fortune:true}},
+  silk_touch:{name:"🧤 Silk Touch",desc:"Mine exact blocks",applies:['tool_wood_pick','tool_pickaxe','tool_iron_pick','tool_diamond_pick','tool_netherite_pick'],cost:{enchant_book:1,string:2},effect:{silk_touch:true}},
+  mending:{name:"🔧 Mending",desc:"Tools never break",applies:['tool_iron_pick','tool_diamond_pick','tool_iron_sword','tool_diamond_sword','tool_netherite_pick','tool_netherite_sword','bow'],cost:{enchant_book:2,diamond:2},effect:{mending:true}},
+  unbreaking:{name:"💎 Unbreaking",desc:"Lasts 3x longer",applies:['tool_iron_pick','tool_diamond_pick','tool_iron_sword','tool_diamond_sword','tool_netherite_pick','tool_netherite_sword','bow'],cost:{enchant_book:1,diamond:1},effect:{unbreaking:true}},
+  axe_sharpness:{name:"⚔️ Axe Sharp",desc:"+2 damage with axe",applies:['tool_wood_axe','tool_iron_axe','tool_netherite_axe'],cost:{enchant_book:1,iron:1},effect:{dmg:2}},
+  protection:{name:"🛡️ Protection",desc:"+2 damage resist",applies:['iron_helmet','diamond_helmet','iron_chestplate','diamond_chestplate','iron_leggings','iron_boots','netherite_helmet','netherite_chestplate','netherite_leggings','netherite_boots'],cost:{enchant_book:1,iron:2},effect:{protection:2}},
+  thorns:{name:"🌵 Thorns",desc:"Reflects 1 dmg back",applies:['iron_chestplate','diamond_chestplate','netherite_chestplate'],cost:{enchant_book:1,diamond:1},effect:{thorns:true}},
+  feather_falling:{name:"🪶 Feather Fall",desc:"No fall damage",applies:['iron_boots','diamond_boots','netherite_boots'],cost:{enchant_book:1,string:1},effect:{feather_falling:true}},
+  fire_protection:{name:"🔥 Fire Prot.",desc:"Fire resistance",applies:['iron_helmet','diamond_helmet','iron_chestplate','diamond_chestplate','netherite_helmet','netherite_chestplate'],cost:{enchant_book:1,coal:2},effect:{fire_protection:true}},
+  power:{name:"💪 Power",desc:"+3 bow damage",applies:['bow'],cost:{enchant_book:1,string:1},effect:{dmg:3}},
+  infinity:{name:"♾️ Infinity",desc:"Infinite arrows",applies:['bow'],cost:{enchant_book:2,gold:1},effect:{infinity:true}},
+  soul_speed:{name:"👟 Soul Speed",desc:"Fast on soul sand",applies:['netherite_boots','iron_boots'],cost:{enchant_book:1,nether_gold:2},effect:{soul_speed:true}},
+  swift_sneak:{name:"🐾 Swift Sneak",desc:"+1 speed bonus",applies:['netherite_leggings','iron_leggings'],cost:{enchant_book:2,nether_gold:3},effect:{swift_sneak:true}},
+};
+function getItemEnchantments(key){return enchantments[key]||{};}
+function hasEnchant(key,ench){return !!(enchantments[key]&&enchantments[key][ench]);}
+function applyEnchant(key,ench){if(!enchantments[key])enchantments[key]={};enchantments[key][ench]=true;}
+function isAnvilNearby(){let px=Math.floor(player.x/TILE_SIZE),py=Math.floor(player.y/TILE_SIZE);for(let dy=-5;dy<=5;dy++)for(let dx=-5;dx<=5;dx++)if(getBlockAtWorld(px+dx,py+dy)==='anvil_block')return true;return false;}
+let enchantOpen=false;
+function toggleEnchant(){if(gameMode!=='survival'){showNotif("✨ Enchanting is Survival only!");return;}enchantOpen=!enchantOpen;document.getElementById('enchantPanel').style.display=enchantOpen?'block':'none';if(enchantOpen)renderEnchantPanel();}
+function renderEnchantPanel(){
+  const c=document.getElementById('enchantContent'),sb=document.getElementById('enchantStatus');if(!c)return;
+  let hasAnvil=isAnvilNearby();
+  sb.innerText=hasAnvil?'⚙️ Anvil nearby — enchanting unlocked!':'⚙️ Place an Anvil (craft: 4 iron → anvil) to enchant';
+  sb.style.color=hasAnvil?'#44ff88':'#ff8844';sb.style.background=hasAnvil?'rgba(20,80,40,0.3)':'rgba(80,20,10,0.3)';
+  c.innerHTML='';
+  const enchantableItems=[
+    {key:'tool_netherite_sword',name:'⚫ Netherite Sword'},{key:'tool_diamond_sword',name:'💎 Diamond Sword'},{key:'tool_iron_sword',name:'⚔️ Iron Sword'},
+    {key:'tool_stone_sword',name:'🗡️ Stone Sword'},{key:'tool_wood_sword',name:'🗡️ Wood Sword'},
+    {key:'tool_netherite_pick',name:'⚫ Netherite Pick'},{key:'tool_diamond_pick',name:'💎 Diamond Pick'},{key:'tool_iron_pick',name:'⛏️ Iron Pick'},
+    {key:'tool_pickaxe',name:'⛏️ Stone Pick'},{key:'tool_wood_pick',name:'⛏️ Wood Pick'},
+    {key:'tool_netherite_axe',name:'⚫ Netherite Axe'},{key:'tool_iron_axe',name:'🪓 Iron Axe'},{key:'tool_wood_axe',name:'🪓 Wood Axe'},
+    {key:'netherite_helmet',name:'⚫ Netherite Helmet'},{key:'netherite_chestplate',name:'⚫ N. Chestplate'},
+    {key:'netherite_leggings',name:'⚫ Netherite Legs'},{key:'netherite_boots',name:'⚫ Netherite Boots'},
+    {key:'iron_helmet',name:'⛑️ Iron Helmet'},{key:'diamond_helmet',name:'💎 D.Helmet'},
+    {key:'iron_chestplate',name:'🥋 Iron Chest'},{key:'diamond_chestplate',name:'💎 D.Chest'},
+    {key:'iron_leggings',name:'👖 Iron Legs'},{key:'iron_boots',name:'👟 Iron Boots'},
+    {key:'bow',name:'🏹 Bow'},
+  ];
+  let shown=0;
+  for(let item of enchantableItems){
+    if((inventory[item.key]||0)<=0)continue;shown++;
+    let iw=document.createElement('div');iw.className='enchant-item-wrap';
+    let curE=getItemEnchantments(item.key);
+    let enchList=Object.keys(curE).map(e=>ENCHANT_DEFS[e]?ENCHANT_DEFS[e].name:'').filter(Boolean).join(', ');
+    let nh=document.createElement('div');nh.className='enchant-item-name';nh.innerText=item.name+(enchList?' ['+enchList+']':'');iw.appendChild(nh);
+    let applicable=Object.entries(ENCHANT_DEFS).filter(([k,def])=>def.applies.includes(item.key));
+    for(let[ek,edef] of applicable){
+      let alreadyHas=curE[ek];let canAfford=Object.entries(edef.cost).every(([k,v])=>(inventory[k]||0)>=v);
+      let opt=document.createElement('div');
+      opt.className='enchant-option'+(alreadyHas?' eo-applied':(!canAfford||!hasAnvil)?' eo-disabled':'');
+      let costStr=Object.entries(edef.cost).map(([k,v])=>`${v}×${k.replace(/_/g,' ')}`).join(', ');
+      opt.innerHTML=`<div><div class="enchant-name">${edef.name}</div><div class="enchant-cost">${edef.desc} | ${costStr}</div></div>${alreadyHas?'<div class="enchant-check">✓</div>':''}`;
+      if(!alreadyHas&&canAfford&&hasAnvil){
+        opt.onclick=()=>{
+          for(let[k,v] of Object.entries(edef.cost))inventory[k]-=v;
+          applyEnchant(item.key,ek);
+          for(let i=0;i<15;i++)particles.push(new Particle(player.x+Math.random()*50-25,player.y+Math.random()*50-25,"#AA44FF"));
+          particles.push(new FloatingText(player.x,player.y-40,`✨ ${edef.name}!`,"#cc88ff"));
+          showNotif(`✨ Enchanted: ${edef.name} on ${item.name}`);
+          updateInventoryUI();renderEnchantPanel();
+        };
+      }
+      iw.appendChild(opt);
+    }
+    c.appendChild(iw);
+  }
+  if(shown===0){let d=document.createElement('div');d.style.cssText='color:#334466;font-size:10px;text-align:center;padding:16px;';d.innerText='No enchantable items in inventory';c.appendChild(d);}
+}
+
+// ===== INVENTORY =====
+let inventory={
+  stone:0,coal:0,iron:0,wood:0,leaves:0,wheat:0,food:5,
+  apple:0,golden_apple:0,enchanted_golden_apple:0,
+  diamond:0,gold:0,gold_block:0,glass:0,string:0,planks:0,stick:0,flint:0,
+  obsidian:0,netherite:0,nether_gold:0,netherite_scrap:0,netherite_ingot:0,
+  ancient_debris:0,blaze_rod:0,blaze_powder:0,nether_wart:0,soul_sand:0,
+  bucket_water:0,bucket_lava:0,
+  crafting_table:0,anvil_block:0,furnace:0,
+  tool_wood_pick:0,tool_pickaxe:0,tool_iron_pick:0,tool_diamond_pick:0,tool_netherite_pick:0,
+  tool_wood_sword:0,tool_stone_sword:0,tool_iron_sword:0,tool_diamond_sword:0,tool_netherite_sword:0,
+  tool_wood_axe:0,tool_iron_axe:0,tool_netherite_axe:0,tool_hoe:0,
+  shield:0,iron_shield:0,diamond_shield:0,netherite_shield:0,
+  iron_helmet:0,diamond_helmet:0,netherite_helmet:0,
+  iron_chestplate:0,diamond_chestplate:0,netherite_chestplate:0,
+  iron_leggings:0,diamond_leggings:0,netherite_leggings:0,
+  iron_boots:0,diamond_boots:0,netherite_boots:0,
+  bow:0,arrow:0,crossbow:0,boomerang:0,tnt:0,trident:0,spear:0,
+  torch:0,brick:0,log_wall:0,chest:0,bed:0,door:0,ladder:0,fence:0,lantern:0,
+  water:0,lava:0,
+  health_potion:0,speed_potion:0,strength_potion:0,night_vision:0,invisibility:0,regen_potion:0,fire_resistance:0,
+  magic_orb:0,star_shard:0,enchant_book:0,beacon:0,
+  bucket:0,fishing_rod:0,compass:0,clock:0,spyglass:0,rope:0,grapple:0,
+  paper:0,book:0,map:0,totem_of_undying:0,
+};
+
+// ===== DEATH DROPS =====
+let deathDropPos=null,deathDropItems=null,graveNotifEl=null;
+function dropInventoryOnDeath(){
+  let px2=Math.floor(player.x/TILE_SIZE),py2=Math.floor(player.y/TILE_SIZE);
+  deathDropPos={x:px2,y:py2};deathDropItems={};
+  for(let k in inventory){if(inventory[k]>0){deathDropItems[k]=inventory[k];inventory[k]=0;}}
+  enchantments={};
+  if(graveNotifEl)graveNotifEl.remove();
+  graveNotifEl=document.createElement('div');graveNotifEl.className='grave-notif';
+  graveNotifEl.innerText=`💀 Items dropped at X:${px2} Y:${py2} — return to recover!`;
+  document.body.appendChild(graveNotifEl);
+}
+function checkPickupDeathDrop(){
+  if(!deathDropPos||!deathDropItems)return;
+  let dist=Math.abs(player.x/TILE_SIZE-deathDropPos.x)+Math.abs(player.y/TILE_SIZE-deathDropPos.y);
+  if(dist<3){
+    for(let k in deathDropItems)inventory[k]=(inventory[k]||0)+deathDropItems[k];
+    deathDropPos=null;deathDropItems=null;
+    if(graveNotifEl){graveNotifEl.remove();graveNotifEl=null;}
+    showNotif("📦 Grave recovered! All items restored.",'#44FF88');
+    for(let i=0;i<20;i++)particles.push(new Particle(player.x+Math.random()*40-20,player.y+Math.random()*40-20,"#FFD700"));
+    updateInventoryUI();
+  }
+}
+
+const INV_DISPLAY=[
+  {section:"⚒️ Resources",items:[
+    {key:'wood',icon:'🪵',name:'Wood'},{key:'stone',icon:'🪨',name:'Stone'},{key:'coal',icon:'⚫',name:'Coal'},
+    {key:'iron',icon:'⚙️',name:'Iron'},{key:'diamond',icon:'💎',name:'Diamond'},{key:'gold',icon:'🥇',name:'Gold'},
+    {key:'gold_block',icon:'🟨',name:'Gold Block'},
+    {key:'obsidian',icon:'🟣',name:'Obsidian'},{key:'netherite',icon:'🔴',name:'Netherite'},
+    {key:'nether_gold',icon:'🔶',name:'N.Gold'},{key:'planks',icon:'🔲',name:'Planks'},
+    {key:'stick',icon:'🪃',name:'Sticks'},{key:'flint',icon:'🪨',name:'Flint'},
+    {key:'string',icon:'🪢',name:'String'},{key:'leaves',icon:'🍃',name:'Leaves'},
+    {key:'wheat',icon:'🌾',name:'Wheat'},{key:'glass',icon:'🪟',name:'Glass'},
+    {key:'crafting_table',icon:'🪵',name:'Craft Table'},{key:'anvil_block',icon:'⚙️',name:'Anvil'},
+    {key:'enchant_book',icon:'📖',name:'Ench.Book'}
+  ]},
+  {section:"🔴 Nether Resources",items:[
+    {key:'ancient_debris',icon:'🔴',name:'Ancient Debris'},{key:'netherite_scrap',icon:'⚫',name:'N.Scrap'},
+    {key:'netherite_ingot',icon:'⚫',name:'N.Ingot'},{key:'blaze_rod',icon:'🔥',name:'Blaze Rod'},
+    {key:'blaze_powder',icon:'💥',name:'Blaze Powder'},{key:'nether_wart',icon:'🌿',name:'Nether Wart'},
+    {key:'soul_sand',icon:'😱',name:'Soul Sand'},
+  ]},
+  {section:"🪣 Fluids & Buckets",items:[
+    {key:'water',icon:'🌊',name:'Water'},{key:'lava',icon:'🔥',name:'Lava'},
+    {key:'bucket',icon:'🪣',name:'Bucket'},{key:'bucket_water',icon:'🪣',name:'Water Bkt'},
+    {key:'bucket_lava',icon:'🪣',name:'Lava Bkt'}
+  ]},
+  {section:"☄️ Special",items:[{key:'totem_of_undying',icon:'☄️',name:'Totem (1-UP)'}]},
+  {section:"🍎 Food & Potions",items:[
+    {key:'food',icon:'🍎',name:'Food'},{key:'apple',icon:'🍏',name:'Apple'},
+    {key:'golden_apple',icon:'🍎🥇',name:'Golden Apple'},{key:'enchanted_golden_apple',icon:'✨🍎',name:'Ench.G.Apple'},
+    {key:'health_potion',icon:'💊',name:'H.Potion'},
+    {key:'speed_potion',icon:'⚡',name:'Speed'},{key:'strength_potion',icon:'💪',name:'Strength'},
+    {key:'regen_potion',icon:'💚',name:'Regen'},{key:'fire_resistance',icon:'🔥',name:'Fire Res.'},
+    {key:'night_vision',icon:'👁️',name:'NightVis'},{key:'invisibility',icon:'👻',name:'Invis.'}
+  ]},
+  {section:"⛏️ Tools",items:[
+    {key:'tool_wood_pick',icon:'⛏️',name:'Wood Pick'},{key:'tool_pickaxe',icon:'⛏️',name:'Stone Pick'},
+    {key:'tool_iron_pick',icon:'⛏️',name:'Iron Pick'},{key:'tool_diamond_pick',icon:'💎⛏️',name:'Dia.Pick'},
+    {key:'tool_netherite_pick',icon:'⚫⛏️',name:'NTH Pick'},
+    {key:'tool_wood_axe',icon:'🪓',name:'Wood Axe'},{key:'tool_iron_axe',icon:'🪓',name:'Iron Axe'},
+    {key:'tool_netherite_axe',icon:'⚫🪓',name:'NTH Axe'},
+    {key:'tool_hoe',icon:'🌾',name:'Hoe'},{key:'fishing_rod',icon:'🎣',name:'Fish.Rod'},
+    {key:'compass',icon:'🧭',name:'Compass'},{key:'spyglass',icon:'🔭',name:'Spyglass'},{key:'clock',icon:'⌚',name:'Clock'}
+  ]},
+  {section:"⚔️ Weapons",items:[
+    {key:'tool_wood_sword',icon:'🗡️',name:'Wood Sword'},{key:'tool_stone_sword',icon:'🗡️',name:'Stone Sword'},
+    {key:'tool_iron_sword',icon:'⚔️',name:'Iron Sword'},{key:'tool_diamond_sword',icon:'💎⚔️',name:'Dia.Sword'},
+    {key:'tool_netherite_sword',icon:'⚫⚔️',name:'NTH Sword'},
+    {key:'bow',icon:'🏹',name:'Bow'},{key:'arrow',icon:'➡️',name:'Arrows'},
+    {key:'crossbow',icon:'🏹',name:'Crossbow'},{key:'spear',icon:'🔱',name:'Spear'},
+    {key:'trident',icon:'🔱',name:'Trident'},{key:'boomerang',icon:'🪃',name:'Boomerang'},{key:'tnt',icon:'💣',name:'TNT'}
+  ]},
+  {section:"🛡️ Armor",items:[
+    {key:'shield',icon:'🛡️',name:'W.Shield'},{key:'iron_shield',icon:'🛡️',name:'I.Shield'},
+    {key:'diamond_shield',icon:'💎🛡️',name:'D.Shield'},{key:'netherite_shield',icon:'⚫🛡️',name:'N.Shield'},
+    {key:'iron_helmet',icon:'⛑️',name:'I.Helmet'},{key:'diamond_helmet',icon:'💎⛑️',name:'D.Helmet'},{key:'netherite_helmet',icon:'⚫⛑️',name:'N.Helmet'},
+    {key:'iron_chestplate',icon:'🥋',name:'I.Chest'},{key:'diamond_chestplate',icon:'💎🥋',name:'D.Chest'},{key:'netherite_chestplate',icon:'⚫🥋',name:'N.Chest'},
+    {key:'iron_leggings',icon:'👖',name:'I.Legs'},{key:'netherite_leggings',icon:'⚫👖',name:'N.Legs'},
+    {key:'iron_boots',icon:'👟',name:'I.Boots'},{key:'netherite_boots',icon:'⚫👟',name:'N.Boots'}
+  ]},
+  {section:"🧱 Building",items:[
+    {key:'torch',icon:'🔥',name:'Torch'},{key:'lantern',icon:'🏮',name:'Lantern'},
+    {key:'brick',icon:'🧱',name:'Brick'},{key:'log_wall',icon:'🏠',name:'Log Wall'},
+    {key:'fence',icon:'🔲',name:'Fence'},{key:'ladder',icon:'🪜',name:'Ladder'},
+    {key:'door',icon:'🚪',name:'Door'},{key:'chest',icon:'📦',name:'Chest'},
+    {key:'furnace',icon:'🔥',name:'Furnace'},{key:'rope',icon:'🪢',name:'Rope'}
+  ]},
+  {section:"🔮 Magic & Misc",items:[
+    {key:'magic_orb',icon:'🔮',name:'Magic Orb'},{key:'star_shard',icon:'🌟',name:'Star Shard'},
+    {key:'beacon',icon:'📡',name:'Beacon'},{key:'grapple',icon:'🪝',name:'Grapple'},
+    {key:'map',icon:'🗺️',name:'Map'},{key:'paper',icon:'📄',name:'Paper'},{key:'book',icon:'📚',name:'Book'}
+  ]},
+];
+let inventoryOpen=false,craftingOpen=false;
+function toggleInventory(){inventoryOpen=!inventoryOpen;document.getElementById('inventoryPanel').style.display=inventoryOpen?'block':'none';if(inventoryOpen)renderInventory();}
+function renderInventory(){
+  const c=document.getElementById('invContent');c.innerHTML='';
+  for(let sec of INV_DISPLAY){
+    const sh=document.createElement('div');sh.className='inv-section';sh.innerText=sec.section;c.appendChild(sh);
+    const g=document.createElement('div');g.className='inv-grid';
+    for(let it of sec.items){
+      const cnt=inventory[it.key]||0;const enchs=getItemEnchantments(it.key);const hasEnchants=Object.keys(enchs).length>0;
+      const slot=document.createElement('div');slot.className='inv-slot'+(cnt>0?' has-item':' zero')+(hasEnchants?' enchanted':'');
+      slot.innerHTML=`<div class="inv-slot-icon">${it.icon}</div><div class="inv-slot-info"><div class="inv-slot-name">${it.name}${hasEnchants?' ✨':''}</div><div class="inv-slot-count">${cnt}</div></div>`;
+      g.appendChild(slot);
+    }
+    c.appendChild(g);
+  }
+}
+function updateInventoryUI(){
+  if(gameMode==='survival'){
+    document.getElementById('healthFill').style.width=(survivalStats.health/survivalStats.maxHealth*100)+'%';
+    document.getElementById('hungerFill').style.width=(survivalStats.hunger/10*100)+'%';
+    document.getElementById('healthVal').innerText=`${Math.ceil(survivalStats.health)}/${survivalStats.maxHealth}`;
+    document.getElementById('hungerVal').innerText=`${Math.ceil(survivalStats.hunger)}/10`;
+    const te=document.getElementById('hudTotem');
+    if(inventory.totem_of_undying>0){te.style.display='block';te.innerText=`☄️ Totem ×${inventory.totem_of_undying}`;}else te.style.display='none';
+  }
+  if(inventoryOpen)renderInventory();
+  if(craftingOpen)updateCraftingPanel();
+  if(enchantOpen)renderEnchantPanel();
+}
+
+// ===== CRAFTING =====
+const craftingRecipes=[
+  {cat:"🤲 Hand",name:"🔲 Planks ×4",cost:{wood:1},result:{planks:4},desc:"1 Wood",needsTable:false},
+  {cat:"🤲 Hand",name:"🪃 Sticks ×4",cost:{planks:1},result:{stick:4},desc:"1 Plank",needsTable:false},
+  {cat:"🤲 Hand",name:"🪵 Crafting Table",cost:{planks:3},result:{crafting_table:1},desc:"3 Planks",needsTable:false},
+  {cat:"🤲 Hand",name:"🔥 Torch ×4",cost:{coal:1,stick:1},result:{torch:4},desc:"Coal+Stick",needsTable:false},
+  {cat:"🤲 Hand",name:"🍎 Food",cost:{wood:1,leaves:1},result:{food:1},desc:"Wood+Leaf",needsTable:false},
+  {cat:"🤲 Hand",name:"🪢 String ×2",cost:{leaves:2},result:{string:2},desc:"2 Leaves",needsTable:false},
+  {cat:"🤲 Hand",name:"🪨 Flint ×2",cost:{stone:2},result:{flint:2},desc:"2 Stone",needsTable:false},
+  {cat:"🤲 Hand",name:"📄 Paper ×3",cost:{wheat:3},result:{paper:3},desc:"3 Wheat",needsTable:false},
+  {cat:"🥇 Gold",name:"🟨 Gold Block",cost:{gold:9},result:{gold_block:1},desc:"9 Gold → Gold Block (for Ench. Apple!)",needsTable:true},
+  {cat:"🥇 Gold",name:"🥇 Gold ×9",cost:{gold_block:1},result:{gold:9},desc:"1 Gold Block → 9 Gold",needsTable:false},
+  {cat:"🍎 Food",name:"🍎🥇 Golden Apple",cost:{apple:1,gold:8},result:{golden_apple:1},desc:"1 Apple + 8 Gold (press G: +2♥ absorption!)",needsTable:true},
+  {cat:"🍎 Food",name:"✨🍎 Enchanted Golden Apple",cost:{apple:1,gold_block:8},result:{enchanted_golden_apple:1},desc:"1 Apple + 8 Gold Blocks (press H: full heal!)",needsTable:true},
+  {cat:"🍎 Food",name:"🍞 Bread",cost:{wheat:2},result:{food:2},desc:"2 Wheat",needsTable:true},
+  {cat:"🍎 Food",name:"🥩 Cooked Meat",cost:{food:1,coal:1},result:{food:3},desc:"Food+Coal",needsTable:true},
+  {cat:"🍎 Food",name:"🍰 Cake",cost:{wheat:2,food:1},result:{food:5},desc:"2 Wheat+Food",needsTable:true},
+  {cat:"⛏️ Picks",name:"⛏️ Wood Pick",cost:{planks:2,stick:2},result:{tool_wood_pick:1},desc:"2 Planks+2 Sticks",needsTable:true},
+  {cat:"⛏️ Picks",name:"⛏️ Stone Pick",cost:{stone:2,stick:2},result:{tool_pickaxe:1},desc:"2 Stone+2 Sticks",needsTable:true},
+  {cat:"⛏️ Picks",name:"⛏️ Iron Pick",cost:{iron:2,stick:2},result:{tool_iron_pick:1},desc:"2 Iron+2 Sticks",needsTable:true},
+  {cat:"⛏️ Picks",name:"💎 Diamond Pick",cost:{diamond:2,stick:2},result:{tool_diamond_pick:1},desc:"2 Dia+2 Sticks",needsTable:true},
+  {cat:"⛏️ Picks",name:"⚫ Netherite Pick",cost:{tool_diamond_pick:1,netherite_ingot:1},result:{tool_netherite_pick:1},desc:"Diamond Pick + Netherite Ingot",needsTable:true},
+  {cat:"🪓 Axes",name:"🪓 Wood Axe",cost:{planks:2,stick:1},result:{tool_wood_axe:1},desc:"2 Planks+Stick",needsTable:true},
+  {cat:"🪓 Axes",name:"🪓 Iron Axe",cost:{iron:2,stick:1},result:{tool_iron_axe:1},desc:"2 Iron+Stick",needsTable:true},
+  {cat:"🪓 Axes",name:"⚫ Netherite Axe",cost:{tool_iron_axe:1,netherite_ingot:1},result:{tool_netherite_axe:1},desc:"Iron Axe + Netherite Ingot",needsTable:true},
+  {cat:"🪓 Axes",name:"🌾 Hoe",cost:{iron:1,stick:2},result:{tool_hoe:1},desc:"Iron+2 Sticks",needsTable:true},
+  {cat:"⚔️ Swords",name:"🗡️ Wood Sword",cost:{planks:2,stick:1},result:{tool_wood_sword:1},desc:"2 Planks+Stick",needsTable:true},
+  {cat:"⚔️ Swords",name:"🗡️ Stone Sword",cost:{stone:2,stick:1},result:{tool_stone_sword:1},desc:"2 Stone+Stick",needsTable:true},
+  {cat:"⚔️ Swords",name:"⚔️ Iron Sword",cost:{iron:2,stick:1},result:{tool_iron_sword:1},desc:"2 Iron+Stick",needsTable:true},
+  {cat:"⚔️ Swords",name:"💎 Dia. Sword",cost:{diamond:2,stick:1},result:{tool_diamond_sword:1},desc:"2 Dia+Stick",needsTable:true},
+  {cat:"⚔️ Swords",name:"⚫ Netherite Sword",cost:{tool_diamond_sword:1,netherite_ingot:1},result:{tool_netherite_sword:1},desc:"Diamond Sword + Netherite Ingot",needsTable:true},
+  {cat:"🏹 Ranged",name:"🏹 Bow",cost:{planks:2,string:2},result:{bow:1},desc:"2 Planks+2 String",needsTable:true},
+  {cat:"🏹 Ranged",name:"➡️ Arrow ×8",cost:{flint:1,stick:1,leaves:1},result:{arrow:8},desc:"Flint+Stick+Leaf",needsTable:true},
+  {cat:"🏹 Ranged",name:"🏹 Crossbow",cost:{iron:2,planks:1,string:1},result:{crossbow:1},desc:"2 Iron+Plank+String",needsTable:true},
+  {cat:"🏹 Ranged",name:"💣 TNT",cost:{coal:3,stone:3},result:{tnt:1},desc:"3 Coal+3 Stone",needsTable:true},
+  {cat:"🛡️ Armor",name:"🛡️ Wood Shield",cost:{planks:3},result:{shield:1},desc:"3 Planks",needsTable:true},
+  {cat:"🛡️ Armor",name:"🛡️ Iron Shield",cost:{iron:3},result:{iron_shield:1},desc:"3 Iron",needsTable:true},
+  {cat:"🛡️ Armor",name:"💎 Dia Shield",cost:{diamond:2,iron:1},result:{diamond_shield:1},desc:"2 Dia+Iron",needsTable:true},
+  {cat:"🛡️ Armor",name:"⚫ Netherite Shield",cost:{netherite_ingot:1,iron_shield:1},result:{netherite_shield:1},desc:"Iron Shield + Netherite Ingot",needsTable:true},
+  {cat:"🛡️ Armor",name:"⛑️ Iron Helmet",cost:{iron:3},result:{iron_helmet:1},desc:"3 Iron",needsTable:true},
+  {cat:"🛡️ Armor",name:"🥋 Iron Chest",cost:{iron:5},result:{iron_chestplate:1},desc:"5 Iron",needsTable:true},
+  {cat:"🛡️ Armor",name:"👖 Iron Legs",cost:{iron:4},result:{iron_leggings:1},desc:"4 Iron",needsTable:true},
+  {cat:"🛡️ Armor",name:"👟 Iron Boots",cost:{iron:2},result:{iron_boots:1},desc:"2 Iron",needsTable:true},
+  {cat:"🛡️ Armor",name:"💎 Dia Helmet",cost:{diamond:3},result:{diamond_helmet:1},desc:"3 Diamond",needsTable:true},
+  {cat:"🛡️ Armor",name:"💎 Dia Chest",cost:{diamond:5},result:{diamond_chestplate:1},desc:"5 Diamond",needsTable:true},
+  {cat:"⚫ Netherite Armor",name:"⚫ N. Helmet",cost:{diamond_helmet:1,netherite_ingot:1},result:{netherite_helmet:1},desc:"Diamond Helmet + Netherite Ingot",needsTable:true},
+  {cat:"⚫ Netherite Armor",name:"⚫ N. Chestplate",cost:{diamond_chestplate:1,netherite_ingot:1},result:{netherite_chestplate:1},desc:"Diamond Chest + Netherite Ingot",needsTable:true},
+  {cat:"⚫ Netherite Armor",name:"⚫ N. Leggings",cost:{iron_leggings:1,netherite_ingot:2},result:{netherite_leggings:1},desc:"Iron Legs + 2 Netherite Ingot",needsTable:true},
+  {cat:"⚫ Netherite Armor",name:"⚫ N. Boots",cost:{iron_boots:1,netherite_ingot:1},result:{netherite_boots:1},desc:"Iron Boots + Netherite Ingot",needsTable:true},
+  {cat:"🔧 Tools",name:"🪣 Bucket",cost:{iron:2},result:{bucket:1},desc:"2 Iron (right-click water/lava to scoop!)",needsTable:true},
+  {cat:"🔧 Tools",name:"🎣 Fishing Rod",cost:{planks:2,string:1},result:{fishing_rod:1},desc:"2 Planks+String",needsTable:true},
+  {cat:"🔧 Tools",name:"🧭 Compass",cost:{iron:2,coal:1},result:{compass:1},desc:"2 Iron+Coal",needsTable:true},
+  {cat:"🔧 Tools",name:"⌚ Clock",cost:{gold:2,coal:1},result:{clock:1},desc:"2 Gold+Coal",needsTable:true},
+  {cat:"🔧 Tools",name:"🔭 Spyglass",cost:{iron:2,glass:1},result:{spyglass:1},desc:"2 Iron+Glass",needsTable:true},
+  {cat:"🔧 Tools",name:"⚙️ Anvil",cost:{iron:4},result:{anvil_block:1},desc:"4 Iron (place to enchant!)",needsTable:true},
+  {cat:"🔧 Tools",name:"🔥 Furnace",cost:{stone:4},result:{furnace:1},desc:"4 Stone",needsTable:true},
+  {cat:"🧱 Build",name:"🔥 Torch ×8",cost:{coal:2,stick:1},result:{torch:8},desc:"2 Coal+Stick",needsTable:true},
+  {cat:"🧱 Build",name:"🏮 Lantern",cost:{torch:1,iron:1},result:{lantern:1},desc:"Torch+Iron",needsTable:true},
+  {cat:"🧱 Build",name:"🧱 Brick ×8",cost:{stone:3,coal:1},result:{brick:8},desc:"3 Stone+Coal",needsTable:true},
+  {cat:"🧱 Build",name:"🪟 Glass ×4",cost:{stone:2},result:{glass:4},desc:"2 Stone",needsTable:true},
+  {cat:"🧱 Build",name:"🏠 Log Wall ×6",cost:{wood:2},result:{log_wall:6},desc:"2 Wood",needsTable:true},
+  {cat:"🧱 Build",name:"🔲 Fence ×4",cost:{planks:2,stick:2},result:{fence:4},desc:"2 Planks+2 Sticks",needsTable:true},
+  {cat:"🧱 Build",name:"📦 Chest",cost:{planks:5},result:{chest:1},desc:"5 Planks",needsTable:true},
+  {cat:"🧱 Build",name:"🚪 Door",cost:{planks:3},result:{door:1},desc:"3 Planks",needsTable:true},
+  {cat:"✨ Potions",name:"💊 Health ×3",cost:{iron:1,wheat:1,coal:1},result:{health_potion:3},desc:"Iron+Wheat+Coal",needsTable:true},
+  {cat:"✨ Potions",name:"⚡ Speed",cost:{iron:1,coal:1},result:{speed_potion:1},desc:"Iron+Coal",needsTable:true},
+  {cat:"✨ Potions",name:"💪 Strength",cost:{iron:2,diamond:1},result:{strength_potion:1},desc:"2 Iron+Dia",needsTable:true},
+  {cat:"✨ Potions",name:"💚 Regen",cost:{iron:1,gold:1,wheat:1},result:{regen_potion:1},desc:"Iron+Gold+Wheat",needsTable:true},
+  {cat:"✨ Potions",name:"🔥 Fire Resistance",cost:{iron:1,gold:1,coal:1},result:{fire_resistance:1},desc:"Iron+Gold+Coal (blocks lava!)",needsTable:true},
+  {cat:"✨ Potions",name:"👁️ Night Vision",cost:{iron:1,gold:1},result:{night_vision:1},desc:"Iron+Gold",needsTable:true},
+  {cat:"✨ Potions",name:"👻 Invis.",cost:{iron:2,gold:2},result:{invisibility:1},desc:"2 Iron+2 Gold",needsTable:true},
+  {cat:"🔴 Netherite",name:"💥 Blaze Powder ×2",cost:{blaze_rod:1},result:{blaze_powder:2},desc:"1 Blaze Rod",needsTable:false},
+  {cat:"🔴 Netherite",name:"⚫ Netherite Scrap",cost:{ancient_debris:1,coal:2},result:{netherite_scrap:1},desc:"Ancient Debris + 2 Coal (smelt!)",needsTable:true},
+  {cat:"🔴 Netherite",name:"⚫ Netherite Ingot",cost:{netherite_scrap:4,gold:4},result:{netherite_ingot:1},desc:"4 Scraps + 4 Gold",needsTable:true},
+  {cat:"🔮 Magic",name:"🔮 Magic Orb",cost:{diamond:1,iron:2,coal:1},result:{magic_orb:1},desc:"Dia+2 Iron+Coal",needsTable:true},
+  {cat:"🔮 Magic",name:"🌟 Star Shard ×2",cost:{diamond:2,gold:1},result:{star_shard:2},desc:"2 Dia+Gold",needsTable:true},
+  {cat:"🔮 Magic",name:"📖 Ench. Book",cost:{iron:1,coal:2,planks:1},result:{enchant_book:1},desc:"Iron+2 Coal+Plank",needsTable:true},
+  {cat:"🔮 Magic",name:"📡 Beacon",cost:{glass:3,diamond:2,iron:2},result:{beacon:1},desc:"3 Glass+2 Dia+2 Iron",needsTable:true},
+  {cat:"🔮 Magic",name:"💎 Craft Diamond",cost:{stone:6,coal:2},result:{diamond:1},desc:"6 Stone+2 Coal",needsTable:true},
+  {cat:"🔮 Magic",name:"🥇 Gold ×2",cost:{iron:3,coal:1},result:{gold:2},desc:"3 Iron+Coal",needsTable:true},
+  {cat:"🔮 Magic",name:"🗺️ Map",cost:{paper:3,iron:1},result:{map:1},desc:"3 Paper+Iron",needsTable:true},
+  {cat:"🌑 Nether",name:"🌑 Nether Portal",cost:{obsidian:10},result:{},desc:"10 Obsidian (auto-builds portal!)",needsTable:true,special:'portal'},
+];
+function isCraftingTableNearby(){let px=Math.floor(player.x/TILE_SIZE),py=Math.floor(player.y/TILE_SIZE);for(let dy=-5;dy<=5;dy++)for(let dx=-5;dx<=5;dx++)if(getBlockAtWorld(px+dx,py+dy)==='crafting_table')return true;return false;}
+let craftSearchTerm='';
+document.getElementById('craftSearch').addEventListener('input',function(){craftSearchTerm=this.value.toLowerCase();updateCraftingPanel();});
+document.getElementById('craftSearch').addEventListener('keydown',e=>e.stopPropagation());
+function updateCraftingPanel(){
+  if(!craftingOpen)return;
+  const c=document.getElementById('craftingRecipes'),ts=document.getElementById('tableStatus');if(!c)return;
+  let hasTable=isCraftingTableNearby();
+  ts.innerText=hasTable?"✅ Crafting Table nearby — all recipes unlocked!":"⚠️ Place a Crafting Table for advanced recipes";
+  ts.style.color=hasTable?"#88ff88":"#ff8844";
+  c.innerHTML='';let lastCat='';
+  let filtered=craftingRecipes.filter(r=>!craftSearchTerm||r.name.toLowerCase().includes(craftSearchTerm)||r.desc.toLowerCase().includes(craftSearchTerm)||r.cat.toLowerCase().includes(craftSearchTerm));
+  filtered=filtered.slice().sort((a,b)=>{let aA=Object.entries(a.cost).every(([k,v])=>(inventory[k]||0)>=v),bA=Object.entries(b.cost).every(([k,v])=>(inventory[k]||0)>=v);return(aA&&!bA)?-1:(!aA&&bA)?1:0;});
+  for(let r of filtered){
+    if(!craftSearchTerm&&r.cat!==lastCat){let d=document.createElement('div');d.className='craft-category';d.innerText=r.cat+(r.needsTable?' 🪵':'');c.appendChild(d);lastCat=r.cat;}
+    let canRes=Object.entries(r.cost).every(([k,a])=>(inventory[k]||0)>=a);
+    let canTable=!r.needsTable||hasTable;let can=canRes&&canTable;
+    let div=document.createElement('div');div.className='craft-recipe'+(can?' affordable':' disabled');
+    div.innerHTML=`<div class="recipe-name">${r.name}</div><div class="recipe-cost">📦 ${r.desc}</div>${can?'<div class="recipe-yield">✓ Click to craft!</div>':(canRes&&!canTable?'<div class="recipe-cost" style="color:#ff8844">🪵 Need Crafting Table</div>':'')}`;
+    if(can)div.onclick=()=>craftRecipe(r);
+    c.appendChild(div);
+  }
+  if(filtered.length===0){let d=document.createElement('div');d.style.cssText='color:#334466;font-size:10px;text-align:center;padding:10px;';d.innerText='No recipes found';c.appendChild(d);}
+}
+function craftRecipe(r){
+  if(r.needsTable&&!isCraftingTableNearby()){particles.push(new FloatingText(player.x,player.y-40,"⚠️ Need Crafting Table!","#ff8844"));return;}
+  for(let[k,a] of Object.entries(r.cost))if((inventory[k]||0)<a)return;
+  for(let[k,a] of Object.entries(r.cost))inventory[k]-=a;
+  if(r.special==='portal'){
+    let px2=Math.floor(player.x/TILE_SIZE),py2=Math.floor(player.y/TILE_SIZE);
+    buildNetherPortal(px2,py2);
+  } else {
+    for(let[k,a] of Object.entries(r.result))inventory[k]=(inventory[k]||0)+a;
+  }
+  for(let i=0;i<12;i++)particles.push(new Particle(player.x+Math.random()*40-20,player.y+Math.random()*40-20,"#FFD966"));
+  showNotif(`✓ Crafted: ${r.name}`);updateInventoryUI();
+}
+function toggleCrafting(){if(gameMode!=='survival')return;craftingOpen=!craftingOpen;document.getElementById('craftingPanel').style.display=craftingOpen?'block':'none';if(craftingOpen){updateCraftingPanel();setTimeout(()=>document.getElementById('craftSearch').focus(),50);}}
+
+// ===== PLAYER =====
+let player={x:256,y:-100,w:28,h:28,vx:0,vy:0,speed:4.2,jumpPower:-10.2,onGround:false,facingRight:true,invincibleTimer:0,lastFallVY:0};
+let survivalStats={health:10,maxHealth:10,hunger:10,maxHunger:10,alive:true};
+let selectedBlock="dirt";
+const placeableBlocks=["dirt","grass","stone","coal_ore","iron_ore","wood","crafting_table","anvil_block","lava","water","bucket","bucket_water","bucket_lava"];
+
+// ===== FLUID SYSTEM =====
+const LIQUID_BLOCKS=new Set(['water','lava']);
+const LIQUID_SLOW_BLOCKS=new Set(['water']);
+const LIQUID_DAMAGE_BLOCKS=new Set(['lava']);
+let playerInLava=false,playerInWater=false;
+let lavaOverlayEl=null,waterOverlayEl=null,netherOverlayEl=null;
+let lavaDmgTimer=0;
+
+function checkFluidContact(){
+  let px=Math.floor(player.x/TILE_SIZE),py=Math.floor(player.y/TILE_SIZE);
+  playerInLava=false;playerInWater=false;
+  for(let dy=0;dy<=1;dy++)for(let ddx=0;ddx<=1;ddx++){
+    let b=getBlockAtWorld(px+ddx,py+dy);
+    if(b==='lava')playerInLava=true;
+    if(b==='water')playerInWater=true;
+  }
+  if(playerInLava&&gameMode==='survival'&&survivalStats.alive){
+    let hasFireRes=inventory.fire_resistance>0||hasEnchant('iron_chestplate','fire_protection')||hasEnchant('diamond_chestplate','fire_protection')||hasEnchant('iron_helmet','fire_protection')||hasEnchant('diamond_helmet','fire_protection')||hasEnchant('netherite_chestplate','fire_protection')||hasEnchant('netherite_helmet','fire_protection');
+    // Netherite armor gives natural fire resistance
+    let hasNetheriteArmor=(inventory.netherite_chestplate>0||inventory.netherite_helmet>0);
+    if(!hasFireRes&&!hasNetheriteArmor){
+      lavaDmgTimer++;
+      if(lavaDmgTimer%20===0){
+        damagePlayer(2);
+        let fl=document.createElement('div');fl.className='lava-flash';document.body.appendChild(fl);setTimeout(()=>fl.remove(),400);
+        particles.push(new FloatingText(player.x,player.y-20,"🔥 BURNING!","#FF4400"));
+      }
+    }
+  } else lavaDmgTimer=0;
+  if(playerInLava){if(!lavaOverlayEl){lavaOverlayEl=document.createElement('div');lavaOverlayEl.className='lava-flash';lavaOverlayEl.style.animation='none';lavaOverlayEl.style.opacity='0.3';document.body.appendChild(lavaOverlayEl);}}
+  else{if(lavaOverlayEl){lavaOverlayEl.remove();lavaOverlayEl=null;}}
+  if(playerInWater){if(!waterOverlayEl){waterOverlayEl=document.createElement('div');waterOverlayEl.className='water-overlay';document.body.appendChild(waterOverlayEl);}}
+  else{if(waterOverlayEl){waterOverlayEl.remove();waterOverlayEl=null;}}
+  if(inNether){if(!netherOverlayEl){netherOverlayEl=document.createElement('div');netherOverlayEl.className='nether-overlay';document.body.appendChild(netherOverlayEl);}}
+  else{if(netherOverlayEl){netherOverlayEl.remove();netherOverlayEl=null;}}
+}
+
+// ===== BLOCK TEXTURES =====
+const BLOCK_PIXELS={
+  grass:['#5A9E2F','#6BBE30','#6BBE30','#5A9E2F','#6BBE30','#7DCE40','#7DCE40','#6BBE30','#7B5830','#6B4820','#8B5A28','#7B5830','#8B5A28','#6B4820','#7B5830','#8B5A28'],
+  dirt:['#8B5A28','#7B4A18','#9B6A38','#8B5A28','#7B4A18','#8B5A28','#7B4A18','#9B6A38','#9B6A38','#8B5A28','#7B4A18','#8B5A28','#8B5A28','#9B6A38','#8B5A28','#7B4A18'],
+  stone:['#6C6F6F','#7C7F7F','#5C5F5F','#6C6F6F','#5C5F5F','#6C6F6F','#7C7F7F','#5C5F5F','#7C7F7F','#5C5F5F','#6C6F6F','#7C7F7F','#6C6F6F','#7C7F7F','#5C5F5F','#6C6F6F'],
+  coal_ore:['#3A3A3E','#222224','#3A3A3E','#3A3A3E','#222224','#3A3A3E','#222224','#3A3A3E','#3A3A3E','#3A3A3E','#3A3A3E','#222224','#3A3A3E','#222224','#3A3A3E','#3A3A3E'],
+  iron_ore:['#6C6F6F','#C89E6B','#6C6F6F','#C89E6B','#C89E6B','#6C6F6F','#C89E6B','#6C6F6F','#6C6F6F','#C89E6B','#6C6F6F','#C89E6B','#C89E6B','#6C6F6F','#C89E6B','#6C6F6F'],
+  diamond_ore:['#5A8888','#44DDEE','#5A8888','#44DDEE','#44DDEE','#5A8888','#44DDEE','#5A8888','#5A8888','#44DDEE','#5A8888','#44DDEE','#44DDEE','#5A8888','#44DDEE','#5A8888'],
+  gold_ore:['#7C7F7F','#FFD700','#7C7F7F','#FFD700','#FFD700','#7C7F7F','#FFD700','#7C7F7F','#7C7F7F','#FFD700','#7C7F7F','#FFD700','#FFD700','#7C7F7F','#FFD700','#7C7F7F'],
+  bedrock:['#222','#333','#222','#333','#333','#222','#333','#222','#222','#333','#222','#333','#333','#222','#333','#222'],
+  wood:['#7A4A20','#A56B2F','#A56B2F','#8A5A2A','#A56B2F','#7A4A20','#8A5A2A','#A56B2F','#8A5A2A','#A56B2F','#7A4A20','#8A5A2A','#A56B2F','#8A5A2A','#A56B2F','#7A4A20'],
+  leaves:['#2A7A2A','#4CAF50','#3A9A3A','#2A7A2A','#4CAF50','#2A7A2A','#4CAF50','#3A9A3A','#3A9A3A','#4CAF50','#2A7A2A','#4CAF50','#2A7A2A','#3A9A3A','#4CAF50','#2A7A2A'],
+  crafting_table:['#7B3F10','#9B5A2A','#7B3F10','#9B5A2A','#4A8AA4','#4A8AA4','#9B5A2A','#7B3F10','#4A8AA4','#4A8AA4','#7B3F10','#9B5A2A','#9B5A2A','#7B3F10','#9B5A2A','#7B3F10'],
+  plank_block:['#C8A464','#B89454','#C8A464','#B89454','#B89454','#C8A464','#B89454','#C8A464','#C8A464','#B89454','#C8A464','#B89454','#B89454','#C8A464','#B89454','#C8A464'],
+  cobble:['#888','#999','#777','#888','#777','#888','#999','#777','#999','#777','#888','#999','#888','#999','#777','#888'],
+  anvil_block:['#444','#666','#444','#666','#666','#888','#666','#888','#555','#777','#555','#777','#666','#888','#666','#888'],
+  obsidian:['#1A0A2A','#0A0018','#220A33','#1A0A2A','#0A0018','#2A1040','#1A0A2A','#0A0018','#2A1040','#1A0A2A','#0A0018','#2A1040','#1A0A2A','#0A0018','#220A33','#1A0A2A'],
+  netherrack:['#6A1A1A','#8A2A2A','#5A0A0A','#7A1A1A','#8A2A2A','#5A0A0A','#7A1A1A','#6A1A1A','#5A0A0A','#7A1A1A','#6A1A1A','#8A2A2A','#7A1A1A','#5A0A0A','#8A2A2A','#6A1A1A'],
+  nether_gold_ore:['#6A1A1A','#FFD700','#6A1A1A','#FFD700','#FFD700','#6A1A1A','#FFD700','#6A1A1A','#6A1A1A','#FFD700','#6A1A1A','#FFD700','#FFD700','#6A1A1A','#FFD700','#6A1A1A'],
+  ancient_debris:['#3A2020','#5A3030','#3A2020','#4A2828','#2A1818','#4A2828','#5A3030','#3A2020','#4A2828','#3A2020','#2A1818','#5A3030','#3A2020','#5A3030','#4A2828','#2A1818'],
+  nether_brick:['#3A1010','#4A1818','#5A2020','#3A1010','#4A1818','#3A1010','#5A2020','#4A1818','#5A2020','#3A1010','#4A1818','#5A2020','#3A1010','#4A1818','#3A1010','#5A2020'],
+  bastion_block:['#221111','#331A1A','#221111','#331A1A','#331A1A','#443030','#331A1A','#221111','#221111','#443030','#331A1A','#221111','#331A1A','#221111','#443030','#331A1A'],
+  soul_sand:['#4A3A2A','#3A2A1A','#5A4A3A','#4A3A2A','#2A1A0A','#4A3A2A','#3A2A1A','#5A4A3A','#5A4A3A','#3A2A1A','#4A3A2A','#2A1A0A','#4A3A2A','#5A4A3A','#3A2A1A','#4A3A2A'],
+};
+const blockTexCache={};
+function getBlockTex(block){if(blockTexCache[block])return blockTexCache[block];const px=BLOCK_PIXELS[block];if(!px)return null;const oc=document.createElement('canvas');oc.width=TILE_SIZE;oc.height=TILE_SIZE;const octx=oc.getContext('2d');const cw=TILE_SIZE/4,ch=TILE_SIZE/4;for(let i=0;i<16;i++){octx.fillStyle=px[i];octx.fillRect((i%4)*cw,Math.floor(i/4)*ch,cw,ch);}octx.strokeStyle='rgba(0,0,0,0.12)';octx.lineWidth=0.5;octx.strokeRect(0,0,TILE_SIZE,TILE_SIZE);blockTexCache[block]=oc;return oc;}
+const colorMap={
+  grass:"#6BBE30",dirt:"#8B5A2B",stone:"#6C6F6F",coal_ore:"#2E2E32",iron_ore:"#C89E6B",
+  diamond_ore:"#44DDEE",gold_ore:"#FFD700",bedrock:"#333333",wood:"#A56B2F",leaves:"#4CAF50",
+  wheat:"#F0C060",crafting_table:"#7B3F10",cobble:"#888888",plank_block:"#C8A464",
+  village_wall:"#C8A464",village_roof:"#8B4513",well_stone:"#888888",dungeon_wall:"#554444",
+  mine_support:"#8B6914",temple_wall:"#D4BC6A",chest_block:"#C8882A",anvil_block:"#555566",
+  water:"#1E6AFF",lava:"#FF5500",obsidian:"#1A0A2A",netherrack:"#7A1A1A",nether_gold_ore:"#CC8800",
+  nether_portal:"#AA44FF",
+  ancient_debris:"#5A3030",nether_brick:"#3A1010",bastion_block:"#221111",
+  fortress_chest:"#8B4513",bastion_chest:"#5A2A0A",
+  blaze_spawner:"#884400",soul_sand:"#4A3A2A",nether_wart:"#AA2200",
+};
+const HARD_BLOCKS=new Set(["stone","coal_ore","iron_ore","diamond_ore","gold_ore","cobble","dungeon_wall","temple_wall","well_stone","mine_support","bedrock","netherrack","nether_gold_ore","ancient_debris","nether_brick","bastion_block"]);
+const IRON_ONLY=new Set(["diamond_ore","gold_ore","obsidian","ancient_debris"]);
+const SOLID_BLOCKS=new Set(["grass","dirt","stone","coal_ore","iron_ore","diamond_ore","gold_ore","bedrock","wood","crafting_table","cobble","plank_block","village_wall","village_roof","well_stone","dungeon_wall","mine_support","temple_wall","chest_block","anvil_block","obsidian","netherrack","nether_gold_ore","ancient_debris","nether_brick","bastion_block","brick","log_wall","fence","soul_sand","fortress_chest","bastion_chest","blaze_spawner"]);
+function isBlockSolid(b){return SOLID_BLOCKS.has(b)||(!LIQUID_BLOCKS.has(b)&&b!=='air'&&b!=='wheat'&&b!=='leaves'&&b!=='nether_portal'&&b!=='nether_wart');}
+function hasPickaxe(min=0){if(min<=0&&inventory.tool_wood_pick>0)return true;if(min<=1&&inventory.tool_pickaxe>0)return true;if(min<=2&&inventory.tool_iron_pick>0)return true;if(min<=3&&inventory.tool_diamond_pick>0)return true;if(min<=3&&inventory.tool_netherite_pick>0)return true;return false;}
+function getPickaxeBonus(){
+  let base=-1,key='';
+  if(inventory.tool_netherite_pick>0){base=6;key='tool_netherite_pick';}
+  else if(inventory.tool_diamond_pick>0){base=4;key='tool_diamond_pick';}
+  else if(inventory.tool_iron_pick>0){base=2;key='tool_iron_pick';}
+  else if(inventory.tool_pickaxe>0){base=1;key='tool_pickaxe';}
+  else if(inventory.tool_wood_pick>0){base=0;key='tool_wood_pick';}
+  if(base>=0&&key){if(hasEnchant(key,'fortune'))base+=2;if(hasEnchant(key,'efficiency'))base+=3;}
+  return base;
+}
+function getSwordDamage(){
+  let base=1,key='';
+  if(inventory.tool_netherite_sword>0){base=9;key='tool_netherite_sword';}
+  else if(inventory.tool_diamond_sword>0){base=6;key='tool_diamond_sword';}
+  else if(inventory.tool_iron_sword>0){base=4;key='tool_iron_sword';}
+  else if(inventory.tool_stone_sword>0){base=3;key='tool_stone_sword';}
+  else if(inventory.tool_wood_sword>0){base=2;key='tool_wood_sword';}
+  if(inventory.spear>0&&base<3)base=3;
+  if(inventory.strength_potion>0)base+=2;
+  if(key){if(hasEnchant(key,'sharpness'))base+=3;if(hasEnchant(key,'smite'))base+=2;}
+  return base;
+}
+function getShieldReduction(){
+  if(inventory.netherite_shield>0)return 5;
+  if(inventory.diamond_shield>0)return 3;
+  if(inventory.iron_shield>0)return 2;
+  if(inventory.shield>0)return 1;
+  return 0;
+}
+function getArmorBonus(){
+  let b=0;
+  if(inventory.netherite_helmet>0)b+=3;if(inventory.netherite_chestplate>0)b+=4;if(inventory.netherite_leggings>0)b+=3;if(inventory.netherite_boots>0)b+=2;
+  if(inventory.diamond_helmet>0||inventory.diamond_chestplate>0)b+=2;
+  if(inventory.iron_helmet>0)b++;if(inventory.iron_chestplate>0)b++;if(inventory.iron_leggings>0)b++;if(inventory.iron_boots>0)b++;
+  const ap=['iron_helmet','diamond_helmet','iron_chestplate','diamond_chestplate','iron_leggings','iron_boots','netherite_helmet','netherite_chestplate','netherite_leggings','netherite_boots'];
+  for(let p of ap)if(hasEnchant(p,'protection'))b+=2;
+  return b;
+}
+
+let canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d');
+let cameraX=0,cameraY=0;
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener('resize',resizeCanvas);resizeCanvas();
+
+// ===== MOBS =====
+const TRULY_PASSIVE=new Set(['cow','pig','sheep','chicken','horse','rabbit','fox','cat','parrot','bat','ocelot','mooshroom','squid','dolphin','strider','villager','wandering_trader']);
+const MOB_DEFS={
+  cow:{w:32,h:26,hp:6,spd:0.6,dmg:0,passive:true,color:'#DDDDBB',eyes:'#111',label:'Cow'},
+  pig:{w:28,h:22,hp:5,spd:0.7,dmg:0,passive:true,color:'#F0A8A8',eyes:'#111',label:'Pig'},
+  sheep:{w:30,h:24,hp:5,spd:0.6,dmg:0,passive:true,color:'#E8E8E8',eyes:'#111',label:'Sheep'},
+  chicken:{w:18,h:18,hp:3,spd:0.8,dmg:0,passive:true,color:'#FFD080',eyes:'#111',label:'Chicken'},
+  horse:{w:38,h:32,hp:10,spd:1.8,dmg:0,passive:true,color:'#A06030',eyes:'#111',label:'Horse'},
+  rabbit:{w:16,h:16,hp:2,spd:1.1,dmg:0,passive:true,color:'#D8C090',eyes:'#111',label:'Rabbit'},
+  fox:{w:26,h:18,hp:4,spd:1.4,dmg:0,passive:true,color:'#CC6622',eyes:'#111',label:'Fox'},
+  cat:{w:20,h:16,hp:4,spd:1.1,dmg:0,passive:true,color:'#FF8840',eyes:'#44FF88',label:'Cat'},
+  parrot:{w:16,h:18,hp:3,spd:0.9,dmg:0,passive:true,color:'#FF4444',eyes:'#111',label:'Parrot'},
+  bat:{w:16,h:14,hp:2,spd:1.4,dmg:0,passive:true,color:'#444444',eyes:'#FF0000',label:'Bat'},
+  ocelot:{w:22,h:16,hp:4,spd:1.3,dmg:0,passive:true,color:'#D0A830',eyes:'#44FF44',label:'Ocelot'},
+  mooshroom:{w:32,h:26,hp:6,spd:0.6,dmg:0,passive:true,color:'#CC3333',eyes:'#111',label:'Mooshroom'},
+  squid:{w:26,h:26,hp:4,spd:0.8,dmg:0,passive:true,color:'#2244AA',eyes:'#88CCFF',label:'Squid'},
+  dolphin:{w:32,h:20,hp:5,spd:1.6,dmg:0,passive:true,color:'#5588BB',eyes:'#111',label:'Dolphin'},
+  strider:{w:30,h:30,hp:8,spd:0.7,dmg:0,passive:true,color:'#AA4444',eyes:'#FF8800',label:'Strider'},
+  wolf:{w:28,h:22,hp:8,spd:1.3,dmg:2,passive:false,color:'#888888',eyes:'#FF4444',label:'Wolf'},
+  polar_bear:{w:36,h:32,hp:12,spd:0.9,dmg:3,passive:false,color:'#F8F8F8',eyes:'#111',label:'Polar Bear'},
+  bee:{w:18,h:14,hp:3,spd:1.0,dmg:1,passive:false,color:'#FFCC00',eyes:'#111',label:'Bee'},
+  goat:{w:28,h:24,hp:6,spd:1.2,dmg:2,passive:false,color:'#D8CCA0',eyes:'#111',label:'Goat'},
+  villager:{w:24,h:28,hp:5,spd:0.8,dmg:0,passive:true,color:'#F5CBA7',eyes:'#222',label:'Villager'},
+  wandering_trader:{w:24,h:28,hp:5,spd:1.0,dmg:0,passive:true,color:'#4488CC',eyes:'#222',label:'Trader'},
+  zombie:{w:26,h:28,hp:6,spd:0.7,dmg:2,passive:false,color:'#4A6B3A',eyes:'#FF2222',label:'Zombie'},
+  skeleton:{w:24,h:28,hp:4,spd:0.9,dmg:2,passive:false,color:'#E8E8E8',eyes:'#FF0000',label:'Skeleton'},
+  creeper:{w:24,h:28,hp:5,spd:0.65,dmg:4,passive:false,color:'#5A8F3A',eyes:'#111',label:'Creeper'},
+  spider:{w:28,h:18,hp:4,spd:1.2,dmg:2,passive:false,color:'#2A1A2A',eyes:'#FF0000',label:'Spider'},
+  enderman:{w:22,h:36,hp:8,spd:1.4,dmg:3,passive:false,color:'#1A0A2A',eyes:'#AA00FF',label:'Enderman'},
+  witch:{w:22,h:28,hp:7,spd:0.8,dmg:2,passive:false,color:'#5A3A6A',eyes:'#FF44FF',label:'Witch'},
+  zombie_villager:{w:26,h:28,hp:7,spd:0.7,dmg:2,passive:false,color:'#3A6A4A',eyes:'#FF2222',label:'Zombie Villager'},
+  husk:{w:26,h:28,hp:7,spd:0.6,dmg:2,passive:false,color:'#C8A040',eyes:'#FF8800',label:'Husk'},
+  stray:{w:24,h:28,hp:4,spd:0.9,dmg:2,passive:false,color:'#B8D8E8',eyes:'#88AAFF',label:'Stray'},
+  drowned:{w:26,h:28,hp:6,spd:0.8,dmg:2,passive:false,color:'#4A8888',eyes:'#00FFFF',label:'Drowned'},
+  phantom:{w:28,h:16,hp:5,spd:1.6,dmg:2,passive:false,color:'#4444AA',eyes:'#00FFFF',label:'Phantom'},
+  pillager:{w:24,h:28,hp:8,spd:0.85,dmg:3,passive:false,color:'#444444',eyes:'#FF8800',label:'Pillager'},
+  ravager:{w:40,h:36,hp:18,spd:0.8,dmg:5,passive:false,color:'#554433',eyes:'#FF4400',label:'Ravager'},
+  silverfish:{w:18,h:12,hp:2,spd:1.2,dmg:1,passive:false,color:'#888888',eyes:'#FF0000',label:'Silverfish'},
+  zombie_piglin:{w:26,h:28,hp:8,spd:0.9,dmg:3,passive:false,color:'#C06060',eyes:'#FF8800',label:'Zombie Piglin'},
+  blaze:{w:22,h:30,hp:10,spd:0.9,dmg:3,passive:false,color:'#FF8800',eyes:'#FFFF00',label:'Blaze'},
+  ghast:{w:40,h:40,hp:10,spd:1.1,dmg:4,passive:false,color:'#F8F8F8',eyes:'#FF4444',label:'Ghast'},
+  magma_cube:{w:30,h:30,hp:8,spd:0.8,dmg:3,passive:false,color:'#CC4400',eyes:'#FFCC00',label:'Magma Cube'},
+  wither_skeleton:{w:26,h:32,hp:10,spd:1.0,dmg:3,passive:false,color:'#222222',eyes:'#FF0000',label:'Wither Skeleton'},
+  hoglin:{w:36,h:30,hp:12,spd:1.1,dmg:4,passive:false,color:'#C08060',eyes:'#FF2222',label:'Hoglin'},
+  piglin:{w:24,h:28,hp:6,spd:1.0,dmg:2,passive:false,color:'#E88060',eyes:'#FF8800',label:'Piglin'},
+  shulker:{w:28,h:28,hp:8,spd:0.0,dmg:3,passive:false,color:'#AA88AA',eyes:'#FFFF44',label:'Shulker'},
+  guardian:{w:28,h:28,hp:10,spd:0.9,dmg:3,passive:false,color:'#448888',eyes:'#FF8800',label:'Guardian'},
+  elder_guardian:{w:40,h:40,hp:20,spd:0.7,dmg:5,passive:false,color:'#336666',eyes:'#FFCC00',label:'Elder Guardian'},
+  cave_spider:{w:20,h:14,hp:3,spd:1.4,dmg:2,passive:false,color:'#1A0A1A',eyes:'#FF0000',label:'Cave Spider'},
+  evoker:{w:24,h:28,hp:12,spd:0.85,dmg:4,passive:false,color:'#DDD8CC',eyes:'#8800FF',label:'Evoker'},
+  ender_dragon:{w:60,h:36,hp:40,spd:1.0,dmg:6,passive:false,color:'#111111',eyes:'#FF00FF',label:'Ender Dragon'},
+  wither:{w:44,h:44,hp:35,spd:0.9,dmg:7,passive:false,color:'#222222',eyes:'#4444FF',label:'Wither'},
+  iron_golem:{w:32,h:38,hp:20,spd:0.55,dmg:5,passive:true,color:'#8A8A8A',eyes:'#CC4444',label:'Iron Golem'},
+};
+const TOTEM_DROPPERS=new Set(['evoker','elder_guardian','ender_dragon','wither','ravager','pillager','witch']);
+const NIGHT_MOBS=['zombie','skeleton','creeper','spider','enderman','witch','zombie_villager','husk','stray','drowned','phantom','pillager','silverfish','zombie_piglin','wither_skeleton','cave_spider'];
+const DAY_PASSIVE=['cow','pig','sheep','chicken','horse','rabbit','fox','cat','parrot','ocelot','bat','mooshroom','squid','dolphin'];
+const DAY_NEUTRAL=['wolf','polar_bear','bee','goat'];
+const FLY_MOBS=new Set(['phantom','bat','parrot','blaze','ghast','ender_dragon','wither']);
+const ALL_HOSTILE=new Set([...NIGHT_MOBS,'ravager','blaze','ghast','magma_cube','hoglin','piglin','shulker','guardian','elder_guardian','bee','goat','wolf','polar_bear','cave_spider','evoker','ender_dragon','wither']);
+
+class Mob{
+  constructor(x,y,type){
+    this.x=x;this.y=y;this.type=type;
+    const def=MOB_DEFS[type]||MOB_DEFS.zombie;
+    this.w=def.w;this.h=def.h;this.health=def.hp;this.maxHealth=def.hp;
+    this.speed=def.spd;this.baseDmg=def.dmg;this.passive=def.passive;
+    this.bodyColor=def.color;this.eyeColor=def.eyes;this.label=def.label||type;
+    this.vx=0;this.vy=0;this.onGround=false;this.attackCooldown=0;this.facingRight=true;
+    this.animTimer=0;this.wanderTimer=0;this.wanderDir=1;this.aggro=false;this.explodeTimer=0;
+  }
+  update(){
+    this.animTimer++;
+    const night=isNight(),dxP=player.x-this.x,dyP=player.y-this.y,dist=Math.sqrt(dxP*dxP+dyP*dyP);
+    const isFly=FLY_MOBS.has(this.type);
+    if(TRULY_PASSIVE.has(this.type)){
+      this.wanderTimer--;if(this.wanderTimer<=0){this.wanderDir=Math.random()<0.5?-1:1;this.wanderTimer=80+Math.floor(Math.random()*120);}
+      this.vx=this.wanderDir*this.speed*0.5;if(night&&dist<150)this.vx=-Math.sign(dxP)*this.speed*1.2;
+    } else if(this.type==='iron_golem'){
+      let nm=null,nd=Infinity;for(let m of entities){if(m===this)continue;if(ALL_HOSTILE.has(m.type)){let d=Math.abs(m.x-this.x)+Math.abs(m.y-this.y);if(d<nd){nd=d;nm=m;}}}
+      if(nm&&nd<300){this.vx=Math.sign(nm.x-this.x)*this.speed;if(nd<50&&this.attackCooldown===0){if(nm.takeDamage(5)){entities.splice(entities.indexOf(nm),1);}this.attackCooldown=50;}}
+      else{if(dist>150)this.vx=Math.sign(dxP)*this.speed*0.6;else if(dist<80)this.vx=-Math.sign(dxP)*0.3;else this.vx=0;}
+    } else if(this.type==='creeper'){
+      if(night&&dist<180)this.aggro=true;
+      if(this.aggro){
+        if(dist<250)this.vx=Math.sign(dxP)*this.speed;
+        if(dist<40&&this.attackCooldown===0){
+          this.explodeTimer++;
+          if(this.explodeTimer>80){
+            if(gameMode==='survival')damagePlayer(4-getShieldReduction()-getArmorBonus());
+            for(let i=0;i<20;i++)particles.push(new Particle(this.x+Math.random()*40-20,this.y+Math.random()*40-20,"#88FF44"));
+            particles.push(new FloatingText(this.x,this.y,"💥 BOOM!","#ff8800"));
+            let bx2=Math.floor(this.x/TILE_SIZE),by2=Math.floor(this.y/TILE_SIZE);
+            for(let dy=-2;dy<=2;dy++)for(let dx2=-2;dx2<=2;dx2++){let b=getBlockAtWorld(bx2+dx2,by2+dy);if(b!=='bedrock'&&b!=='obsidian'&&b!=='air'&&Math.random()<0.4)setBlockAtWorld(bx2+dx2,by2+dy,'air');}
+            entities.splice(entities.indexOf(this),1);return;
+          }
+        } else this.explodeTimer=Math.max(0,this.explodeTimer-1);
+      }
+    } else if(this.type==='enderman'){
+      if(dist<250&&night){this.aggro=true;if(Math.random()<0.002&&dist>60){this.x=player.x+(Math.random()*100-50);this.y=player.y-50;}this.vx=Math.sign(dxP)*this.speed;}else this.vx*=0.8;
+      if(Math.random()<0.3)particles.push(new Particle(this.x+Math.random()*this.w,this.y+Math.random()*this.h,"#8800FF"));
+    } else if(this.type==='ender_dragon'||this.type==='wither'){
+      this.aggro=true;this.vx=Math.sign(dxP)*this.speed*1.5;this.vy=Math.sign(dyP)*this.speed;
+    } else {
+      if(night&&dist<260)this.aggro=true;
+      if(!night&&!['cave_spider','silverfish','shulker'].includes(this.type))this.aggro=false;
+      if(this.aggro){this.vx=Math.sign(dxP)*this.speed;if(isFly)this.vy=Math.sign(dyP)*this.speed;}
+      else{this.wanderTimer--;if(this.wanderTimer<=0){this.wanderDir=Math.random()<0.5?-1:1;this.wanderTimer=80+Math.floor(Math.random()*100);}this.vx=this.wanderDir*this.speed*0.3;}
+    }
+    if(this.vx!==0)this.facingRight=this.vx>0;
+    if(!isFly){
+      if(Math.abs(this.vx)>0&&this.onGround&&Math.random()<0.03){let ah=Math.floor((this.x+(this.facingRight?this.w+4:-4))/TILE_SIZE),bR=Math.floor((this.y+this.h-2)/TILE_SIZE);if(isBlockSolid(getBlockAtWorld(ah,bR)))this.vy=-8;}
+      this.vy+=0.4;this.vy=Math.min(14,this.vy);
+    } else {this.vy*=0.85;}
+    this.x+=this.vx;this.y+=this.vy;this.onGround=false;
+    if(!isFly){
+      let bx3=Math.floor(this.x/TILE_SIZE),by3=Math.floor(this.y/TILE_SIZE);
+      for(let dy=-1;dy<=2;dy++)for(let ddx=-1;ddx<=2;ddx++){let b=getBlockAtWorld(bx3+ddx,by3+dy);if(b&&isBlockSolid(b)){let bX=(bx3+ddx)*TILE_SIZE,bY=(by3+dy)*TILE_SIZE;if(this.x<bX+TILE_SIZE&&this.x+this.w>bX&&this.y<bY+TILE_SIZE&&this.y+this.h>bY){let ox=Math.min(this.x+this.w-bX,bX+TILE_SIZE-this.x),oy=Math.min(this.y+this.h-bY,bY+TILE_SIZE-this.y);if(oy<=ox){if(this.vy>=0){this.y=bY-this.h;this.vy=0;this.onGround=true;}else{this.y=bY+TILE_SIZE;this.vy=0;}}else{if(this.vx>0)this.x=bX-this.w;else this.x=bX+TILE_SIZE;}}}}
+    }
+    if(this.attackCooldown>0)this.attackCooldown--;
+    if(ALL_HOSTILE.has(this.type)&&dist<45&&this.attackCooldown===0&&survivalStats.alive&&gameMode==='survival'){
+      let dmg=Math.max(1,this.baseDmg-getShieldReduction()-getArmorBonus());
+      if(hasEnchant('iron_chestplate','thorns')||hasEnchant('diamond_chestplate','thorns')||hasEnchant('netherite_chestplate','thorns'))this.health-=1;
+      damagePlayer(dmg);this.attackCooldown=50;
+    }
+  }
+  draw(){
+    let sx=this.x-cameraX,sy=this.y-cameraY;
+    if(sx<-80||sx>canvas.width+80||sy<-80||sy>canvas.height+80)return;
+    ctx.save();
+    const t=this.type,AT=this.animTimer,w=this.w,h=this.h;
+    const night=isNight();const legSwing=Math.sin(AT*0.2)*5,armSwing=Math.sin(AT*0.2)*6;
+    if(night&&ALL_HOSTILE.has(t)){ctx.shadowColor=this.eyeColor+'55';ctx.shadowBlur=8;}
+    ctx.fillStyle=this.bodyColor;ctx.fillRect(sx,sy+h*0.3,w,h*0.55);
+    ctx.fillRect(sx+(this.facingRight?w-10:-w*0.1),sy+h*0.1,w*0.42,h*0.38);
+    ctx.fillStyle=this.eyeColor;ctx.fillRect(this.facingRight?sx+w-5:sx+2,sy+h*0.18,4,4);
+    ctx.fillStyle=this.bodyColor;
+    ctx.fillRect(sx+w*0.1,sy+h*0.82+legSwing,w*0.22,h*0.2);
+    ctx.fillRect(sx+w*0.35,sy+h*0.82-legSwing,w*0.22,h*0.2);
+    ctx.restore();ctx.shadowBlur=0;
+    ctx.fillStyle="#440000";ctx.fillRect(sx,sy-7,w,3);
+    ctx.fillStyle=TRULY_PASSIVE.has(t)?'#44FF44':t==='iron_golem'?'#8888AA':'#FF4444';
+    ctx.fillRect(sx,sy-7,w*(this.health/this.maxHealth),3);
+    ctx.save();ctx.font="bold 9px monospace";const nw=ctx.measureText(this.label).width;const nx=sx+w/2-nw/2;const ny=sy-10;
+    ctx.fillStyle="rgba(0,0,0,0.55)";ctx.fillRect(nx-3,ny-9,nw+6,11);
+    ctx.fillStyle=TRULY_PASSIVE.has(t)?'#88ffaa':ALL_HOSTILE.has(t)?'#ff8888':'#ffffff';
+    ctx.fillText(this.label,nx,ny);ctx.restore();
+  }
+  takeDamage(a){this.health-=a;if(!TRULY_PASSIVE.has(this.type))this.aggro=true;return this.health<=0;}
+}
+
+class Particle{constructor(x,y,c){this.x=x;this.y=y;this.vx=(Math.random()-.5)*3;this.vy=(Math.random()-.5)*3-1;this.life=0.8;this.color=c;this.size=3+Math.random()*4;}update(){this.x+=this.vx;this.y+=this.vy;this.vy+=0.2;this.life-=0.025;return this.life>0;}draw(){ctx.globalAlpha=this.life;ctx.fillStyle=this.color;ctx.fillRect(this.x-cameraX,this.y-cameraY,this.size,this.size);ctx.globalAlpha=1;}}
+class FloatingText{constructor(x,y,t,c){this.x=x;this.y=y;this.text=t;this.color=c;this.life=1;}update(){this.y-=1;this.life-=0.018;return this.life>0;}draw(){ctx.globalAlpha=this.life;ctx.font="bold 13px monospace";ctx.fillStyle=this.color;ctx.fillText(this.text,this.x-cameraX,this.y-cameraY);ctx.globalAlpha=1;}}
+
+// ===== COMBAT =====
+function damagePlayer(amount){
+  if(gameMode!=='survival'||!survivalStats.alive||player.invincibleTimer>0)return;
+  survivalStats.health=Math.max(0,survivalStats.health-amount);player.invincibleTimer=25;
+  particles.push(new FloatingText(player.x,player.y-20,`-${amount}❤️`,"#ff6666"));
+  if(survivalStats.health<=0){
+    if(inventory.totem_of_undying>0){
+      inventory.totem_of_undying--;survivalStats.health=4;player.invincibleTimer=100;
+      let fl=document.createElement('div');fl.className='totem-flash';document.body.appendChild(fl);setTimeout(()=>fl.remove(),1000);
+      for(let i=0;i<30;i++)particles.push(new Particle(player.x+Math.random()*60-30,player.y+Math.random()*60-30,"#FFD700"));
+      showNotif("☄️ TOTEM OF UNDYING — You survived!",'#FFD700');
+      updateInventoryUI();return;
+    }
+    survivalStats.alive=false;dropInventoryOnDeath();
+    let d=document.createElement('div');d.className='death-msg';
+    d.innerHTML="💀 YOU DIED!<br><span style='font-size:14px;color:#ff8888;'>Press R to respawn<br>Return to 💀 grave to recover items!</span>";
+    document.body.appendChild(d);setTimeout(()=>d.remove(),5000);
+  }
+  updateInventoryUI();
+}
+function respawn(){survivalStats.health=10;survivalStats.maxHealth=10;survivalStats.hunger=8;survivalStats.alive=true;player.x=256;player.y=-100;player.vx=player.vy=0;player.invincibleTimer=40;if(inNether)exitNether();updateInventoryUI();}
+
+function getMouseWorldPos(e){const rect=canvas.getBoundingClientRect();let mx=(e.clientX-rect.left)*(canvas.width/rect.width)+cameraX,my=(e.clientY-rect.top)*(canvas.height/rect.height)+cameraY;return{x:Math.floor(mx/TILE_SIZE),y:Math.floor(my/TILE_SIZE)};}
+
+function mineBlock(e){
+  if(gameMode==='survival'&&!survivalStats.alive)return;
+  let pos=getMouseWorldPos(e);if(pos.y<WORLD_MIN_Y||pos.y>WORLD_MAX_Y)return;
+  let block=getBlockAtWorld(pos.x,pos.y);if(block==='bedrock')return;
+  if(block!=='air'&&!LIQUID_BLOCKS.has(block)&&block!=='nether_portal'){
+    if(gameMode==='survival'&&HARD_BLOCKS.has(block)){
+      let needsLevel=IRON_ONLY.has(block)?2:0;
+      if(block==='ancient_debris')needsLevel=3; // Needs diamond+ pick
+      if(!hasPickaxe(needsLevel)){
+        if(block==='ancient_debris')showNotif("⛏️ Need Diamond+ Pickaxe for Ancient Debris!");
+        else showNotif(needsLevel>=2?"⛏️ Need Iron+ Pickaxe!":"⛏️ Need any Pickaxe!");
+        return;
+      }
+    }
+    let bonus=Math.max(0,getPickaxeBonus());
+    if(block==="stone"||block==="cobble"||block==="well_stone")inventory.stone+=1+bonus;
+    else if(block==="coal_ore"){inventory.coal+=1+bonus;if(Math.random()<0.3)inventory.flint++;}
+    else if(block==="iron_ore")inventory.iron+=1+bonus;
+    else if(block==="diamond_ore")inventory.diamond+=1+Math.floor(bonus/2);
+    else if(block==="gold_ore")inventory.gold+=1+Math.floor(bonus/2);
+    else if(block==="wood"||block==="mine_support"){inventory.wood++;inventory.stick+=2;}
+    else if(block==="leaves"){inventory.leaves++;if(Math.random()<0.3)inventory.string++;
+      if(Math.random()<0.08){inventory.apple++;particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🍏 Apple!","#88FF44"));showNotif("🍏 Found an Apple! Craft with 8 Gold = Golden Apple (C key)",'#88FF44');}
+    }
+    else if(block==="wheat"){inventory.wheat++;if(Math.random()<0.5)inventory.food++;}
+    else if(block==="crafting_table")inventory.crafting_table++;
+    else if(block==="anvil_block"){inventory.anvil_block++;showNotif("⚙️ Anvil picked up!",'#cc88ff');}
+    else if(block==="obsidian"){if(hasPickaxe(2)){inventory.obsidian++;showNotif("🟣 Obsidian! Use 10 to build Nether Portal (C key)",'#AA44FF');}else{showNotif("⛏️ Need Iron+ Pickaxe for Obsidian!");return;}}
+    else if(block==="netherrack")inventory.stone++;
+    else if(block==="nether_gold_ore"){inventory.nether_gold+=1+Math.floor(bonus/2);inventory.gold+=Math.floor(bonus/2);}
+    else if(block==="ancient_debris"){
+      // Ancient debris is very rare and needs smelting
+      inventory.ancient_debris+=1;
+      for(let i=0;i<10;i++)particles.push(new Particle(pos.x*TILE_SIZE+Math.random()*TILE_SIZE,pos.y*TILE_SIZE+Math.random()*TILE_SIZE,"#5A3030"));
+      particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🔴 Ancient Debris!","#AA4444"));
+      showNotif("🔴 Ancient Debris! Smelt it to get Netherite Scrap! (C key)",'#AA4444');
+    }
+    else if(block==="nether_brick")inventory.stone+=1;
+    else if(block==="bastion_block"){inventory.stone++;if(Math.random()<0.08)inventory.ancient_debris++;}
+    else if(block==="soul_sand"){inventory.soul_sand++;if(Math.random()<0.2)inventory.nether_wart++;}
+    else if(block==="nether_wart")inventory.nether_wart++;
+    else if(block==="fortress_chest"){
+      // Fortress chest drops: blaze rods, nether wart, gold, maybe ancient debris
+      inventory.blaze_rod+=2+Math.floor(Math.random()*3);
+      inventory.blaze_powder+=3;
+      inventory.nether_wart+=2+Math.floor(Math.random()*4);
+      inventory.nether_gold+=2+Math.floor(Math.random()*3);
+      if(Math.random()<0.3)inventory.ancient_debris++;
+      if(Math.random()<0.2){inventory.totem_of_undying++;particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"☄️ Totem!","#FFD700"));}
+      particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🔥 Fortress Loot!","#FF8800"));
+      showNotif("🏯 Fortress chest: Blaze Rods + Nether Wart!",'#FF8800');
+    }
+    else if(block==="bastion_chest"){
+      // Bastion chest: rare netherite loot!
+      inventory.ancient_debris+=1+Math.floor(Math.random()*2);
+      inventory.nether_gold+=4+Math.floor(Math.random()*4);
+      inventory.gold+=2+Math.floor(Math.random()*3);
+      if(Math.random()<0.5)inventory.netherite_ingot++;
+      if(Math.random()<0.25){inventory.netherite_ingot++;showNotif("⚫ Found Netherite Ingot in Bastion!",'#884444');}
+      if(Math.random()<0.12){inventory.totem_of_undying++;particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"☄️ Totem!","#FFD700"));}
+      if(Math.random()<0.08){inventory.netherite_scrap+=2;showNotif("⚫ Found Netherite Scraps in Bastion!",'#884444');}
+      particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"💎 Bastion Loot!","#AA4444"));
+      showNotif("🏴 Bastion chest: Ancient Debris & Netherite!",'#AA4444');
+    }
+    else if(block==="blaze_spawner"){
+      inventory.blaze_rod++;inventory.blaze_powder+=2;inventory.coal++;
+      particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🔥 Blaze Rod!","#FF8800"));
+    }
+    else if(block==="chest_block"){inventory.iron+=1+Math.floor(Math.random()*3);inventory.coal+=Math.floor(Math.random()*3);if(Math.random()<0.35)inventory.diamond++;if(Math.random()<0.4)inventory.gold++;if(Math.random()<0.12){inventory.totem_of_undying++;particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"☄️ Totem!","#FFD700"));}if(Math.random()<0.08){inventory.obsidian+=2;showNotif("🟣 Found Obsidian in chest!",'#AA44FF');}particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🎁 Loot!","#FFD700"));}
+    else if(block==="dirt"){if(Math.random()<0.3)inventory.wood++;}
+    else if(block==="plank_block"||block==="village_wall"||block==="village_roof")inventory.wood++;
+    else if(block==="dungeon_wall"||block==="temple_wall")inventory.stone+=1+bonus;
+    setBlockAtWorld(pos.x,pos.y,"air");
+    for(let i=0;i<8;i++)particles.push(new Particle(pos.x*TILE_SIZE+Math.random()*TILE_SIZE,pos.y*TILE_SIZE+Math.random()*TILE_SIZE,"#AA8866"));
+    updateInventoryUI();if(craftingOpen)updateCraftingPanel();if(enchantOpen)renderEnchantPanel();
+  }
+  // Attack mobs
+  for(let i=0;i<entities.length;i++){
+    let mob=entities[i];if(mob.type==='iron_golem')continue;
+    if(Math.abs(mob.x-pos.x*TILE_SIZE)<55&&Math.abs(mob.y-pos.y*TILE_SIZE)<55){
+      let dmg=getSwordDamage();
+      for(let p=0;p<6;p++)particles.push(new Particle(mob.x,mob.y,"#FF4444"));
+      if(mob.takeDamage(dmg)){
+        particles.push(new FloatingText(mob.x,mob.y,"💀","#ff8888"));
+        if(mob.type==='villager')showNotif("😱 You killed a villager!");
+        else{
+          if(Math.random()<0.4)inventory.food++;if(Math.random()<0.2)inventory.iron++;if(Math.random()<0.15)inventory.coal++;if(Math.random()<0.1)inventory.string++;
+          if(mob.type==='skeleton'||mob.type==='stray'){inventory.arrow+=3;inventory.string++;}
+          if(mob.type==='spider'||mob.type==='cave_spider')inventory.string++;
+          if(mob.type==='blaze'){
+            inventory.blaze_rod+=1+Math.floor(Math.random()*2);
+            inventory.blaze_powder+=2;
+            inventory.nether_gold++;
+            particles.push(new FloatingText(mob.x,mob.y-20,"🔥 Blaze Rod!","#FF8800"));
+          }
+          if(mob.type==='ghast')inventory.string+=2;
+          if(mob.type==='witch'){inventory.health_potion++;inventory.gold++;}
+          if(mob.type==='enderman'){inventory.magic_orb++;inventory.string++;}
+          if(mob.type==='drowned')inventory.gold++;
+          if(mob.type==='pillager'||mob.type==='ravager')inventory.iron+=2;
+          if(mob.type==='pig')inventory.food+=3;if(mob.type==='cow'){inventory.food+=2;inventory.string+=2;}
+          if(mob.type==='sheep'){inventory.food++;inventory.string+=3;}if(mob.type==='chicken')inventory.food+=2;
+          if(mob.type==='zombie_piglin'){inventory.nether_gold+=3;inventory.gold+=2;}
+          if(mob.type==='hoglin'){inventory.food+=3;inventory.nether_gold+=2;}
+          if(mob.type==='magma_cube'){inventory.coal++;inventory.nether_gold+=2;}
+          if(mob.type==='wither_skeleton'){inventory.coal+=3;inventory.stone+=2;}
+          if(mob.type==='piglin'){
+            inventory.nether_gold+=3;
+            // Piglins sometimes barter ancient debris/netherite
+            if(Math.random()<0.1){inventory.ancient_debris++;particles.push(new FloatingText(mob.x,mob.y-20,"🔴 Ancient Debris!","#AA4444"));}
+          }
+          if(TOTEM_DROPPERS.has(mob.type)&&Math.random()<0.65){inventory.totem_of_undying++;particles.push(new FloatingText(mob.x,mob.y-20,"☄️ Totem!","#FFD700"));showNotif(`☄️ Got Totem from ${mob.type}!`,'#FFD700');}
+          if(mob.type==='ender_dragon'){inventory.diamond+=5;inventory.magic_orb+=3;inventory.star_shard+=2;showNotif("🐉 Dragon slain! Epic loot!");}
+          if(mob.type==='wither'){
+            inventory.diamond+=4;inventory.iron+=5;inventory.nether_gold+=5;
+            inventory.ancient_debris+=2;inventory.netherite_ingot+=1;
+            showNotif("☠️ Wither slain! Got Netherite Ingot!");}
+          updateInventoryUI();
+        }
+        entities.splice(i,1);
+      } else particles.push(new FloatingText(mob.x,mob.y,`-${dmg}⚔️`,"#ffaa66"));
+      break;
+    }
+  }
+}
+
+// ===== PLACE BLOCK =====
+function placeBlock(e){
+  if(gameMode==='survival'&&!survivalStats.alive)return;
+  let pos=getMouseWorldPos(e);if(pos.y<WORLD_MIN_Y||pos.y>WORLD_MAX_Y)return;
+  let clickedBlock=getBlockAtWorld(pos.x,pos.y);
+
+  // BUCKET PICKUP LOGIC
+  if(gameMode==='survival'&&inventory.bucket>0&&(clickedBlock==='water'||clickedBlock==='lava')){
+    if(clickedBlock==='water'){
+      inventory.bucket--;inventory.bucket_water++;
+      setBlockAtWorld(pos.x,pos.y,'air');
+      for(let i=0;i<8;i++)particles.push(new Particle(pos.x*TILE_SIZE+Math.random()*TILE_SIZE,pos.y*TILE_SIZE+Math.random()*TILE_SIZE,"#4488FF"));
+      particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🪣 Water scooped!","#44AAFF"));
+      showNotif("🪣 Water collected!",'#44AAFF');updateInventoryUI();return;
+    } else if(clickedBlock==='lava'){
+      inventory.bucket--;inventory.bucket_lava++;
+      setBlockAtWorld(pos.x,pos.y,'air');
+      for(let i=0;i<8;i++)particles.push(new Particle(pos.x*TILE_SIZE+Math.random()*TILE_SIZE,pos.y*TILE_SIZE+Math.random()*TILE_SIZE,"#FF6600"));
+      particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🪣 Lava scooped!","#FF8800"));
+      showNotif("🪣 Lava collected!",'#FF8800');updateInventoryUI();return;
+    }
+  }
+
+  // BUCKET PLACE LOGIC
+  if(gameMode==='survival'&&selectedBlock==='bucket_water'&&inventory.bucket_water>0&&clickedBlock==='air'){
+    let px2=pos.x*TILE_SIZE,py2=pos.y*TILE_SIZE;
+    let hit=(player.x<px2+TILE_SIZE&&player.x+player.w>px2&&player.y<py2+TILE_SIZE&&player.y+player.h>py2);
+    if(!hit){inventory.bucket_water--;inventory.bucket++;setBlockAtWorld(pos.x,pos.y,'water');for(let i=0;i<8;i++)particles.push(new Particle(px2+Math.random()*TILE_SIZE,py2+Math.random()*TILE_SIZE,"#4488FF"));updateInventoryUI();}
+    return;
+  }
+  if(gameMode==='survival'&&selectedBlock==='bucket_lava'&&inventory.bucket_lava>0&&clickedBlock==='air'){
+    let px2=pos.x*TILE_SIZE,py2=pos.y*TILE_SIZE;
+    let hit=(player.x<px2+TILE_SIZE&&player.x+player.w>px2&&player.y<py2+TILE_SIZE&&player.y+player.h>py2);
+    if(!hit){inventory.bucket_lava--;inventory.bucket++;setBlockAtWorld(pos.x,pos.y,'lava');for(let i=0;i<8;i++)particles.push(new Particle(px2+Math.random()*TILE_SIZE,py2+Math.random()*TILE_SIZE,"#FF6600"));updateInventoryUI();}
+    return;
+  }
+
+  // Nether portal entry
+  if(clickedBlock==='nether_portal'){if(!inNether)enterNether();else exitNether();return;}
+  if(clickedBlock==='anvil_block'){enchantOpen=true;document.getElementById('enchantPanel').style.display='block';renderEnchantPanel();showNotif("✨ Enchanting opened!",'#cc88ff');return;}
+  if(clickedBlock==='air'){
+    let px2=pos.x*TILE_SIZE,py2=pos.y*TILE_SIZE;
+    let hit=(player.x<px2+TILE_SIZE&&player.x+player.w>px2&&player.y<py2+TILE_SIZE&&player.y+player.h>py2);
+    if(!hit){
+      if(gameMode==='survival'){
+        if(selectedBlock==='crafting_table'){if(inventory.crafting_table<=0){showNotif("❌ No Crafting Table!");return;}inventory.crafting_table--;}
+        else if(selectedBlock==='anvil_block'){if(inventory.anvil_block<=0){showNotif("❌ No Anvil!");return;}inventory.anvil_block--;}
+        else if(selectedBlock==='lava'){if(inventory.lava<=0){showNotif("❌ No Lava! Mine lava blocks.");return;}inventory.lava--;}
+        else if(selectedBlock==='water'){if(inventory.water<=0){showNotif("❌ No Water! Find a water pool.");return;}inventory.water--;}
+        else if(selectedBlock==='bucket'||selectedBlock==='bucket_water'||selectedBlock==='bucket_lava'){return;}
+      }
+      setBlockAtWorld(pos.x,pos.y,selectedBlock);
+      if(selectedBlock==='water'||selectedBlock==='lava'){
+        const dirs=[[0,-1],[0,1],[-1,0],[1,0]];
+        for(let[dx2,dy2] of dirs){
+          let nb=getBlockAtWorld(pos.x+dx2,pos.y+dy2);
+          if((selectedBlock==='water'&&nb==='lava')||(selectedBlock==='lava'&&nb==='water')){
+            setTimeout(()=>{
+              setBlockAtWorld(pos.x,pos.y,'obsidian');setBlockAtWorld(pos.x+dx2,pos.y+dy2,'obsidian');
+              for(let i=0;i<16;i++)particles.push(new Particle((pos.x+0.5)*TILE_SIZE+Math.random()*TILE_SIZE-16,(pos.y+0.5)*TILE_SIZE+Math.random()*TILE_SIZE-16,"#554466"));
+              particles.push(new FloatingText((pos.x+0.5)*TILE_SIZE,(pos.y-1)*TILE_SIZE,"💎 Obsidian!","#AA88FF"));
+              showNotif("🌊🔥 Water + Lava = 💎 Obsidian!",'#AA88FF');
+            },500);
+          }
+        }
+      }
+      for(let i=0;i<6;i++)particles.push(new Particle(px2+Math.random()*TILE_SIZE,py2+Math.random()*TILE_SIZE,"#FFD966"));
+      if(selectedBlock==='anvil_block')showNotif("⚙️ Anvil placed! Right-click to enchant.",'#cc88ff');
+      if(craftingOpen)updateCraftingPanel();if(enchantOpen)renderEnchantPanel();
+    }
+  }
+}
+
+// ===== MOVEMENT with FALL DAMAGE =====
+const FALL_DMG_THRESHOLD = 12.0;
+let keys={};
+function updateMovement(){
+  if(gameMode==='survival'&&!survivalStats.alive)return;
+  let spd=player.speed*(inventory.speed_potion>0?1.6:1);
+  if(playerInWater)spd*=0.45;
+  let moveX=(keys["a"]||keys["ArrowLeft"]?-1:0)+(keys["d"]||keys["ArrowRight"]?1:0);
+  player.vx=moveX*spd;if(moveX!==0)player.facingRight=moveX===1;
+  if(gameMode==='creative'){let moveY=(keys["w"]||keys["ArrowUp"]?-1:0)+(keys["s"]||keys["ArrowDown"]?1:0);if(keys[" "])moveY=-1;player.vy=moveY*spd;}
+  else{
+    if(playerInWater){
+      if(keys[" "]||keys["w"]||keys["ArrowUp"])player.vy=Math.max(-3,player.vy-0.5);
+      player.vy+=0.15;player.vy=Math.min(2,player.vy);
+    } else {
+      if((keys[" "]||keys["w"]||keys["ArrowUp"])&&player.onGround){player.vy=player.jumpPower;player.onGround=false;}
+      player.vy=Math.min(20,player.vy+0.55);
+    }
+  }
+  let wasOnGround=player.onGround;
+  if(player.vy>0&&!playerInWater){player.lastFallVY=Math.max(player.lastFallVY,player.vy);}
+  player.onGround=false;player.x+=player.vx;if(player.x<0)player.x=0;
+  let px=Math.floor(player.x/TILE_SIZE),py=Math.floor(player.y/TILE_SIZE);
+  for(let dy=-1;dy<=2;dy++)for(let ddx=-1;ddx<=2;ddx++){let b=getBlockAtWorld(px+ddx,py+dy);if(b&&isBlockSolid(b)){let bx2=(px+ddx)*TILE_SIZE,by2=(py+dy)*TILE_SIZE;if(player.x<bx2+TILE_SIZE&&player.x+player.w>bx2&&player.y<by2+TILE_SIZE&&player.y+player.h>by2){if(player.vx>0)player.x=bx2-player.w;else if(player.vx<0)player.x=bx2+TILE_SIZE;}}}
+  player.y+=player.vy;px=Math.floor(player.x/TILE_SIZE);py=Math.floor(player.y/TILE_SIZE);
+  for(let dy=-1;dy<=2;dy++)for(let ddx=-1;ddx<=2;ddx++){let b=getBlockAtWorld(px+ddx,py+dy);if(b&&isBlockSolid(b)){let bx2=(px+ddx)*TILE_SIZE,by2=(py+dy)*TILE_SIZE;if(player.x<bx2+TILE_SIZE&&player.x+player.w>bx2&&player.y<by2+TILE_SIZE&&player.y+player.h>by2){if(player.vy>=0&&(player.y+player.h-by2)<=TILE_SIZE+2){
+    if(!wasOnGround&&gameMode==='survival'&&player.lastFallVY>FALL_DMG_THRESHOLD){
+      let hasFf=hasEnchant('iron_boots','feather_falling')||hasEnchant('diamond_boots','feather_falling')||hasEnchant('netherite_boots','feather_falling');
+      if(!hasFf&&!playerInWater){
+        let fallDmg=Math.floor((player.lastFallVY-FALL_DMG_THRESHOLD)*0.8);
+        if(fallDmg>0){damagePlayer(fallDmg);particles.push(new FloatingText(player.x,player.y-20,`🪂 -${fallDmg} Fall!`,"#ff8844"));for(let i=0;i<8;i++)particles.push(new Particle(player.x+Math.random()*player.w,player.y+player.h,"#AA6633"));}
+      }
+    }
+    player.lastFallVY=0;player.y=by2-player.h;player.vy=0;player.onGround=true;}else if(player.vy<0){player.y=by2+TILE_SIZE;player.vy=0;}}}}
+  if(player.y<WORLD_MIN_Y*TILE_SIZE){player.y=WORLD_MIN_Y*TILE_SIZE;player.vy=0;}
+  if(player.y+player.h>(WORLD_MAX_Y-1)*TILE_SIZE){player.y=(WORLD_MAX_Y-1)*TILE_SIZE-player.h;player.vy=0;player.onGround=true;}
+  if(player.invincibleTimer>0)player.invincibleTimer--;
+  if(inventory.regen_potion>0&&survivalStats.health<survivalStats.maxHealth&&Math.random()<0.005){survivalStats.health=Math.min(survivalStats.maxHealth,survivalStats.health+0.5);updateInventoryUI();}
+  if(gameMode==='survival'&&survivalStats.alive&&Math.random()<0.007){survivalStats.hunger=Math.max(0,survivalStats.hunger-0.07);if(survivalStats.hunger<=0)damagePlayer(1);updateInventoryUI();}
+  checkFluidContact();checkPickupDeathDrop();
+  if(gameMode==='survival'){
+    let bUnder=getBlockAtWorld(Math.floor(player.x/TILE_SIZE),Math.floor(player.y/TILE_SIZE)+1);
+    if(bUnder==='nether_portal'){if(!inNether)enterNether();else exitNether();}
+  }
+}
+
+// ===== MOB SPAWNING =====
+function spawnMobs(){
+  if(gameMode!=='survival')return;
+  if(inNether){
+    if(entities.length<12&&Math.random()<0.015){
+      let type=NETHER_MOB_POOL[Math.floor(Math.random()*NETHER_MOB_POOL.length)];
+      let surf=getNetherlandSurface(Math.floor((player.x+(Math.random()*400-200))/TILE_SIZE));
+      let side=Math.random()<0.5?-1:1;
+      entities.push(new Mob(player.x+side*(200+Math.random()*200),(surf-3)*TILE_SIZE,type));
+    }
+    return;
+  }
+  const hostileCount=entities.filter(e=>NIGHT_MOBS.includes(e.type)).length;
+  if(isNight()&&hostileCount<16&&Math.random()<0.022){
+    let side=Math.random()<0.5?-1:1,type,roll=Math.random();
+    if(roll<0.002)type='ender_dragon';
+    else type=NIGHT_MOBS[Math.floor(Math.random()*NIGHT_MOBS.length)];
+    let surf=getSurfaceHeight(Math.floor((player.x+side*300)/TILE_SIZE));
+    entities.push(new Mob(player.x+side*(220+Math.random()*200),surf*TILE_SIZE-30,type));
+  }
+  const passiveCount=entities.filter(e=>DAY_PASSIVE.includes(e.type)||DAY_NEUTRAL.includes(e.type)).length;
+  if(!isNight()&&passiveCount<12&&Math.random()<0.007){
+    let type=Math.random()<0.6?DAY_PASSIVE[Math.floor(Math.random()*DAY_PASSIVE.length)]:DAY_NEUTRAL[Math.floor(Math.random()*DAY_NEUTRAL.length)];
+    let surf=getSurfaceHeight(Math.floor((player.x+(Math.random()*400-200))/TILE_SIZE));
+    entities.push(new Mob(player.x+(Math.random()*400-200),(surf-2)*TILE_SIZE,type));
+  }
+  if(!isNight()&&entities.filter(e=>e.type==='villager').length<3&&Math.random()<0.003){let surf=getSurfaceHeight(Math.floor(player.x/TILE_SIZE));entities.push(new Mob(player.x+(Math.random()*200-100),(surf-2)*TILE_SIZE,'villager'));}
+  if(!isNight()&&entities.filter(e=>e.type==='iron_golem').length<1&&Math.random()<0.001){let surf=getSurfaceHeight(Math.floor(player.x/TILE_SIZE));entities.push(new Mob(player.x+(Math.random()*100-50),(surf-3)*TILE_SIZE,'iron_golem'));}
+}
+function clearNightMobs(){if(!isNight()&&dayTimer<5){let removed=entities.filter(e=>NIGHT_MOBS.includes(e.type)).length;entities=entities.filter(e=>!NIGHT_MOBS.includes(e.type));if(removed>0)showNotif(`☀️ ${removed} mob${removed>1?'s':''} fled the sun!`);}}
+
+// ===== RENDER =====
+function drawBackground(){
+  ctx.fillStyle=getSkyColor();ctx.fillRect(0,0,canvas.width,canvas.height);
+  if(inNether){
+    ctx.fillStyle='rgba(80,10,0,0.3)';ctx.fillRect(0,0,canvas.width,canvas.height);
+    for(let i=0;i<20;i++){let fx=(i*131+Date.now()*0.02)%canvas.width,fy=Math.sin(Date.now()*0.001+i)*50+100;ctx.fillStyle=`rgba(255,${40+Math.sin(Date.now()*0.003+i)*20},0,0.04)`;ctx.fillRect(fx,fy,120,60);}
+    return;
+  }
+  if(!isNight()){
+    ctx.fillStyle="#FFFFFFCC";for(let i=0;i<4;i++){let cx2=(Date.now()*0.015+i*280)%(canvas.width+400)-200;ctx.beginPath();ctx.ellipse(cx2,50+i*35,50,28,0,0,Math.PI*2);ctx.fill();}
+    let sunX=(dayTimer/DAY_TICKS)*canvas.width;ctx.fillStyle='#FFD700';ctx.fillRect(sunX-20,44,40,40);ctx.fillStyle='#FFEC5A';ctx.fillRect(sunX-14,48,28,28);
+  } else {
+    for(let i=0;i<80;i++){let ssx=(i*197+37)%canvas.width,ssy=(i*83+11)%130,blink=Math.sin(Date.now()*0.003+i)*0.5+0.5;ctx.globalAlpha=blink*0.9;ctx.fillStyle="#FFF";ctx.fillRect(ssx,ssy,2,2);}ctx.globalAlpha=1;
+    let mt=(dayTimer-DAY_TICKS)/NIGHT_TICKS,mx=mt*canvas.width;ctx.fillStyle='#E8E8E8';ctx.fillRect(mx-16,56,32,32);
+  }
+  let na=getNightOverlay();if(na>0){ctx.fillStyle=`rgba(0,0,30,${na})`;ctx.fillRect(0,0,canvas.width,canvas.height);}
+}
+
+let lavaAnimTimer=0;
+function drawWorld(){
+  lavaAnimTimer++;
+  let sx0=Math.floor(cameraX/TILE_SIZE)-1,ex=sx0+Math.ceil(canvas.width/TILE_SIZE)+3;
+  let sy0=Math.floor(cameraY/TILE_SIZE)-1,ey=sy0+Math.ceil(canvas.height/TILE_SIZE)+3;
+  for(let ty=sy0;ty<=ey;ty++){if(ty<(inNether?-100:WORLD_MIN_Y)||ty>WORLD_MAX_Y)continue;
+    for(let tx=sx0;tx<=ex;tx++){
+      let block=getBlockAtWorld(tx,ty);if(block!=='air'){
+        let bsx=tx*TILE_SIZE-cameraX,bsy=ty*TILE_SIZE-cameraY;
+        if(block==='water'){
+          let wave=Math.sin(lavaAnimTimer*0.08+tx*0.4)*2;
+          ctx.fillStyle='rgba(30,106,255,0.7)';ctx.fillRect(bsx,bsy+wave,TILE_SIZE,TILE_SIZE-wave);
+          ctx.fillStyle='rgba(80,150,255,0.3)';for(let wx2=0;wx2<4;wx2++)ctx.fillRect(bsx+wx2*8,bsy+wave,6,3);
+          ctx.strokeStyle='rgba(0,60,200,0.3)';ctx.lineWidth=1;ctx.strokeRect(bsx,bsy,TILE_SIZE,TILE_SIZE);
+        } else if(block==='lava'){
+          let pulse=Math.sin(lavaAnimTimer*0.06+tx*0.3+ty*0.2)*0.15;
+          ctx.fillStyle=`rgba(${Math.floor(220+pulse*30)},${Math.floor(60+pulse*20)},0,0.92)`;ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);
+          if(Math.sin(lavaAnimTimer*0.1+tx*2.7)*0.5+0.5>0.85){ctx.fillStyle='rgba(255,180,0,0.7)';ctx.beginPath();ctx.arc(bsx+8+Math.sin(lavaAnimTimer*0.2)*4,bsy+12,5,0,Math.PI*2);ctx.fill();}
+          ctx.fillStyle='rgba(255,120,0,0.4)';ctx.fillRect(bsx+4,bsy+4,TILE_SIZE-8,6);
+          ctx.shadowColor='#FF5500';ctx.shadowBlur=12;ctx.fillStyle='rgba(255,80,0,0)';ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);ctx.shadowBlur=0;
+        } else if(block==='nether_portal'){
+          let phase=lavaAnimTimer*0.05;
+          ctx.fillStyle=`rgba(140,0,255,0.${60+Math.floor(Math.sin(phase+tx)*15)})`;ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);
+          ctx.fillStyle=`rgba(200,100,255,0.${30+Math.floor(Math.sin(phase*1.3)*12)})`;
+          for(let pi=0;pi<3;pi++){let px3=bsx+TILE_SIZE/2+Math.cos(phase+pi*2.1)*8,py3=bsy+TILE_SIZE/2+Math.sin(phase*0.7+pi*2.1)*10;ctx.beginPath();ctx.arc(px3,py3,4,0,Math.PI*2);ctx.fill();}
+          ctx.shadowColor='#8800FF';ctx.shadowBlur=15;ctx.fillStyle='rgba(0,0,0,0)';ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);ctx.shadowBlur=0;
+        } else if(block==='obsidian'){
+          const tex=getBlockTex(block);
+          if(tex)ctx.drawImage(tex,bsx,bsy);else{ctx.fillStyle='#1A0A2A';ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);}
+          ctx.strokeStyle='rgba(150,80,255,0.5)';ctx.lineWidth=1.5;ctx.strokeRect(bsx+1,bsy+1,TILE_SIZE-2,TILE_SIZE-2);
+          ctx.fillStyle='rgba(180,100,255,0.15)';ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);
+        } else if(block==='ancient_debris'){
+          const tex=getBlockTex(block);
+          if(tex)ctx.drawImage(tex,bsx,bsy);else{ctx.fillStyle='#5A3030';ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);}
+          // Glowing vein lines
+          let glow=Math.sin(lavaAnimTimer*0.04+tx*0.5+ty*0.3)*0.4+0.6;
+          ctx.strokeStyle=`rgba(180,80,60,${glow*0.8})`;ctx.lineWidth=2;
+          ctx.strokeRect(bsx+3,bsy+3,TILE_SIZE-6,TILE_SIZE-6);
+          ctx.fillStyle=`rgba(220,100,60,${glow*0.25})`;ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);
+        } else if(block==='nether_brick'){
+          const tex=getBlockTex(block);
+          if(tex)ctx.drawImage(tex,bsx,bsy);else{ctx.fillStyle='#3A1010';ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);}
+          // Mortar lines
+          ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1;
+          ctx.beginPath();ctx.moveTo(bsx,bsy+TILE_SIZE/2);ctx.lineTo(bsx+TILE_SIZE,bsy+TILE_SIZE/2);ctx.stroke();
+          ctx.beginPath();ctx.moveTo(bsx+TILE_SIZE/2,bsy);ctx.lineTo(bsx+TILE_SIZE/2,bsy+TILE_SIZE/2);ctx.stroke();
+          ctx.beginPath();ctx.moveTo(bsx,bsy+TILE_SIZE/2);ctx.lineTo(bsx+TILE_SIZE/2,bsy+TILE_SIZE);ctx.stroke();
+        } else if(block==='bastion_block'){
+          const tex=getBlockTex(block);
+          if(tex)ctx.drawImage(tex,bsx,bsy);else{ctx.fillStyle='#221111';ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);}
+          ctx.strokeStyle='rgba(80,30,30,0.4)';ctx.lineWidth=1;ctx.strokeRect(bsx,bsy,TILE_SIZE,TILE_SIZE);
+        } else if(block==='soul_sand'){
+          const tex=getBlockTex(block);
+          if(tex)ctx.drawImage(tex,bsx,bsy);else{ctx.fillStyle='#4A3A2A';ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);}
+          // Spooky face
+          ctx.fillStyle='rgba(0,0,0,0.4)';ctx.beginPath();ctx.arc(bsx+10,bsy+14,3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(bsx+22,bsy+14,3,0,Math.PI*2);ctx.fill();
+          ctx.beginPath();ctx.arc(bsx+16,bsy+20,4,0,Math.PI,false);ctx.stroke();
+        } else if(block==='nether_wart'){
+          ctx.fillStyle='#AA2200';ctx.fillRect(bsx+4,bsy+14,TILE_SIZE-8,TILE_SIZE-16);
+          ctx.fillStyle='#CC3300';for(let wi=0;wi<3;wi++)ctx.fillRect(bsx+5+wi*8,bsy+8,6,8);
+          ctx.fillStyle='#FF4400';for(let wi=0;wi<3;wi++){ctx.beginPath();ctx.arc(bsx+8+wi*8,bsy+8,4,0,Math.PI*2);ctx.fill();}
+        } else if(block==='fortress_chest'||block==='bastion_chest'){
+          let isFort=block==='fortress_chest';
+          ctx.fillStyle=isFort?'#8B4513':'#4A1A05';ctx.fillRect(bsx+2,bsy+10,TILE_SIZE-4,TILE_SIZE-12);
+          ctx.fillStyle=isFort?'#A0522D':'#6B2A08';ctx.fillRect(bsx+2,bsy+6,TILE_SIZE-4,6);
+          ctx.fillStyle=isFort?'#FFD700':'#FF8800';ctx.fillRect(bsx+11,bsy+14,10,6);
+          // Glowing outline
+          ctx.strokeStyle=isFort?'rgba(255,140,0,0.8)':'rgba(180,60,0,0.8)';ctx.lineWidth=2;ctx.strokeRect(bsx+2,bsy+6,TILE_SIZE-4,TILE_SIZE-8);
+          ctx.font='10px sans-serif';ctx.fillText(isFort?'🏯':'🏴',bsx+9,bsy+8);
+        } else if(block==='blaze_spawner'){
+          ctx.fillStyle='#884400';ctx.fillRect(bsx,bsy,TILE_SIZE,TILE_SIZE);
+          ctx.fillStyle='#FF6600';ctx.strokeStyle='#FF8800';ctx.lineWidth=2;ctx.strokeRect(bsx+2,bsy+2,TILE_SIZE-4,TILE_SIZE-4);
+          let f=Math.sin(lavaAnimTimer*0.1+tx)*0.5+0.5;
+          ctx.fillStyle=`rgba(255,${100+Math.floor(f*100)},0,0.6)`;ctx.fillRect(bsx+4,bsy+4,TILE_SIZE-8,TILE_SIZE-8);
+          ctx.font='14px sans-serif';ctx.fillText('🔥',bsx+8,bsy+22);
+        } else {
+          const tex=getBlockTex(block);
+          if(tex)ctx.drawImage(tex,bsx,bsy);
+          else{ctx.fillStyle=colorMap[block]||"#666";ctx.fillRect(bsx,bsy,TILE_SIZE-1,TILE_SIZE-1);ctx.strokeStyle="#00000018";ctx.lineWidth=1;ctx.strokeRect(bsx,bsy,TILE_SIZE-1,TILE_SIZE-1);}
+        }
+        if(block==="crafting_table"){ctx.strokeStyle='rgba(74,138,164,0.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(bsx+4,bsy+4);ctx.lineTo(bsx+TILE_SIZE-4,bsy+TILE_SIZE-4);ctx.stroke();ctx.beginPath();ctx.moveTo(bsx+TILE_SIZE-4,bsy+4);ctx.lineTo(bsx+4,bsy+TILE_SIZE-4);ctx.stroke();}
+        if(block==="anvil_block"){ctx.strokeStyle='rgba(150,80,255,0.7)';ctx.lineWidth=2;ctx.strokeRect(bsx+1,bsy+1,TILE_SIZE-2,TILE_SIZE-2);ctx.fillStyle='rgba(200,150,255,0.9)';ctx.font='bold 9px monospace';ctx.fillText('✨',bsx+10,bsy+10);}
+        if(block==="chest_block"){ctx.fillStyle='#7A3A08';ctx.fillRect(bsx+4,bsy+10,TILE_SIZE-8,TILE_SIZE-14);ctx.fillStyle='#FFD700';ctx.fillRect(bsx+11,bsy+15,10,7);ctx.fillStyle='#A05010';ctx.fillRect(bsx+4,bsy+10,TILE_SIZE-8,2);}
+        if(block==="wheat"){ctx.fillStyle='#E8C040';for(let wi=0;wi<4;wi++)ctx.fillRect(bsx+6+wi*6,bsy+4,3,TILE_SIZE-8);}
+        if(block==="netherrack"){if(Math.sin(lavaAnimTimer*0.15+tx*1.3+ty*1.7)*0.5+0.5>0.9){ctx.fillStyle='rgba(255,80,0,0.4)';ctx.beginPath();ctx.arc(bsx+Math.random()*TILE_SIZE,bsy+Math.random()*TILE_SIZE,2,0,Math.PI*2);ctx.fill();}}
+      }
+    }
+  }
+  for(let ty=sy0;ty<=ey;ty++)for(let tx=sx0;tx<=ex;tx++){
+    if(getBlockAtWorld(tx,ty)==='lava'){let bsx=tx*TILE_SIZE-cameraX,bsy=ty*TILE_SIZE-cameraY;ctx.fillStyle='rgba(255,80,0,0.06)';ctx.fillRect(bsx-TILE_SIZE,bsy-TILE_SIZE,TILE_SIZE*3,TILE_SIZE*3);}
+  }
+  if(deathDropPos){
+    let gsx=deathDropPos.x*TILE_SIZE-cameraX,gsy=deathDropPos.y*TILE_SIZE-cameraY;
+    const pulse=0.4+Math.sin(Date.now()*0.005)*0.3;
+    ctx.fillStyle=`rgba(255,80,80,${pulse*0.2})`;ctx.beginPath();ctx.arc(gsx+16,gsy,28,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=`rgba(255,80,80,${pulse})`;ctx.lineWidth=2;ctx.strokeRect(gsx-2,gsy-22,28,28);
+    ctx.font='22px sans-serif';ctx.fillText('💀',gsx,gsy);
+  }
+}
+
+function drawPlayer(){
+  let sx=player.x-cameraX,sy=player.y-cameraY;
+  if(player.invincibleTimer>0&&Math.floor(player.invincibleTimer/3)%2===0)return;
+  if(inventory.invisibility>0)ctx.globalAlpha=0.25;
+  const AT=Date.now()*0.008,moving=Math.abs(player.vx)>0.3;
+  const legSwing=moving?Math.sin(AT*3)*7:0,armSwing=moving?Math.sin(AT*3)*8:0;
+  if(playerInWater&&Math.random()<0.15)particles.push(new Particle(player.x+Math.random()*player.w,player.y,"rgba(120,180,255,0.8)"));
+  if(playerInLava&&Math.random()<0.3)particles.push(new Particle(player.x+Math.random()*player.w,player.y,"#FF6600"));
+  ctx.fillStyle='#2A3A8C';ctx.fillRect(sx+5,sy+16+legSwing,9,13);ctx.fillRect(sx+player.w-14,sy+16-legSwing,9,13);
+  ctx.fillStyle='#1A1A1A';ctx.fillRect(sx+4,sy+27+legSwing,10,4);ctx.fillRect(sx+player.w-14,sy+27-legSwing,10,4);
+  ctx.fillStyle='#3C8DBC';ctx.fillRect(sx+3,sy+8,player.w-6,14);ctx.fillStyle='#2A6A9A';ctx.fillRect(sx+3,sy+12,player.w-6,2);
+  ctx.fillStyle='#F5CBA7';ctx.fillRect(sx-5,sy+8+armSwing,7,12);ctx.fillRect(sx+player.w,sy+8-armSwing,7,12);
+  ctx.fillStyle='#3C8DBC';ctx.fillRect(sx-5,sy+8+armSwing,7,6);ctx.fillRect(sx+player.w,sy+8-armSwing,7,6);
+  ctx.fillStyle='#F5CBA7';ctx.fillRect(sx+3,sy-2,player.w-6,12);
+  ctx.fillStyle='#5A3A1A';ctx.fillRect(sx+3,sy-2,player.w-6,4);ctx.fillRect(sx+3,sy-2,3,10);
+  ctx.fillStyle='#1A1A2A';let eyeX=player.facingRight?sx+14:sx+5;ctx.fillRect(eyeX,sy+3,5,4);ctx.fillStyle='white';ctx.fillRect(eyeX+1,sy+3,2,2);
+  // Netherite armor glow
+  if(inventory.netherite_chestplate>0||inventory.netherite_helmet>0){
+    let ng=Math.sin(Date.now()*0.003)*0.1+0.2;
+    ctx.shadowColor='#AA4444';ctx.shadowBlur=12;
+  }
+  let hasPick=inventory.tool_netherite_pick>0||inventory.tool_wood_pick>0||inventory.tool_pickaxe>0||inventory.tool_iron_pick>0||inventory.tool_diamond_pick>0;
+  if(hasPick){
+    let pc=inventory.tool_netherite_pick>0?"#884444":inventory.tool_diamond_pick>0?"#44DDEE":inventory.tool_iron_pick>0?"#C89E6B":inventory.tool_pickaxe>0?"#888":"#A56B2F";
+    let tx2=player.facingRight?sx+player.w+4:sx-8;
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#A56B2F';ctx.fillRect(tx2+1,sy+9,3,12);ctx.fillStyle=pc;ctx.fillRect(tx2-1,sy+5,7,6);
+  } else if(inventory.tool_netherite_sword>0||inventory.tool_diamond_sword>0||inventory.tool_iron_sword>0||inventory.tool_stone_sword>0||inventory.tool_wood_sword>0){
+    let sc=inventory.tool_netherite_sword>0?'#884444':inventory.tool_diamond_sword>0?'#44DDEE':inventory.tool_iron_sword>0?'#C8C8C8':inventory.tool_stone_sword>0?'#888':'#C8A464';
+    let tx2=player.facingRight?sx+player.w+3:sx-9;
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#A56B2F';ctx.fillRect(tx2+2,sy+10,3,14);ctx.fillStyle=sc;ctx.fillRect(tx2,sy+3,6,10);
+    if(inventory.tool_netherite_sword>0){ctx.shadowColor='#AA2222';ctx.shadowBlur=8;}
+  }
+  ctx.shadowBlur=0;
+  if(inventory.netherite_shield>0||inventory.iron_shield>0||inventory.diamond_shield>0||inventory.shield>0){ctx.fillStyle=inventory.netherite_shield>0?'rgba(180,60,60,0.7)':inventory.diamond_shield>0?'#44DDEEBB':inventory.iron_shield>0?'#AAAAAAAA':'#C8A464AA';ctx.fillRect(sx-9,sy+10,9,16);}
+  if(inventory.netherite_chestplate>0||inventory.iron_chestplate>0||inventory.diamond_chestplate>0){ctx.fillStyle=inventory.netherite_chestplate>0?'rgba(180,60,60,0.35)':inventory.diamond_chestplate>0?'rgba(68,221,238,0.3)':'rgba(160,160,180,0.35)';ctx.fillRect(sx+3,sy+8,player.w-6,14);}
+  if(inventory.netherite_helmet>0||inventory.iron_helmet>0||inventory.diamond_helmet>0){ctx.fillStyle=inventory.netherite_helmet>0?'rgba(180,60,60,0.55)':inventory.diamond_helmet>0?'rgba(68,221,238,0.5)':'rgba(160,160,180,0.55)';ctx.fillRect(sx+3,sy-6,player.w-6,8);}
+  if(inventory.fire_resistance>0||(inventory.netherite_chestplate>0||inventory.netherite_helmet>0)){ctx.fillStyle='rgba(255,100,0,0.15)';ctx.fillRect(sx-2,sy-2,player.w+4,player.h+4);}
+  ctx.globalAlpha=1;ctx.shadowBlur=0;
+}
+
+function drawHotbar(){
+  let hbW=placeableBlocks.length*46+16,hbX=canvas.width/2-hbW/2,hbY=canvas.height-60;
+  ctx.fillStyle="rgba(8,15,8,0.88)";ctx.strokeStyle="#2a4a2a";ctx.lineWidth=2;
+  ctx.beginPath();if(ctx.roundRect)ctx.roundRect(hbX,hbY,hbW,48,12);else ctx.rect(hbX,hbY,hbW,48);ctx.fill();ctx.stroke();
+  for(let i=0;i<placeableBlocks.length;i++){
+    let b=placeableBlocks[i],bx=hbX+8+i*46,by=hbY+8;
+    if(b==='water'){ctx.fillStyle='rgba(30,106,255,0.7)';ctx.fillRect(bx,by,30,30);}
+    else if(b==='lava'){ctx.fillStyle='#FF5500';ctx.fillRect(bx,by,30,30);ctx.fillStyle='#FF8800';ctx.fillRect(bx+4,by+4,22,8);}
+    else if(b==='bucket'){ctx.fillStyle='#999999';ctx.fillRect(bx,by,30,30);ctx.fillStyle='#CCCCCC';ctx.fillRect(bx+5,by+5,20,18);ctx.fillStyle='#888';ctx.fillRect(bx+8,by+3,14,4);}
+    else if(b==='bucket_water'){ctx.fillStyle='#777';ctx.fillRect(bx,by,30,30);ctx.fillStyle='rgba(30,100,255,0.85)';ctx.fillRect(bx+4,by+10,22,16);ctx.fillStyle='#888';ctx.fillRect(bx+8,by+3,14,4);}
+    else if(b==='bucket_lava'){ctx.fillStyle='#777';ctx.fillRect(bx,by,30,30);ctx.fillStyle='#FF5500';ctx.fillRect(bx+4,by+10,22,16);ctx.fillStyle='#888';ctx.fillRect(bx+8,by+3,14,4);}
+    else{const tex=getBlockTex(b);if(tex)ctx.drawImage(tex,bx,by,30,30);else{ctx.fillStyle=colorMap[b]||"#663311";ctx.fillRect(bx,by,30,30);}}
+    ctx.strokeStyle="rgba(0,0,0,0.4)";ctx.lineWidth=1;ctx.strokeRect(bx,by,30,30);
+    if(selectedBlock===b){ctx.strokeStyle="#7CFC00";ctx.lineWidth=2.5;ctx.strokeRect(bx-2,by-2,34,34);}
+    if(b==='bucket'&&inventory.bucket>0){ctx.fillStyle="#7CFC00";ctx.font="bold 9px monospace";ctx.fillText(inventory.bucket,bx+20,by+28);}
+    if(b==='bucket_water'&&inventory.bucket_water>0){ctx.fillStyle="#44AAFF";ctx.font="bold 9px monospace";ctx.fillText(inventory.bucket_water,bx+20,by+28);}
+    if(b==='bucket_lava'&&inventory.bucket_lava>0){ctx.fillStyle="#FF8800";ctx.font="bold 9px monospace";ctx.fillText(inventory.bucket_lava,bx+20,by+28);}
+    ctx.fillStyle="#4a7a4a";ctx.font="bold 9px monospace";ctx.fillText(`${(i+1)%10}`,bx+11,by+43);
+  }
+  if(gameMode==='survival'){
+    let s=`🪵${inventory.wood} 🪨${inventory.stone} ⚫${inventory.coal} ⚙️${inventory.iron} 💎${inventory.diamond} 🥇${inventory.gold} 🟣${inventory.obsidian}${inventory.apple>0?' 🍏×'+inventory.apple:''}${inventory.golden_apple>0?' 🍎🥇×'+inventory.golden_apple:''}${inventory.ancient_debris>0?' 🔴'+inventory.ancient_debris:''}${inventory.netherite_ingot>0?' ⚫Nth×'+inventory.netherite_ingot:''}${inventory.totem_of_undying>0?' ☄️'+inventory.totem_of_undying:''}${inNether?' 🔥NETHER':''}${inventory.bucket>0?' 🪣×'+inventory.bucket:''}${survivalStats.maxHealth>10?' 💛'+survivalStats.maxHealth+'♥':''}`;
+    ctx.fillStyle="#3a6a3a";ctx.font="10px monospace";ctx.fillText(s,hbX,hbY-8);
+  }
+}
+function updateHUD(){
+  if(gameMode!=='survival')return;
+  const dayEl=document.getElementById('hudDay'),coordEl=document.getElementById('hudCoords');
+  let tx=Math.floor(player.x/TILE_SIZE),ty=Math.floor(player.y/TILE_SIZE);
+  const hostiles=entities.filter(e=>ALL_HOSTILE.has(e.type));
+  let statStr=`📍 X:${tx} Y:${ty} | 😈${hostiles.length}${playerInWater?' 🌊':''}${playerInLava?' 🔥 BURNING!':''}${player.vy>10?' 🪂':''}`;
+  if(dayEl)dayEl.innerHTML=inNether?`🔥 THE NETHER | 😈 ${hostiles.length} mobs`:isNight()?`🌙 Night | 😈 ${hostiles.length} mobs`:`☀️ Day ${Math.round((1-dayTimer/DAY_TICKS)*100)}%`;
+  if(coordEl)coordEl.innerHTML=statStr;
+}
+function initHotbar(){document.getElementById('hotbar').style.display='flex';}
+
+// ===== INPUT =====
+window.addEventListener("keydown",(e)=>{
+  if(document.activeElement===document.getElementById('craftSearch'))return;
+  keys[e.key]=true;
+  const bd=[
+    {key:"1",b:"dirt"},{key:"2",b:"grass"},{key:"3",b:"stone"},{key:"4",b:"coal_ore"},
+    {key:"5",b:"iron_ore"},{key:"6",b:"wood"},{key:"7",b:"crafting_table"},{key:"8",b:"anvil_block"},
+    {key:"9",b:"lava"},{key:"0",b:"water"},{key:"-",b:"bucket"},{key:"=",b:"bucket_water"},{key:"\\",b:"bucket_lava"}
+  ];
+  for(let b of bd)if(e.key===b.key){selectedBlock=b.b;e.preventDefault();}
+  if(e.key==="c"||e.key==="C"){toggleCrafting();e.preventDefault();}
+  if(e.key==="i"||e.key==="I"){toggleInventory();e.preventDefault();}
+  if(e.key==="x"||e.key==="X"){toggleEnchant();e.preventDefault();}
+  if(e.key==="n"||e.key==="N"){if(inNether)exitNether();else if(gameMode==='survival'){if(inventory.obsidian>=10){inventory.obsidian-=10;let px2=Math.floor(player.x/TILE_SIZE),py2=Math.floor(player.y/TILE_SIZE);buildNetherPortal(px2,py2);}else showNotif("🟣 Need 10 Obsidian to build Nether Portal!",'#AA44FF');}e.preventDefault();}
+  if(e.key==="e"&&gameMode==='survival'&&inventory.food>0&&survivalStats.hunger<10){inventory.food--;survivalStats.hunger=Math.min(10,survivalStats.hunger+3);updateInventoryUI();particles.push(new FloatingText(player.x,player.y-10,"🍗 +3","#88ff88"));e.preventDefault();}
+  if(e.key==="q"&&gameMode==='survival'&&inventory.health_potion>0&&survivalStats.health<survivalStats.maxHealth){inventory.health_potion--;survivalStats.health=Math.min(survivalStats.maxHealth,survivalStats.health+5);updateInventoryUI();particles.push(new FloatingText(player.x,player.y-10,"💊 +5❤️","#ff88ff"));e.preventDefault();}
+  // G = Golden Apple: +2 absorption hearts for 30 seconds
+  if(e.key==="g"&&gameMode==='survival'&&inventory.golden_apple>0){
+    inventory.golden_apple--;
+    const absorption=2;
+    survivalStats.maxHealth=Math.min(14,survivalStats.maxHealth+absorption);
+    survivalStats.health=Math.min(survivalStats.maxHealth,survivalStats.health+4);
+    updateInventoryUI();
+    particles.push(new FloatingText(player.x,player.y-20,"🍎🥇 +2♥ Absorption!","#FFD700"));
+    for(let i=0;i<12;i++)particles.push(new Particle(player.x+Math.random()*60-30,player.y+Math.random()*60-30,"#FFD700"));
+    showNotif("🍎🥇 Golden Apple! +2 bonus hearts! (30s)",'#FFD700');
+    setTimeout(()=>{survivalStats.maxHealth=Math.max(10,survivalStats.maxHealth-absorption);survivalStats.health=Math.min(survivalStats.health,survivalStats.maxHealth);updateInventoryUI();showNotif("⌛ Golden Apple effect faded",'#AAAAAA');},30000);
+    e.preventDefault();
+  }
+  // H = Enchanted Golden Apple: full heal + +4 absorption hearts for 2 minutes
+  if(e.key==="h"&&gameMode==='survival'&&inventory.enchanted_golden_apple>0){
+    inventory.enchanted_golden_apple--;
+    const absorption=4;
+    survivalStats.maxHealth=Math.min(18,survivalStats.maxHealth+absorption);
+    survivalStats.health=survivalStats.maxHealth;
+    updateInventoryUI();
+    particles.push(new FloatingText(player.x,player.y-30,"✨🍎 FULL HEAL + +4♥!","#FFD700"));
+    for(let i=0;i<25;i++)particles.push(new Particle(player.x+Math.random()*80-40,player.y+Math.random()*60-30,Math.random()<0.5?"#FFD700":"#FFFFFF"));
+    showNotif("✨🍎 Enchanted Golden Apple! FULL HEAL + 4 extra hearts! (2min)",'#FFD700');
+    setTimeout(()=>{survivalStats.maxHealth=Math.max(10,survivalStats.maxHealth-absorption);survivalStats.health=Math.min(survivalStats.health,survivalStats.maxHealth);updateInventoryUI();showNotif("⌛ Enchanted Golden Apple effect faded",'#AAAAAA');},120000);
+    e.preventDefault();
+  }
+  if(e.key==="f"&&gameMode==='survival'&&inventory.fire_resistance>0){inventory.fire_resistance--;showNotif("🔥 Fire Resistance active!",'#FF8800');particles.push(new FloatingText(player.x,player.y-20,"🔥 Protected!","#FF8800"));e.preventDefault();}
+  if(e.key==="r"&&gameMode==='survival'&&!survivalStats.alive)respawn();
+  if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key))e.preventDefault();
+});
+window.addEventListener("keyup",(e)=>{keys[e.key]=false;});
+canvas.addEventListener("click",mineBlock);
+canvas.addEventListener("contextmenu",(e)=>{e.preventDefault();placeBlock(e);});
+
+// ===== GAME LOOP =====
+let lastDayPhase=false;
+function gameLoop(){
+  dayTimer=(dayTimer+1)%FULL_CYCLE;
+  let wasNight=lastDayPhase;lastDayPhase=isNight();
+  if(wasNight&&!isNight()&&!inNether)clearNightMobs();
+  cameraX=player.x+player.w/2-canvas.width/2;cameraY=player.y+player.h/2-canvas.height/2;
+  if(!inNether){
+    cameraY=Math.max(WORLD_MIN_Y*TILE_SIZE,Math.min(WORLD_MAX_Y*TILE_SIZE-canvas.height,cameraY));
+    if(cameraX<0)cameraX=0;
+    let pcx=Math.floor(player.x/TILE_SIZE/16),pcy=Math.floor(player.y/TILE_SIZE/16);
+    for(let dx=-3;dx<=3;dx++)for(let dy=-3;dy<=3;dy++){let key=getChunkKey(pcx+dx,pcy+dy);if(!worldChunks.has(key))generateChunk(pcx+dx,pcy+dy);}
+  } else {
+    let pcx=Math.floor(player.x/TILE_SIZE/16),pcy=Math.floor(player.y/TILE_SIZE/16);
+    for(let dx=-2;dx<=2;dx++)for(let dy=-2;dy<=2;dy++){let key=getChunkKey(pcx+dx,pcy+dy);if(!netherWorldChunks.has(key))generateNetherChunk(pcx+dx,pcy+dy);}
+  }
+  updateMovement();
+  if(gameMode==='survival'){spawnMobs();}
+  for(let i=entities.length-1;i>=0;i--){if(entities[i]){entities[i].update();if(entities[i]&&entities[i].y>WORLD_MAX_Y*TILE_SIZE)entities.splice(i,1);}}
+  for(let i=particles.length-1;i>=0;i--)if(!particles[i].update())particles.splice(i,1);
+  drawBackground();drawWorld();
+  for(let ent of entities)ent.draw();
+  drawPlayer();
+  for(let p of particles)p.draw();
+  drawHotbar();updateHUD();updateInventoryUI();
+  requestAnimationFrame(gameLoop);
+}
+
+function initGame(mode){
+  gameMode=mode;worldChunks.clear();structureSeeds.clear();netherWorldChunks.clear();netherStructureSeeds.clear();dayTimer=0;lastDayPhase=false;entities=[];particles=[];
+  enchantments={};deathDropPos=null;deathDropItems=null;if(graveNotifEl){graveNotifEl.remove();graveNotifEl=null;}
+  inNether=false;playerInLava=false;playerInWater=false;lavaAnimTimer=0;lavaDmgTimer=0;
+  if(lavaOverlayEl){lavaOverlayEl.remove();lavaOverlayEl=null;}
+  if(waterOverlayEl){waterOverlayEl.remove();waterOverlayEl=null;}
+  if(netherOverlayEl){netherOverlayEl.remove();netherOverlayEl=null;}
+  let surfY=getSurfaceHeight(8);player.x=8*TILE_SIZE;player.y=(surfY-3)*TILE_SIZE;
+  player.vx=player.vy=0;player.onGround=false;player.invincibleTimer=0;player.lastFallVY=0;cameraX=0;cameraY=0;
+  for(let i=-3;i<=5;i++)for(let j=-2;j<=4;j++)generateChunk(i,j);
+  if(mode==='survival'){
+    survivalStats={health:10,maxHealth:10,hunger:10,maxHunger:10,alive:true};
+    for(let k in inventory)inventory[k]=0;
+    inventory.food=5;inventory.wood=3;inventory.planks=4;inventory.stick=4;inventory.coal=2;
+    inventory.enchant_book=1;inventory.anvil_block=1;inventory.bucket=1;
+    setTimeout(()=>{
+      let s=getSurfaceHeight(12);
+      entities.push(new Mob(12*TILE_SIZE,(s-2)*TILE_SIZE,'villager'));
+      entities.push(new Mob(14*TILE_SIZE,(s-4)*TILE_SIZE,'iron_golem'));
+      for(let i=0;i<5;i++){let type=DAY_PASSIVE[Math.floor(Math.random()*DAY_PASSIVE.length)];let sx2=player.x+(Math.random()*300-150);let sy2=getSurfaceHeight(Math.floor(sx2/TILE_SIZE));entities.push(new Mob(sx2,(sy2-2)*TILE_SIZE,type));}
+    },500);
+    craftingOpen=false;inventoryOpen=false;enchantOpen=false;
+    document.getElementById('craftingPanel').style.display='none';
+    document.getElementById('inventoryPanel').style.display='none';
+    document.getElementById('enchantPanel').style.display='none';
+  } else {document.getElementById('hud').style.display='none';}
+  updateInventoryUI();gameLoop();
+  setTimeout(()=>showNotif(mode==='survival'?"🍏 Mine leaves for Apples! G=Golden Apple (+2♥) H=Ench.Apple (full heal!) N=Nether":"✨ Creative! WASD to fly!"),300);
+}
+})();
+</script>
+</body>
+</html>
