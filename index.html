@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Chronicles of Middle-earth | Cinematic Edition</title>
+    <title>The Chronicles of Middle-earth | Premium Edition</title>
     <style>
         /* Base Styling & Textured Backgrounds */
         * {
@@ -14,105 +14,75 @@
         }
 
         body {
+            /* Tiered ambient texture: Subtle noise pattern layered over deep charcoal radial gradients */
             background: 
                 radial-gradient(circle at 50% 20%, rgba(40, 34, 21, 0.3) 0%, rgba(13, 13, 13, 1) 70%),
                 linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
                 url('https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&w=1920&q=80') repeat;
             color: #f5f2eb;
             line-height: 1.8;
-            overflow-x: hidden;
         }
 
-        /* Cinematic Intro Splash Screen */
-        #intro-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #080808;
-            background-image: 
-                radial-gradient(circle at center, rgba(30, 25, 15, 0.6) 0%, #050505 80%),
-                url('https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=1920&q=80');
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 1.5s ease, visibility 1.5s ease;
-        }
-
-        #intro-overlay.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .intro-glow-text {
-            color: #d4af37;
-            font-size: 1.8rem;
-            font-style: italic;
-            text-align: center;
-            max-width: 80%;
-            letter-spacing: 2px;
-            opacity: 0;
-            transform: scale(0.95);
-            animation: ringGlow 4s forwards ease-in-out;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.7), 0 0 40px rgba(212, 175, 55, 0.4);
-        }
-
-        .intro-subtitle {
-            margin-top: 20px;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 6px;
-            color: #8c8573;
-            opacity: 0;
-            animation: fadeInSubtitle 2s forwards 1.5s ease;
-        }
-
-        @keyframes ringGlow {
-            0% { opacity: 0; transform: scale(0.95); filter: blur(5px); }
-            35% { opacity: 1; transform: scale(1); filter: blur(0); }
-            75% { opacity: 1; transform: scale(1.02); filter: blur(0); text-shadow: 0 0 30px rgba(212, 175, 55, 0.9); }
-            100% { opacity: 0; transform: scale(1.05); filter: blur(8px); }
-        }
-
-        @keyframes fadeInSubtitle {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        /* Hero Header with Layered Depth */
+        /* Enhanced Cinematic Intro Header */
         header {
             background: 
-                linear-gradient(rgba(0, 0, 0, 0.4), rgba(13, 13, 13, 1)), 
+                radial-gradient(circle at 50% 50%, rgba(20, 17, 10, 0.4) 0%, rgba(5, 5, 5, 0.95) 90%),
                 url('https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
-            height: 60vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            color: #d4af37;
-            padding: 20px;
-            border-bottom: 2px solid;
-            border-image: linear-gradient(to right, transparent, #d4af37, transparent) 1;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 -50px 100px rgba(13, 13, 13, 1);
         }
 
+        /* Subtle overlay texture on header */
+        header::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: url('https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&w=500&q=80') repeat; 
+            opacity: 0.04; pointer-events: none;
+        }
+        
+        header p.sub-tag {
+            font-size: 1.1rem; text-transform: uppercase; letter-spacing: 6px; color: #a39f92; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+        
         header h1 {
-            font-size: 3.8rem;
-            margin-bottom: 15px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4), 3px 3px 6px rgba(0,0,0,0.9);
+            font-size: 5rem; 
+            line-height: 1.1;
+            font-weight: 700; 
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            background: linear-gradient(to bottom, #fff 30%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.35)) drop-shadow(4px 4px 10px rgba(0,0,0,0.9));
+            margin-bottom: 30px;
         }
 
-        header p {
-            font-size: 1.3rem;
-            color: #c5bfae;
-            max-width: 650px;
-            font-style: italic;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        header h1 span {
+            font-size: 3.8rem; letter-spacing: 12px; display: block; margin-top: 10px;
+        }
+        
+        header .divider {
+            width: 80px; height: 1px; background: linear-gradient(to right, transparent, #d4af37, transparent); margin-bottom: 30px;
+        }
+        
+        header p.quote {
+            font-size: 1.4rem; color: #e3dec9; max-width: 750px; font-style: italic; line-height: 1.8; text-shadow: 2px 2px 8px rgba(0,0,0,0.9);
+        }
+
+        header .scroll-indicator {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); color: #d4af37; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; opacity: 0.7;
+        }
+
+        header .scroll-line {
+            width: 1px; height: 40px; background: linear-gradient(#d4af37, transparent); margin: 10px auto 0 auto;
         }
 
         /* Main Content Layout */
@@ -122,11 +92,11 @@
             padding: 40px 20px;
         }
 
-        /* Long Rich Text Sections - Aged Parchment Scrolls */
+        /* Long Rich Text Sections - Styled like Aged Parchment Scrolls */
         .intro-section, .lore-section {
             background: 
                 linear-gradient(rgba(24, 23, 20, 0.95), rgba(18, 17, 14, 0.98)),
-                url('https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=600&q=80');
+                url('https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=600&q=80'); /* Stone/Paper grain texture */
             padding: 50px;
             border-radius: 4px;
             border: 1px solid rgba(212, 175, 55, 0.3);
@@ -134,6 +104,10 @@
                 inset 0 0 30px rgba(0, 0, 0, 0.8),
                 0 10px 25px rgba(0,0,0,0.6);
             margin-bottom: 60px;
+        }
+
+        .intro-section {
+            margin-top: -40px; position: relative; z-index: 10;
         }
 
         h2 {
@@ -191,6 +165,7 @@
             position: relative;
         }
 
+        /* Vignette overlay on images for vintage texture blending */
         .book-img::after {
             content: '';
             position: absolute;
@@ -263,7 +238,7 @@
             width: 100%;
             height: 100%;
             background: rgba(5, 5, 5, 0.92);
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px); /* Modern frosted look behind popup */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -342,6 +317,7 @@
                 flex-direction: column;
             }
             header h1 { font-size: 2.6rem; }
+            header h1 span { font-size: 2rem; }
             .book-img { max-height: 300px; }
             .book-text, .intro-section { padding: 30px 20px; }
         }
@@ -349,36 +325,36 @@
 </head>
 <body>
 
-    <!-- Cinematic Intro Overlay Screen -->
-    <div id="intro-overlay">
-        <div class="intro-glow-text">
-            "One Ring to rule them all, One Ring to find them..."
-        </div>
-        <div class="intro-subtitle">Entering Middle-earth</div>
-    </div>
-
     <header>
-        <h1>The Lord of the Rings</h1>
-        <p>"The localized history of the War of the Ring, told through the timeless prose of J.R.R. Tolkien."</p>
+        <p class="sub-tag">J.R.R. Tolkien's Immortal Epic</p>
+        <h1>THE LORD<br><span>OF THE RINGS</span></h1>
+        <div class="divider"></div>
+        <p class="quote">
+            "The world is changed. I feel it in the water. I feel it in the earth. I smell it in the air. Much that once was is lost, for none now live who remember it."
+        </p>
+        <div class="scroll-indicator">
+            Scroll to Begin
+            <div class="scroll-line"></div>
+        </div>
     </header>
 
     <div class="container">
         
-        <!-- Long Form Introduction -->
         <section class="intro-section">
-            <h2>The Literary Legacy of Middle-earth</h2>
+            <h2>Prologue: The Shadow of the Past</h2>
             <p>
-                Originally written as a single sequel to the 1937 children's fantasy novel <em>The Hobbit</em>, J.R.R. Tolkien’s high-fantasy epic <strong>The Lord of the Rings</strong> quickly developed into an unprecedentedly complex literary achievement. Written in stages between 1937 and 1949, the narrative spans thousands of pages, heavily underpinned by Tolkien's extensive background in philology, mythology, and theology. 
+                It began with the forging of the Great Rings. Three were given to the Elves, immortal, wisest and fairest of all beings. Seven to the Dwarf-lords, great craftsmen and miners of the mountain halls. And nine, nine rings were gifted to the race of Men, who above all else desire power. Within these rings was bound the strength and the will to govern each race. 
             </p>
             <p>
-                Unlike standard modern fantasy, the world of Arda features fully realized constructed languages (such as Quenya and Sindarin), deep-seated geological and genealogical records, and an intricate moral philosophy exploring the corruption of power, industrialization, and the value of ordinary, simple mercy over martial might. It remains one of the best-selling book series of all time, fundamentally altering the trajectory of modern speculative fiction.
+                But they were all of them deceived, for another ring was made. Deep in the land of Mordor, in the fires of Mount Doom, the Dark Lord Sauron forged a Master Ring, and into this Ring he poured his cruelty, his malice, and his will to dominate all life. <strong>One Ring to rule them all.</strong>
+            </p>
+            <p>
+                J.R.R. Tolkien’s sweeping masterpiece is not merely a story of mythic warfare; it is a profound exploration of ordinary resilience against systematic corruption. Through meticulously layered philology, fully structural Elven tongues, and historical depth that rivals real-world antiquity, the text stands as the foundational pillar of modern epic fantasy—an unforgettable chronicle of fellowship fractured, yet unbroken.
             </p>
         </section>
 
-        <!-- Deep-Dive Trilogy Sections -->
         <section class="trilogy-grid">
             
-            <!-- Book 1 -->
             <div class="book-row">
                 <div class="book-img">
                     <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=700&q=80" alt="Mysterious deep green forest trail">
@@ -394,7 +370,6 @@
                 </div>
             </div>
 
-            <!-- Book 2 -->
             <div class="book-row">
                 <div class="book-img">
                     <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=700&q=80" alt="Dark stormy skies over jagged mountains">
@@ -410,7 +385,6 @@
                 </div>
             </div>
 
-            <!-- Book 3 -->
             <div class="book-row">
                 <div class="book-img">
                     <img src="https://images.unsplash.com/photo-1506466010722-395df2bf8775?auto=format&fit=crop&w=700&q=80" alt="Ancient majestic stone architecture gothic cathedral interior">
@@ -428,7 +402,6 @@
 
         </section>
 
-        <!-- Dynamic Lore Section -->
         <section class="lore-section">
             <h2>The Core Themes: Power & Fellowship</h2>
             <p>
@@ -436,7 +409,6 @@
             </p>
         </section>
 
-        <!-- CTA Trigger Component -->
         <section class="cta-area">
             <h2>Uncover the Elven Language</h2>
             <p>Click below to open the ancient translation archives and uncover hidden text concerning the lore of the rings.</p>
@@ -445,7 +417,6 @@
 
     </div>
 
-    <!-- Floating Pop-up Window Structure -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <button class="close-btn" id="closeModal">&times;</button>
@@ -471,29 +442,22 @@
         <p>A Static Web Project Tribute to J.R.R. Tolkien. Textures and imagery loaded via Unsplash.</p>
     </footer>
 
-    <!-- JavaScript Module -->
     <script>
-        // Intro Splash Screen Timer Handler
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const introOverlay = document.getElementById('intro-overlay');
-                introOverlay.classList.add('fade-out');
-            }, 3800); // Fades out right as the text animation ends
-        });
-
-        // Modal Functionality
         const openBtn = document.getElementById('openModal');
         const closeBtn = document.getElementById('closeModal');
         const modalOverlay = document.getElementById('modalOverlay');
 
+        // Open floating pop-up window
         openBtn.addEventListener('click', () => {
             modalOverlay.classList.add('active');
         });
 
+        // Close window via 'X' button
         closeBtn.addEventListener('click', () => {
             modalOverlay.classList.remove('active');
         });
 
+        // Close window by clicking on the dark background mask
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) {
                 modalOverlay.classList.remove('active');
