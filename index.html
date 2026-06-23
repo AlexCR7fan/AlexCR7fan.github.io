@@ -3,108 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Realm of Middle-earth</title>
+    <title>The Chronicles of Middle-earth | Tolkien's Masterpiece</title>
     <style>
-        /* Base Styling */
+        /* Base Styling & Theme */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Georgia', serif;
         }
 
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            line-height: 1.6;
+            background-color: #0d0d0d;
+            color: #f0ebd8;
+            line-height: 1.8;
         }
 
+        /* Hero Header */
         header {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
-            height: 40vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(13, 13, 13, 1)), 
+                        url('https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            height: 55vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            color: #ffb703;
-            border-bottom: 3px solid #ffb703;
+            color: #d4af37;
+            padding: 20px;
+            border-bottom: 2px solid #d4af37;
         }
 
         header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
         }
 
-        /* Main Content */
+        header p {
+            font-size: 1.2rem;
+            color: #a39f92;
+            max-width: 600px;
+            font-style: italic;
+        }
+
+        /* Main Content Layout */
         .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
 
-        .intro {
-            text-align: center;
-            margin-bottom: 40px;
+        /* Long Rich Text Sections */
+        .intro-section, .lore-section {
+            background-color: #171717;
+            padding: 40px;
+            border-radius: 8px;
+            border-left: 5px solid #d4af37;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        /* Image Gallery Grid */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+        h2 {
+            color: #d4af37;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
         }
 
-        .card {
-            background-color: #1e1e1e;
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #e0d9c5;
+            text-align: justify;
+        }
+
+        /* Image and Content Grid */
+        .trilogy-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .book-row {
+            display: flex;
+            background-color: #171717;
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #333;
-            transition: transform 0.3s ease;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
+        .book-row:nth-child(even) {
+            flex-direction: row-reverse;
         }
 
-        .card img {
+        .book-img {
+            flex: 1;
+            min-width: 40%;
+            max-height: 450px;
+        }
+
+        .book-img img {
             width: 100%;
-            height: 200px;
+            height: 100%;
             object-fit: cover;
         }
 
-        .card-content {
-            padding: 20px;
+        .book-text {
+            flex: 1.5;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .card-content h3 {
-            color: #ffb703;
-            margin-bottom: 10px;
+        .book-text h3 {
+            color: #d4af37;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
         }
 
-        /* CTA Button */
-        .btn-container {
+        /* Interactive Call-To-Action Layout */
+        .cta-area {
             text-align: center;
-            margin-top: 20px;
+            background: linear-gradient(rgba(23, 23, 23, 0.9), rgba(23, 23, 23, 0.9)),
+                        url('https://images.unsplash.com/photo-1519074069444-1ba4fffb6548?auto=format&fit=crop&w=1200&q=80') center center/cover;
+            padding: 60px 20px;
+            border-radius: 8px;
+            border: 1px solid #d4af37;
         }
 
         .open-btn {
-            background-color: #ffb703;
-            color: #121212;
+            background-color: #d4af37;
+            color: #0d0d0d;
             border: none;
-            padding: 12px 24px;
-            font-size: 1rem;
+            padding: 15px 35px;
+            font-size: 1.1rem;
             font-weight: bold;
-            border-radius: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            margin-top: 15px;
         }
 
         .open-btn:hover {
-            background-color: #fb8500;
+            background-color: #f4ebd0;
+            transform: translateY(-2px);
         }
 
         /* Floating Pop-up Window (Modal) */
@@ -114,66 +165,79 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
             z-index: 1000;
         }
 
-        /* Active state for modal */
         .modal-overlay.active {
             opacity: 1;
             pointer-events: auto;
         }
 
         .modal-box {
-            background-color: #1e1e1e;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 500px;
+            background-color: #1c1a17;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 600px;
             width: 90%;
-            border: 2px solid #ffb703;
+            border: 2px solid #d4af37;
             text-align: center;
             position: relative;
-            transform: scale(0.7);
-            transition: transform 0.3s ease;
+            transform: translateY(-50px);
+            transition: transform 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
         }
 
         .modal-overlay.active .modal-box {
-            transform: scale(1);
+            transform: translateY(0);
         }
 
         .modal-box h2 {
-            color: #ffb703;
-            margin-bottom: 15px;
+            color: #d4af37;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border: none;
         }
 
         .close-btn {
             position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 1.8rem;
-            color: #aaa;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #a39f92;
             cursor: pointer;
             background: none;
             border: none;
+            transition: color 0.2s;
         }
 
         .close-btn:hover {
-            color: #fff;
+            color: #d4af37;
         }
 
+        /* Footer */
         footer {
             text-align: center;
-            padding: 20px;
-            background-color: #0a0a0a;
-            color: #777;
+            padding: 30px;
+            background-color: #050505;
+            color: #666;
             font-size: 0.9rem;
-            margin-top: 40px;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .book-row, .book-row:nth-child(even) {
+                flex-direction: column;
+            }
+            header h1 { font-size: 2.3rem; }
+            .book-img { max-height: 250px; }
         }
     </style>
 </head>
@@ -181,81 +245,126 @@
 
     <header>
         <h1>The Lord of the Rings</h1>
-        <p>A legendary journey through J.R.R. Tolkien's epic masterpiece</p>
+        <p>"The localized history of the War of the Ring, told through the timeless prose of J.R.R. Tolkien."</p>
     </header>
 
     <div class="container">
-        <section class="intro">
-            <h2>Explore the Trilogy</h2>
-            <p>Dive back into the timeless struggle between good and evil in Middle-earth.</p>
+        
+        <section class="intro-section">
+            <h2>The Literary Legacy of Middle-earth</h2>
+            <p>
+                Originally written as a single sequel to the 1937 children's fantasy novel <em>The Hobbit</em>, J.R.R. Tolkien’s high-fantasy epic <strong>The Lord of the Rings</strong> quickly developed into an unprecedentedly complex literary achievement. Written in stages between 1937 and 1949, the narrative spans thousands of pages, heavily underpinned by Tolkien's extensive background in philology, mythology, and theology. 
+            </p>
+            <p>
+                Unlike standard modern fantasy, the world of Arda features fully realized constructed languages (such as Quenya and Sindarin), deep-seated geological and genealogical records, and an intricate moral philosophy exploring the corruption of power, industrialization, and the value of ordinary, simple mercy over martial might. It remains one of the best-selling book series of all time, fundamentally altering the trajectory of modern speculative fiction.
+            </p>
         </section>
 
-        <!-- Image Gallery -->
-        <section class="gallery">
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=500&q=80" alt="The Fellowship of the Ring">
-                <div class="card-content">
+        <section class="trilogy-grid">
+            
+            <div class="book-row">
+                <div class="book-img">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=700&q=80" alt="Mysterious forest path representing Shire/Rivendell">
+                </div>
+                <div class="book-text">
                     <h3>I. The Fellowship of the Ring</h3>
-                    <p>The journey begins as a young Hobbit is burdened with an ancient, perilous ring.</p>
+                    <p>
+                        The journey begins in the pastoral serenity of the Shire, where the unsuspecting Hobbit Frodo Baggins inherits a seemingly innocuous trinket from his eccentric uncle, Bilbo. Beneath its golden facade lies the ultimate tool of malice: the One Ring, forged by Sauron the Dark Lord to conquer all of Middle-earth. 
+                    </p>
+                    <p>
+                        As dark shadows encroach upon his peaceful home, Frodo must abandon safety. Guided by the wizard Gandalf, a diverse coalition of Elves, Dwarves, Men, and Hobbits forms at Rivendell. Bound by oath, this disparate Fellowship sets off on an impossible trek toward the dark heart of Mordor to destroy the ring in the fires of Mount Doom.
+                    </p>
                 </div>
             </div>
 
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1519074069444-1ba4fffb6548?auto=format&fit=crop&w=500&q=80" alt="The Two Towers">
-                <div class="card-content">
+            <div class="book-row">
+                <div class="book-img">
+                    <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=700&q=80" alt="Dark mountains representing the landscape of Mordor">
+                </div>
+                <div class="book-text">
                     <h3>II. The Two Towers</h3>
-                    <p>The Fellowship is broken, but hope remains as alliances form across Rohan and Gondor.</p>
+                    <p>
+                        Following the tragic fracture of the Fellowship at Amon Hen, the narrative splits into distinct, parallel paths. Frodo and his fiercely loyal companion Samwise Gamgee journey alone through desolate, rock-strewn wastes, stalked by the wretched creature Gollum, whose mind is completely warped by his centuries-old addiction to the Ring.
+                    </p>
+                    <p>
+                        Simultaneously, the remaining heroes—Aragorn, Legolas, and Gimli—traverse the kingdom of Rohan to confront the rising betrayal of the corrupted wizard Saruman. This volume explores the immense psychological weights of isolation, the toll of war, and the emerging resilience of mortal realms against absolute destruction.
+                    </p>
                 </div>
             </div>
 
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1506466010722-395df2bf8775?auto=format&fit=crop&w=500&q=80" alt="The Return of the King">
-                <div class="card-content">
+            <div class="book-row">
+                <div class="book-img">
+                    <img src="https://images.unsplash.com/photo-1506466010722-395df2bf8775?auto=format&fit=crop&w=700&q=80" alt="A grand ancient stone structure symbolizing Minas Tirith">
+                </div>
+                <div class="book-text">
                     <h3>III. The Return of the King</h3>
-                    <p>The final battle for Middle-earth approaches as Frodo reaches the fires of Mount Doom.</p>
+                    <p>
+                        The grand finale pushes Middle-earth to the absolute brink of ruin. While massive armies collide in the bloodied fields outside Minas Tirith, the true, desperate gamble relies entirely upon two exhausted Hobbits creeping across a volcanic wasteland. 
+                    </p>
+                    <p>
+                        Tolkien masterfully weaves themes of profound grief, triumph, and the inevitability of change. Even as kings reclaim ancient thrones and evil is finally banished, the story reflects a bittersweet reality: great victories always require deeply personal sacrifices, and the world can never fully return to the innocence it once possessed.
+                    </p>
                 </div>
             </div>
+
         </section>
 
-        <!-- Interactive Trigger -->
-        <div class="btn-container">
-            <button class="open-btn" id="openModal">Reveal the One Ring Lore</button>
-        </div>
+        <section class="lore-section">
+            <h2>The Core Themes: Power & Fellowship</h2>
+            <p>
+                At its core, the text is a study of how absolute power corrupts, symbolized by the crushing psychological weight the Ring exerts on anyone who comes near it. It is not the grand warriors or the powerful wizards who are ultimately chosen to carry this burden, but rather the small, overlooked Hobbits—celebrated for their resilience, simple pleasures, and complete lack of ambition for absolute dominance.
+            </p>
+        </section>
+
+        <section class="cta-area">
+            <h2>Uncover the Elven Language</h2>
+            <p>Click below to open the ancient translation archives and uncover hidden text concerning the lore of the rings.</p>
+            <button class="open-btn" id="openModal">Translate Ancient Lore</button>
+        </section>
+
     </div>
 
-    <!-- Floating Pop-up Window (Modal Element) -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <button class="close-btn" id="closeModal">&times;</button>
-            <h2>The Secret Lore</h2>
-            <p style="font-style: italic; margin-bottom: 15px; color: #ffb703;">
-                "One Ring to rule them all, One Ring to find them, One Ring to bring them all, and in the darkness bind them."
+            <h2>The Inscription of the One Ring</h2>
+            
+            <p style="font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.3rem; color: #d4af37; margin: 25px 0; border: 1px dashed #d4af37; padding: 15px;">
+                "Ash nazg durbatulûk, ash nazg gimbatul, ash nazg thrakatulûk agh burzum-ishi krimpatul."
             </p>
-            <p>Forged by the Dark Lord Sauron in the fires of Mount Doom, the One Ring holds the power to dominate all of Middle-earth. Only a simple Hobbit stands between its malice and total destruction.</p>
+            
+            <p style="font-size: 1.05rem; text-align: left; color: #c4bda7;">
+                Translated from the Black Speech of Mordor into the Common Tongue, the text reads:
+            </p>
+            <p style="font-weight: bold; color: #fff; font-style: italic;">
+                "One Ring to rule them all, One Ring to find them, <br>One Ring to bring them all, and in the darkness bind them."
+            </p>
+            <p style="font-size: 0.95rem; color: #888; margin-top: 15px;">
+                This phrase was chanted by Sauron during its forging, instantly alerting the Elven ring-bearers across Middle-earth of his betrayal.
+            </p>
         </div>
     </div>
 
     <footer>
-        <p>Created for fans of Middle-earth. Images via Unsplash.</p>
+        <p>A Static Web Project Tribute to J.R.R. Tolkien. Images dynamically pulled from Unsplash.</p>
     </footer>
 
-    <!-- JavaScript for Pop-up Functionality -->
     <script>
         const openBtn = document.getElementById('openModal');
         const closeBtn = document.getElementById('closeModal');
         const modalOverlay = document.getElementById('modalOverlay');
 
-        // Open Pop-up
+        // Open floating pop-up window
         openBtn.addEventListener('click', () => {
             modalOverlay.classList.add('active');
         });
 
-        // Close Pop-up via close button
+        // Close window via 'X' button
         closeBtn.addEventListener('click', () => {
             modalOverlay.classList.remove('active');
         });
 
-        // Close Pop-up by clicking outside the box
+        // Close window by clicking on the dark background mask
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) {
                 modalOverlay.classList.remove('active');
