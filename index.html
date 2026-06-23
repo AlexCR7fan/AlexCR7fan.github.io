@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Chronicles of Middle-earth | Premium Edition</title>
+    <title>The Chronicles of Middle-earth | Ultimate Interactive Edition</title>
     <style>
         /* Base Styling & Textured Backgrounds */
         * {
@@ -20,6 +20,32 @@
                 url('https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&w=1920&q=80') repeat;
             color: #f5f2eb;
             line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Click Glow Classes via JS */
+        .interactive-glow {
+            transition: filter 0.3s, box-shadow 0.4s ease, text-shadow 0.4s ease, border-color 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .gold-pulse {
+            animation: goldFlash 0.8s ease-out;
+        }
+        .fiery-pulse {
+            animation: fieryFlash 0.8s ease-out;
+        }
+
+        @keyframes goldFlash {
+            0% { box-shadow: 0 0 0px rgba(214, 175, 85, 0); border-color: rgba(214, 175, 85, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(214, 175, 85, 0.8); border-color: rgba(214, 175, 85, 1); }
+            100% { box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+        }
+
+        @keyframes fieryFlash {
+            0% { text-shadow: 0 0 0px rgba(230, 92, 0, 0); color: #fff; }
+            50% { text-shadow: 0 0 25px rgba(230, 92, 0, 1), 0 0 10px rgba(255, 215, 0, 0.8); color: #ffe6cc; }
+            100% { text-shadow: 0 2px 4px rgba(0,0,0,0.5); color: #d4af37; }
         }
 
         /* Enhanced Cinematic Intro Header */
@@ -61,6 +87,7 @@
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.35)) drop-shadow(4px 4px 10px rgba(0,0,0,0.9));
             margin-bottom: 30px;
+            user-select: none;
         }
 
         header h1 span {
@@ -142,7 +169,14 @@
             box-shadow: 
                 inset 0 0 20px rgba(0,0,0,0.6),
                 0 8px 20px rgba(0,0,0,0.5);
-            transition: border-color 0.4s ease;
+            position: relative;
+        }
+
+        .book-row::after {
+            content: '✦ Click card to inspect lore';
+            position: absolute; bottom: 15px; right: 20px;
+            font-size: 0.8rem; color: rgba(212, 175, 55, 0.5);
+            letter-spacing: 1px; font-style: italic; pointer-events: none;
         }
 
         .book-row:hover {
@@ -153,15 +187,16 @@
             flex-direction: row-reverse;
         }
 
-        /* Adjusted image settings for portrait book covers */
         .book-img {
             flex: 1;
             min-width: 35%;
-            background-color: #080808;
+            background: radial-gradient(circle at center, #1f1a10 0%, #080808 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 30px;
+            position: relative;
+            perspective: 1000px;
         }
 
         .book-img img {
@@ -169,9 +204,18 @@
             height: auto;
             max-height: 440px;
             object-fit: contain;
-            border-radius: 4px;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.7);
-            filter: contrast(102%);
+            border-radius: 5px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            filter: contrast(105%) brightness(95%);
+        }
+
+        .book-row:hover .book-img img {
+            transform: scale(1.03) translateY(-5px);
+            filter: contrast(110%) brightness(105%);
+            border-color: rgba(212, 175, 55, 0.8);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9), 0 0 25px rgba(212, 175, 55, 0.3);
         }
 
         .book-text {
@@ -222,21 +266,21 @@
             box-shadow: 0 0 15px rgba(212,175,55,0.6);
         }
 
-        /* Floating Pop-up Window (Modal) */
+        /* Floating Pop-up Overlays (Modals) */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 5, 5, 0.92);
-            backdrop-filter: blur(4px);
+            background: rgba(4, 4, 4, 0.94);
+            backdrop-filter: blur(8px);
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             z-index: 1000;
         }
 
@@ -245,26 +289,31 @@
             pointer-events: auto;
         }
 
+        /* 3D Cinematic Pop-up Window Effect */
         .modal-box {
             background: 
-                linear-gradient(rgba(24, 21, 16, 0.98), rgba(13, 11, 8, 0.99)),
+                linear-gradient(rgba(24, 21, 16, 0.99), rgba(13, 11, 8, 1)),
                 url('https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=600&q=80');
             padding: 50px;
-            border-radius: 4px;
+            border-radius: 6px;
             max-width: 650px;
             width: 90%;
-            border: 2px solid #d4af37;
+            border: 2px solid rgba(212, 175, 55, 0.4);
             text-align: center;
             position: relative;
-            transform: scale(0.85) translateY(30px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.8) translateY(40px) rotateX(-10deg);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 
-                inset 0 0 40px rgba(0,0,0,0.9),
-                0 20px 50px rgba(0,0,0,0.9);
+                inset 0 0 50px rgba(0,0,0,0.95),
+                0 25px 60px rgba(0,0,0,0.95);
         }
 
         .modal-overlay.active .modal-box {
-            transform: scale(1) translateY(0);
+            transform: scale(1) translateY(0) rotateX(0deg);
+            border-color: rgba(212, 175, 55, 1);
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.95), 0 30px 70px rgba(0,0,0,0.95), 0 0 40px rgba(230, 92, 0, 0.25);
         }
 
         .modal-box h2 {
@@ -284,12 +333,13 @@
             cursor: pointer;
             background: none;
             border: none;
-            transition: color 0.2s;
+            transition: color 0.2s, transform 0.2s;
             line-height: 1;
         }
 
         .close-btn:hover {
             color: #d4af37;
+            transform: scale(1.1);
         }
 
         footer {
@@ -298,17 +348,16 @@
             background-color: #050505;
             color: #555147;
             font-size: 0.95rem;
-            border-top: 1px solid rgba(212,175,55,0.1);
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
             letter-spacing: 1px;
         }
 
         @media (max-width: 900px) {
-            .book-row, .book-row:nth-child(even) {
-                flex-direction: column;
-            }
+            .book-row, .book-row:nth-child(even) { flex-direction: column; }
             header h1 { font-size: 2.6rem; }
             header h1 span { font-size: 2rem; }
             .book-img { padding: 30px 20px; }
+            .book-img img { max-height: 320px; }
             .book-text, .intro-section { padding: 30px 20px; }
         }
     </style>
@@ -317,7 +366,7 @@
 
     <header>
         <p class="sub-tag">J.R.R. Tolkien's Immortal Epic</p>
-        <h1>THE LORD<br><span>OF THE RINGS</span></h1>
+        <h1 class="interactive-glow" id="mainHeaderTitle">THE LORD<br><span>OF THE RINGS</span></h1>
         <div class="divider"></div>
         <p class="quote">
             "The world is changed. I feel it in the water. I feel it in the earth. I smell it in the air. Much that once was is lost, for none now live who remember it."
@@ -331,78 +380,167 @@
     <div class="container">
         
         <section class="intro-section">
-            <h2>Prologue: The Shadow of the Past</h2>
+            <h2 class="interactive-glow" id="prologueTitle">Prologue: The Shadow of the Past</h2>
             <p>
                 It began with the forging of the Great Rings. Three were given to the Elves, immortal, wisest and fairest of all beings. Seven to the Dwarf-lords, great craftsmen and miners of the mountain halls. And nine, nine rings were gifted to the race of Men, who above all else desire power. Within these rings was bound the strength and the will to govern each race. 
             </p>
             <p>
                 But they were all of them deceived, for another ring was made. Deep in the land of Mordor, in the fires of Mount Doom, the Dark Lord Sauron forged a Master Ring, and into this Ring he poured his cruelty, his malice, and his will to dominate all life. <strong>One Ring to rule them all.</strong>
             </p>
-            <p>
-                J.R.R. Tolkien’s sweeping masterpiece is not merely a story of mythic warfare; it is a profound exploration of ordinary resilience against systematic corruption. Through meticulously layered philology, fully structural Elven tongues, and historical depth that rivals real-world antiquity, the text stands as the foundational pillar of modern epic fantasy—an unforgettable chronicle of fellowship fractured, yet unbroken.
-            </p>
         </section>
 
         <section class="trilogy-grid">
             
-            <div class="book-row">
+            <div class="book-row interactive-glow" data-book="1">
                 <div class="book-img">
-                    <img src="https://covers.openlibrary.org/b/id/12818512-L.jpg" alt="The Fellowship of the Ring Original Book Cover">
+                    <img src="https://covers.openlibrary.org/b/id/12818512-L.jpg" alt="The Fellowship of the Ring">
                 </div>
                 <div class="book-text">
                     <h3>I. The Fellowship of the Ring</h3>
                     <p>
-                        The journey begins in the pastoral serenity of the Shire, where the unsuspecting Hobbit Frodo Baggins inherits a seemingly innocuous trinket from his eccentric uncle, Bilbo. Beneath its golden facade lies the ultimate tool of malice: the One Ring, forged by Sauron the Dark Lord to conquer all of Middle-earth. 
-                    </p>
-                    <p>
-                        As dark shadows encroach upon his peaceful home, Frodo must abandon safety. Guided by the wizard Gandalf, a diverse coalition of Elves, Dwarves, Men, and Hobbits forms at Rivendell. Bound by oath, this disparate Fellowship sets off on an impossible trek toward the dark heart of Mordor to destroy the ring in the fires of Mount Doom.
+                        The journey begins in the pastoral serenity of the Shire, where the unsuspecting Hobbit Frodo Baggins inherits a seemingly innocuous trinket from his eccentric uncle, Bilbo. Beneath its golden facade lies the ultimate tool of malice: the One Ring.
                     </p>
                 </div>
             </div>
 
-            <div class="book-row">
+            <div class="book-row interactive-glow" data-book="2">
                 <div class="book-img">
-                    <img src="https://covers.openlibrary.org/b/id/13215822-L.jpg" alt="The Two Towers Original Book Cover">
+                    <img src="https://covers.openlibrary.org/b/id/13215822-L.jpg" alt="The Two Towers">
                 </div>
                 <div class="book-text">
                     <h3>II. The Two Towers</h3>
                     <p>
-                        Following the tragic fracture of the Fellowship at Amon Hen, the narrative splits into distinct, parallel paths. Frodo and his fiercely loyal companion Samwise Gamgee journey alone through desolate, rock-strewn wastes, stalked by the wretched creature Gollum, whose mind is completely warped by his centuries-old addiction to the Ring.
-                    </p>
-                    <p>
-                        Simultaneously, the remaining heroes—Aragorn, Legolas, and Gimli—traverse the kingdom of Rohan to confront the rising betrayal of the corrupted wizard Saruman. This volume explores the immense psychological weights of isolation, the toll of war, and the emerging resilience of mortal realms against absolute destruction.
+                        Following the tragic fracture of the Fellowship at Amon Hen, the narrative splits into distinct, parallel paths. Frodo and his companion Samwise journey alone through desolate wastes, stalked by the creature Gollum.
                     </p>
                 </div>
             </div>
 
-            <div class="book-row">
+            <div class="book-row interactive-glow" data-book="3">
                 <div class="book-img">
-                    <img src="https://covers.openlibrary.org/b/id/12651470-L.jpg" alt="The Return of the King Original Book Cover">
+                    <img src="https://covers.openlibrary.org/b/id/12651470-L.jpg" alt="The Return of the King">
                 </div>
                 <div class="book-text">
                     <h3>III. The Return of the King</h3>
                     <p>
-                        The grand finale pushes Middle-earth to the absolute brink of ruin. While massive armies collide in the bloodied fields outside Minas Tirith, the true, desperate gamble relies entirely upon two exhausted Hobbits creeping across a volcanic wasteland. 
-                    </p>
-                    <p>
-                        Tolkien masterfully weaves themes of profound grief, triumph, and the inevitability of change. Even as kings reclaim ancient thrones and evil is finally banished, the story reflects a bittersweet reality: great victories always require deeply personal sacrifices, and the world can never fully return to the innocence it once possessed.
+                        The grand finale pushes Middle-earth to the absolute brink of ruin. While massive armies collide in the bloodied fields outside Minas Tirith, the true gamble relies upon two exhausted Hobbits creeping across Mordor.
                     </p>
                 </div>
             </div>
 
-        </section>
-
-        <section class="lore-section">
-            <h2>The Core Themes: Power & Fellowship</h2>
-            <p>
-                At its core, the text is a study of how absolute power corrupts, symbolized by the crushing psychological weight the Ring exerts on anyone who comes near it. It is not the grand warriors or the powerful wizards who are ultimately chosen to carry this burden, but rather the small, overlooked Hobbits—celebrated for their resilience, simple pleasures, and complete lack of ambition for absolute dominance.
-            </p>
         </section>
 
         <section class="cta-area">
             <h2>Uncover the Elven Language</h2>
             <p>Click below to open the ancient translation archives and uncover hidden text concerning the lore of the rings.</p>
-            <button class="open-btn" id="openModal">Translate Ancient Lore</button>
+            <button class="open-btn" id="openMainModal">Translate Ancient Lore</button>
         </section>
 
     </div>
+
+    <div class="modal-overlay" id="mainModalOverlay">
+        <div class="modal-box">
+            <button class="close-btn" data-close>&times;</button>
+            <h2>The Inscription of the One Ring</h2>
+            <p style="font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.35rem; color: #d4af37; margin: 25px 0; border: 1px dashed rgba(212,175,55,0.4); padding: 20px; background: rgba(0,0,0,0.4); box-shadow: inset 0 0 10px #000;">
+                "Ash nazg durbatulûk, ash nazg gimbatul, ash nazg thrakatulûk agh burzum-ishi krimpatul."
+            </p>
+            <p style="font-weight: bold; color: #fff; font-style: italic; font-size: 1.2rem; line-height: 1.6;">
+                "One Ring to rule them all, One Ring to find them, <br>One Ring to bring them all, and in the darkness bind them."
+            </p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="bookModal1">
+        <div class="modal-box">
+            <button class="close-btn" data-close>&times;</button>
+            <h2>Fellowship Archive Details</h2>
+            <p style="color: #d4af37; font-weight: bold; margin-bottom: 15px;">Setting: Rivendell & The Shire</p>
+            <p>This volume captures the transition from comfortable isolation to severe historical reality. Prominent components include the Council of Elrond, the descent into the deadly mines of Moria, and the tragic fall of Gandalf against the Balrog.</p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="bookModal2">
+        <div class="modal-box">
+            <button class="close-btn" data-close>&times;</button>
+            <h2>The Two Towers Archive Details</h2>
+            <p style="color: #d4af37; font-weight: bold; margin-bottom: 15px;">Setting: Rohan, Isengard, & Dead Marshes</p>
+            <p>Introduces the critical military struggles of Men against industrialized tyranny. Key events feature the monumental clash at Helm's Deep, the awakening march of the Ents, and Frodo's ambush by Shelob the Great Spider.</p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="bookModal3">
+        <div class="modal-box">
+            <button class="close-btn" data-close>&times;</button>
+            <h2>Return of the King Archive Details</h2>
+            <p style="color: #d4af37; font-weight: bold; margin-bottom: 15px;">Setting: Minas Tirith & Mount Doom</p>
+            <p>The ultimate conclusion of the Third Age. Highlights include the cataclysmic Battle of the Pelennor Fields, the paths of the Dead braved by Aragorn, and the bittersweet, somber departure from the Grey Havens.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>A Static Web Project Tribute to J.R.R. Tolkien. Images loaded via OpenLibrary & Unsplash.</p>
+    </footer>
+
+    <script>
+        // --- 1. Click to Glow System ---
+        const mainTitle = document.getElementById('mainHeaderTitle');
+        const prologueTitle = document.getElementById('prologueTitle');
+
+        mainTitle.addEventListener('click', (e) => {
+            mainTitle.classList.add('fiery-pulse');
+            setTimeout(() => mainTitle.classList.remove('fiery-pulse'), 800);
+        });
+
+        prologueTitle.addEventListener('click', (e) => {
+            prologueTitle.classList.add('fiery-pulse');
+            setTimeout(() => prologueTitle.classList.remove('fiery-pulse'), 800);
+        });
+
+
+        // --- 2. Multiple Pop-Up (Modal) Controller ---
+        const mainOpenBtn = document.getElementById('openMainModal');
+        const mainModal = document.getElementById('mainHeaderTitle');
+        
+        // Open Main Ring Lore
+        mainOpenBtn.addEventListener('click', () => {
+            document.getElementById('mainModalOverlay').classList.add('active');
+        });
+
+        // Open specific book modals on row click + add contextual glowing pulse
+        const bookRows = document.querySelectorAll('.book-row');
+        bookRows.forEach(row => {
+            row.addEventListener('click', () => {
+                // Add flash animation code execution
+                row.classList.add('gold-pulse');
+                setTimeout(() => row.classList.remove('gold-pulse'), 800);
+
+                // Fetch data attribute to map targeted window
+                const bookID = row.getAttribute('data-book');
+                const targetedModal = document.getElementById(`bookModal${bookID}`);
+                if(targetedModal) {
+                    setTimeout(() => targetedModal.classList.add('active'), 150);
+                }
+            });
+        });
+
+        // Universal Close Handler (Closes any active modal window via background or 'X' button)
+        const allModals = document.querySelectorAll('.modal-overlay');
+        allModals.forEach(modal => {
+            // Close via background click mask
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+
+            // Close via specified close component child element
+            const closeBtn = modal.querySelector('[data-close]');
+            if(closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
