@@ -3,27 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Chronicles of Middle-earth | Tolkien's Masterpiece</title>
+    <title>The Chronicles of Middle-earth | Cinematic Edition</title>
     <style>
-        /* Base Styling & Theme */
+        /* Base Styling & Textured Backgrounds */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Georgia', serif;
+            font-family: 'Cinzel', 'Georgia', serif;
         }
 
         body {
-            background-color: #0d0d0d;
-            color: #f0ebd8;
+            background: 
+                radial-gradient(circle at 50% 20%, rgba(40, 34, 21, 0.3) 0%, rgba(13, 13, 13, 1) 70%),
+                linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                url('https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&w=1920&q=80') repeat;
+            color: #f5f2eb;
             line-height: 1.8;
+            overflow-x: hidden;
         }
 
-        /* Hero Header */
+        /* Cinematic Intro Splash Screen */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #080808;
+            background-image: 
+                radial-gradient(circle at center, rgba(30, 25, 15, 0.6) 0%, #050505 80%),
+                url('https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=1920&q=80');
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
+        }
+
+        #intro-overlay.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .intro-glow-text {
+            color: #d4af37;
+            font-size: 1.8rem;
+            font-style: italic;
+            text-align: center;
+            max-width: 80%;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: scale(0.95);
+            animation: ringGlow 4s forwards ease-in-out;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.7), 0 0 40px rgba(212, 175, 55, 0.4);
+        }
+
+        .intro-subtitle {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            color: #8c8573;
+            opacity: 0;
+            animation: fadeInSubtitle 2s forwards 1.5s ease;
+        }
+
+        @keyframes ringGlow {
+            0% { opacity: 0; transform: scale(0.95); filter: blur(5px); }
+            35% { opacity: 1; transform: scale(1); filter: blur(0); }
+            75% { opacity: 1; transform: scale(1.02); filter: blur(0); text-shadow: 0 0 30px rgba(212, 175, 55, 0.9); }
+            100% { opacity: 0; transform: scale(1.05); filter: blur(8px); }
+        }
+
+        @keyframes fadeInSubtitle {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Hero Header with Layered Depth */
         header {
-            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(13, 13, 13, 1)), 
-                        url('https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
-            height: 55vh;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.4), rgba(13, 13, 13, 1)), 
+                url('https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            height: 60vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -31,21 +95,24 @@
             text-align: center;
             color: #d4af37;
             padding: 20px;
-            border-bottom: 2px solid #d4af37;
+            border-bottom: 2px solid;
+            border-image: linear-gradient(to right, transparent, #d4af37, transparent) 1;
         }
 
         header h1 {
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             margin-bottom: 15px;
-            letter-spacing: 2px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4), 3px 3px 6px rgba(0,0,0,0.9);
         }
 
         header p {
-            font-size: 1.2rem;
-            color: #a39f92;
-            max-width: 600px;
+            font-size: 1.3rem;
+            color: #c5bfae;
+            max-width: 650px;
             font-style: italic;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
         }
 
         /* Main Content Layout */
@@ -55,46 +122,62 @@
             padding: 40px 20px;
         }
 
-        /* Long Rich Text Sections */
+        /* Long Rich Text Sections - Aged Parchment Scrolls */
         .intro-section, .lore-section {
-            background-color: #171717;
-            padding: 40px;
-            border-radius: 8px;
-            border-left: 5px solid #d4af37;
-            margin-bottom: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            background: 
+                linear-gradient(rgba(24, 23, 20, 0.95), rgba(18, 17, 14, 0.98)),
+                url('https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=600&q=80');
+            padding: 50px;
+            border-radius: 4px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 10px 25px rgba(0,0,0,0.6);
+            margin-bottom: 60px;
         }
 
         h2 {
             color: #d4af37;
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
+            font-size: 2.4rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         p {
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            color: #e0d9c5;
+            margin-bottom: 25px;
+            font-size: 1.15rem;
+            color: #e3dec9;
             text-align: justify;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
         }
 
         /* Image and Content Grid */
         .trilogy-grid {
             display: flex;
             flex-direction: column;
-            gap: 40px;
-            margin-bottom: 50px;
+            gap: 50px;
+            margin-bottom: 60px;
         }
 
         .book-row {
             display: flex;
-            background-color: #171717;
-            border-radius: 8px;
+            background: 
+                linear-gradient(rgba(28, 27, 24, 0.95), rgba(20, 19, 17, 0.95)),
+                url('https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=600&q=80');
+            border-radius: 6px;
             overflow: hidden;
-            border: 1px solid #2a2a2a;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 
+                inset 0 0 20px rgba(0,0,0,0.6),
+                0 8px 20px rgba(0,0,0,0.5);
+            transition: border-color 0.4s ease;
+        }
+
+        .book-row:hover {
+            border-color: rgba(212, 175, 55, 0.4);
         }
 
         .book-row:nth-child(even) {
@@ -103,19 +186,29 @@
 
         .book-img {
             flex: 1;
-            min-width: 40%;
-            max-height: 450px;
+            min-width: 42%;
+            max-height: 480px;
+            position: relative;
+        }
+
+        .book-img::after {
+            content: '';
+            position: absolute;
+            top:0; left:0; width:100%; height:100%;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+            pointer-events: none;
         }
 
         .book-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            filter: grayscale(15%) sepia(10%) contrast(105%);
         }
 
         .book-text {
             flex: 1.5;
-            padding: 40px;
+            padding: 50px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -123,49 +216,54 @@
 
         .book-text h3 {
             color: #d4af37;
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* Interactive Call-To-Action Layout */
+        /* Immersive Interactive Call-To-Action Layout */
         .cta-area {
             text-align: center;
-            background: linear-gradient(rgba(23, 23, 23, 0.9), rgba(23, 23, 23, 0.9)),
-                        url('https://images.unsplash.com/photo-1519074069444-1ba4fffb6548?auto=format&fit=crop&w=1200&q=80') center center/cover;
-            padding: 60px 20px;
-            border-radius: 8px;
+            background: 
+                linear-gradient(rgba(13, 13, 13, 0.85), rgba(13, 13, 13, 0.95)),
+                url('https://images.unsplash.com/photo-1519074069444-1ba4fffb6548?auto=format&fit=crop&w=1200&q=80') center center/cover;
+            padding: 70px 40px;
+            border-radius: 4px;
             border: 1px solid #d4af37;
+            box-shadow: 0 0 30px rgba(212,175,55,0.15);
         }
 
         .open-btn {
-            background-color: #d4af37;
+            background: linear-gradient(#d4af37, #aa841c);
             color: #0d0d0d;
-            border: none;
-            padding: 15px 35px;
+            border: 1px solid #ffe89e;
+            padding: 16px 40px;
             font-size: 1.1rem;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 4px;
+            letter-spacing: 2px;
+            border-radius: 3px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            transition: all 0.3s ease;
-            margin-top: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin-top: 20px;
         }
 
         .open-btn:hover {
-            background-color: #f4ebd0;
+            background: linear-gradient(#f4ebd0, #d4af37);
             transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(212,175,55,0.6);
         }
 
-        /* Floating Pop-up Window (Modal) */
+        /* Advanced Floating Pop-up Window (Modal) */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(5, 5, 5, 0.92);
+            backdrop-filter: blur(4px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -181,67 +279,83 @@
         }
 
         .modal-box {
-            background-color: #1c1a17;
-            padding: 40px;
-            border-radius: 12px;
-            max-width: 600px;
+            background: 
+                linear-gradient(rgba(24, 21, 16, 0.98), rgba(13, 11, 8, 0.99)),
+                url('https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=600&q=80');
+            padding: 50px;
+            border-radius: 4px;
+            max-width: 650px;
             width: 90%;
             border: 2px solid #d4af37;
             text-align: center;
             position: relative;
-            transform: translateY(-50px);
-            transition: transform 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            transform: scale(0.85) translateY(30px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                inset 0 0 40px rgba(0,0,0,0.9),
+                0 20px 50px rgba(0,0,0,0.9);
         }
 
         .modal-overlay.active .modal-box {
-            transform: translateY(0);
+            transform: scale(1) translateY(0);
         }
 
         .modal-box h2 {
             color: #d4af37;
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin-bottom: 20px;
             border: none;
+            text-shadow: 0 0 8px rgba(212,175,55,0.3);
         }
 
         .close-btn {
             position: absolute;
             top: 15px;
             right: 20px;
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: #a39f92;
             cursor: pointer;
             background: none;
             border: none;
             transition: color 0.2s;
+            line-height: 1;
         }
 
         .close-btn:hover {
             color: #d4af37;
         }
 
-        /* Footer */
+        /* Footer Styling */
         footer {
             text-align: center;
-            padding: 30px;
+            padding: 40px 20px;
             background-color: #050505;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid #1a1a1a;
+            color: #555147;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(212,175,55,0.1);
+            letter-spacing: 1px;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
             .book-row, .book-row:nth-child(even) {
                 flex-direction: column;
             }
-            header h1 { font-size: 2.3rem; }
-            .book-img { max-height: 250px; }
+            header h1 { font-size: 2.6rem; }
+            .book-img { max-height: 300px; }
+            .book-text, .intro-section { padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Cinematic Intro Overlay Screen -->
+    <div id="intro-overlay">
+        <div class="intro-glow-text">
+            "One Ring to rule them all, One Ring to find them..."
+        </div>
+        <div class="intro-subtitle">Entering Middle-earth</div>
+    </div>
 
     <header>
         <h1>The Lord of the Rings</h1>
@@ -250,6 +364,7 @@
 
     <div class="container">
         
+        <!-- Long Form Introduction -->
         <section class="intro-section">
             <h2>The Literary Legacy of Middle-earth</h2>
             <p>
@@ -260,11 +375,13 @@
             </p>
         </section>
 
+        <!-- Deep-Dive Trilogy Sections -->
         <section class="trilogy-grid">
             
+            <!-- Book 1 -->
             <div class="book-row">
                 <div class="book-img">
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=700&q=80" alt="Mysterious forest path representing Shire/Rivendell">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=700&q=80" alt="Mysterious deep green forest trail">
                 </div>
                 <div class="book-text">
                     <h3>I. The Fellowship of the Ring</h3>
@@ -277,9 +394,10 @@
                 </div>
             </div>
 
+            <!-- Book 2 -->
             <div class="book-row">
                 <div class="book-img">
-                    <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=700&q=80" alt="Dark mountains representing the landscape of Mordor">
+                    <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=700&q=80" alt="Dark stormy skies over jagged mountains">
                 </div>
                 <div class="book-text">
                     <h3>II. The Two Towers</h3>
@@ -292,9 +410,10 @@
                 </div>
             </div>
 
+            <!-- Book 3 -->
             <div class="book-row">
                 <div class="book-img">
-                    <img src="https://images.unsplash.com/photo-1506466010722-395df2bf8775?auto=format&fit=crop&w=700&q=80" alt="A grand ancient stone structure symbolizing Minas Tirith">
+                    <img src="https://images.unsplash.com/photo-1506466010722-395df2bf8775?auto=format&fit=crop&w=700&q=80" alt="Ancient majestic stone architecture gothic cathedral interior">
                 </div>
                 <div class="book-text">
                     <h3>III. The Return of the King</h3>
@@ -309,6 +428,7 @@
 
         </section>
 
+        <!-- Dynamic Lore Section -->
         <section class="lore-section">
             <h2>The Core Themes: Power & Fellowship</h2>
             <p>
@@ -316,6 +436,7 @@
             </p>
         </section>
 
+        <!-- CTA Trigger Component -->
         <section class="cta-area">
             <h2>Uncover the Elven Language</h2>
             <p>Click below to open the ancient translation archives and uncover hidden text concerning the lore of the rings.</p>
@@ -324,47 +445,55 @@
 
     </div>
 
+    <!-- Floating Pop-up Window Structure -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <button class="close-btn" id="closeModal">&times;</button>
             <h2>The Inscription of the One Ring</h2>
             
-            <p style="font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.3rem; color: #d4af37; margin: 25px 0; border: 1px dashed #d4af37; padding: 15px;">
+            <p style="font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.35rem; color: #d4af37; margin: 25px 0; border: 1px dashed rgba(212,175,55,0.4); padding: 20px; background: rgba(0,0,0,0.4); box-shadow: inset 0 0 10px #000;">
                 "Ash nazg durbatulûk, ash nazg gimbatul, ash nazg thrakatulûk agh burzum-ishi krimpatul."
             </p>
             
-            <p style="font-size: 1.05rem; text-align: left; color: #c4bda7;">
+            <p style="font-size: 1.05rem; text-align: left; color: #c4bda7; margin-bottom: 10px;">
                 Translated from the Black Speech of Mordor into the Common Tongue, the text reads:
             </p>
-            <p style="font-weight: bold; color: #fff; font-style: italic;">
+            <p style="font-weight: bold; color: #fff; font-style: italic; font-size: 1.2rem; line-height: 1.6; text-shadow: 0 0 5px rgba(255,255,255,0.2);">
                 "One Ring to rule them all, One Ring to find them, <br>One Ring to bring them all, and in the darkness bind them."
             </p>
-            <p style="font-size: 0.95rem; color: #888; margin-top: 15px;">
+            <p style="font-size: 0.95rem; color: #8c8573; margin-top: 20px; border-top: 1px solid rgba(212,175,55,0.1); padding-top: 15px;">
                 This phrase was chanted by Sauron during its forging, instantly alerting the Elven ring-bearers across Middle-earth of his betrayal.
             </p>
         </div>
     </div>
 
     <footer>
-        <p>A Static Web Project Tribute to J.R.R. Tolkien. Images dynamically pulled from Unsplash.</p>
+        <p>A Static Web Project Tribute to J.R.R. Tolkien. Textures and imagery loaded via Unsplash.</p>
     </footer>
 
+    <!-- JavaScript Module -->
     <script>
+        // Intro Splash Screen Timer Handler
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const introOverlay = document.getElementById('intro-overlay');
+                introOverlay.classList.add('fade-out');
+            }, 3800); // Fades out right as the text animation ends
+        });
+
+        // Modal Functionality
         const openBtn = document.getElementById('openModal');
         const closeBtn = document.getElementById('closeModal');
         const modalOverlay = document.getElementById('modalOverlay');
 
-        // Open floating pop-up window
         openBtn.addEventListener('click', () => {
             modalOverlay.classList.add('active');
         });
 
-        // Close window via 'X' button
         closeBtn.addEventListener('click', () => {
             modalOverlay.classList.remove('active');
         });
 
-        // Close window by clicking on the dark background mask
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) {
                 modalOverlay.classList.remove('active');
