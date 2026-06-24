@@ -177,6 +177,26 @@ canvas { display:block; width:100%; height:100%; }
 .controls-strip { position:fixed; top:12px; right:12px; z-index:100; background:rgba(0,0,0,0.65); border:1px solid #1a3a1a; border-radius:10px; padding:6px 10px; font-size:9px; color:#3a6a3a; line-height:1.9; display:none; }
 #netherPortalFlash { position:fixed; inset:0; z-index:600; background:rgba(180,0,255,0.5); pointer-events:none; display:none; animation:netherFlash 1.2s ease-out forwards; }
 @keyframes netherFlash { 0%{opacity:1;} 100%{opacity:0;} }
+.save-toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.88); color:#7CFC00; padding:8px 20px; border-radius:20px; font-size:12px; border:1px solid #2a5a2a; z-index:450; pointer-events:none; animation:notifAnim 2.4s ease-out forwards; }
+#saveSlotPanel { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:700; display:none; background:rgba(6,10,6,0.97); border:2px solid #2a5a2a; border-radius:16px; padding:18px; width:330px; max-height:80vh; overflow-y:auto; backdrop-filter:blur(16px); font-family:'Courier New',monospace; }
+#saveSlotPanel::-webkit-scrollbar { width:4px; }
+#saveSlotPanel::-webkit-scrollbar-thumb { background:#2a5a2a; border-radius:2px; }
+.saveslot-title { color:#7CFC00; font-size:13px; font-weight:bold; letter-spacing:3px; margin-bottom:10px; text-align:center; border-bottom:1px solid #1a3a1a; padding-bottom:8px; }
+.saveslot-row { background:rgba(0,0,0,0.4); border:1px solid #1a3a1a; border-radius:8px; margin:6px 0; padding:8px 10px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.saveslot-info { flex:1; min-width:0; }
+.saveslot-name { color:#cdeecd; font-size:11px; font-weight:bold; }
+.saveslot-meta { color:#5a7a5a; font-size:8.5px; margin-top:2px; }
+.saveslot-empty .saveslot-name { color:#3a4a3a; }
+.saveslot-btn { background:#1a3a1a; border:1px solid #2a5a2a; color:#7CFC00; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:9px; font-family:'Courier New',monospace; white-space:nowrap; }
+.saveslot-btn:hover { background:#2a5a2a; }
+.saveslot-btn.load-btn { color:#7FAAFF; border-color:#2a3a5a; background:#1a2a3a; }
+.saveslot-btn.load-btn:hover { background:#2a3a5a; }
+.saveslot-btn.del-btn { color:#ff8888; border-color:#5a2a2a; background:#3a1a1a; }
+.saveslot-btn.del-btn:hover { background:#5a2a2a; }
+.saveslot-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.saveslot-close-btn { display:block; margin:12px auto 0; background:#1a3a1a; border:1px solid #2a5a2a; color:#7CFC00; padding:6px 22px; border-radius:8px; cursor:pointer; font-size:10px; font-family:'Courier New',monospace; }
+.saveslot-close-btn:hover { background:#2a5a2a; }
+.saveslot-status { text-align:center; font-size:9px; margin-bottom:8px; padding:4px 6px; border-radius:6px; color:#7a9a7a; background:rgba(0,0,0,0.3); }
 </style>
 </head>
 <body>
@@ -220,7 +240,7 @@ canvas { display:block; width:100%; height:100%; }
     </div>
     <style>@keyframes legA { from{transform:translateY(-3px);} to{transform:translateY(3px);} }</style>
     <div class="features-grid">
-      <div class="feat">🌍 Infinite World</div><div class="feat">🏘️ Villages</div><div class="feat">🏰 Dungeons</div><div class="feat">⛏️ Tool Tiers</div><div class="feat">👁️ 55+ Mob Types</div><div class="feat">📋 75+ Recipes</div><div class="feat">✨ Enchanting Table</div><div class="feat">☄️ Totem of Undying</div><div class="feat">💀 Death Drops</div><div class="feat">🌊 Bucket Pickup</div><div class="feat">🔥 The Nether</div><div class="feat">🏯 Nether Fortress</div><div class="feat">🏴 Bastion Remnant</div><div class="feat">🔴 Ancient Debris</div><div class="feat">⚫ Netherite Armor</div><div class="feat">🍎🥇 Golden Apples</div><div class="feat">✨ Absorption Hearts</div><div class="feat">💎 Obsidian</div><div class="feat">🪂 Real Fall Damage</div><div class="feat">🌙 Day/Night Cycle</div>
+      <div class="feat">🌍 Infinite World</div><div class="feat">🏘️ Villages</div><div class="feat">🏰 Dungeons</div><div class="feat">⛏️ Tool Tiers</div><div class="feat">👁️ 55+ Mob Types</div><div class="feat">📋 75+ Recipes</div><div class="feat">✨ Enchanting Table</div><div class="feat">☄️ Totem of Undying</div><div class="feat">💀 Death Drops</div><div class="feat">🌊 Bucket Pickup</div><div class="feat">🔥 The Nether</div><div class="feat">🏯 Nether Fortress</div><div class="feat">🏴 Bastion Remnant</div><div class="feat">🔴 Ancient Debris</div><div class="feat">⚫ Netherite Armor</div><div class="feat">🍎🥇 Golden Apples</div><div class="feat">✨ Absorption Hearts</div><div class="feat">💎 Obsidian</div><div class="feat">🪂 Real Fall Damage</div><div class="feat">🌙 Day/Night Cycle</div><div class="feat">💾 Save Worlds</div>
     </div>
     <div class="mode-cards">
       <div class="mode-card survival" id="survivalBtn">
@@ -249,7 +269,7 @@ canvas { display:block; width:100%; height:100%; }
   <div class="hud-pill hud-totem" id="hudTotem" style="display:none">☄️ Totem Ready</div>
   <div class="hud-pill hud-nether" id="hudNether" style="display:none">🔥 THE NETHER</div>
 </div>
-<div class="controls-strip" id="controlsStrip">WASD Move | Space Jump<br>LClick Mine/Attack | RClick Place/Pickup<br>🪣 RClick water/lava with bucket to scoop!<br>1-9 Blocks | I Inventory | C Craft<br>X Enchant | E Eat | Q Potion | R Respawn<br>G = Golden Apple (+2♥) | H = Ench. Apple (Full heal!)<br>🔥 Lava burns! 🌊 Water slows! 🪂 5+ block fall = damage!<br>💎 Water+Lava=Obsidian | N=Nether Portal / Teleport Home<br>🏯 Nether Fortress: Blaze Rods & Chests!<br>🏴 Bastion Remnant: Ancient Debris & Netherite!</div>
+<div class="controls-strip" id="controlsStrip">WASD Move | Space Jump<br>LClick Mine/Attack | RClick Place/Pickup<br>🪣 RClick water/lava with bucket to scoop!<br>1-9 Blocks | I Inventory | C Craft<br>X Enchant | E Eat | Q Potion | R Respawn<br>P = Save/Load World Menu<br>G = Golden Apple (+2♥) | H = Ench. Apple (Full heal!)<br>🔥 Lava burns! 🌊 Water slows! 🪂 5+ block fall = damage!<br>💎 Water+Lava=Obsidian | N=Nether Portal / Teleport Home<br>🏯 Nether Fortress: Blaze Rods & Chests!<br>🏴 Bastion Remnant: Ancient Debris & Netherite!</div>
 <div id="inventoryPanel"><div class="inv-title">🎒 INVENTORY</div><div id="invContent"></div></div>
 <div id="craftingPanel">
   <div class="craft-title">🔨 CRAFTING</div>
@@ -263,6 +283,12 @@ canvas { display:block; width:100%; height:100%; }
   <div class="enchant-status-bar" id="enchantStatus">⚙️ Place an Anvil to enchant</div>
   <div id="enchantContent"></div>
   <button class="enchant-close-btn" id="enchantCloseBtn">✕ Close</button>
+</div>
+<div id="saveSlotPanel">
+  <div class="saveslot-title">💾 SAVE / LOAD WORLD</div>
+  <div class="saveslot-status" id="saveSlotStatus">Choose a slot to save or load</div>
+  <div id="saveSlotList"></div>
+  <button class="saveslot-close-btn" id="saveSlotCloseBtn">✕ Close (P)</button>
 </div>
 <div id="hotbar" style="display:none;flex-direction:row;"></div>
 
