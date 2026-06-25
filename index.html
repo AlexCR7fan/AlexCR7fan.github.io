@@ -197,6 +197,9 @@ canvas { display:block; width:100%; height:100%; }
 .saveslot-close-btn { display:block; margin:12px auto 0; background:#1a3a1a; border:1px solid #2a5a2a; color:#7CFC00; padding:6px 22px; border-radius:8px; cursor:pointer; font-size:10px; font-family:'Courier New',monospace; }
 .saveslot-close-btn:hover { background:#2a5a2a; }
 .saveslot-status { text-align:center; font-size:9px; margin-bottom:8px; padding:4px 6px; border-radius:6px; color:#7a9a7a; background:rgba(0,0,0,0.3); }
+#soundToggle { position:fixed; bottom:12px; right:12px; z-index:100; display:none; background:rgba(8,15,8,0.9); border:2px solid #2a4a2a; border-radius:10px; width:42px; height:42px; align-items:center; justify-content:center; cursor:pointer; font-size:18px; user-select:none; backdrop-filter:blur(8px); transition:all 0.15s; }
+#soundToggle:hover { border-color:#4a7a4a; background:rgba(20,40,20,0.9); }
+#soundToggle.muted { color:#665; opacity:0.6; }
 </style>
 </head>
 <body>
@@ -225,7 +228,7 @@ canvas { display:block; width:100%; height:100%; }
     <div class="logo-eyebrow">✦ PIXEL SURVIVAL ✦</div>
     <div class="logo-main">MINECRAFT 2D</div>
     <div class="logo-sub">ULTIMATE EDITION</div>
-    <div class="logo-version">v4.3 · NETHER UPDATE · FORTRESS · BASTION · NETHERITE · GOLDEN APPLES · ABSORPTION</div>
+    <div class="logo-version">v4.4 · SOUND UPDATE · NETHER · FORTRESS · BASTION · NETHERITE · GOLDEN APPLES</div>
     <div class="intro-scene">
       <div class="scene-torch" style="left:18%;bottom:28px;"><div class="torch-flame"></div><div class="torch-body"></div></div>
       <div class="scene-torch" style="left:72%;bottom:28px;"><div class="torch-flame"></div><div class="torch-body"></div></div>
@@ -240,7 +243,7 @@ canvas { display:block; width:100%; height:100%; }
     </div>
     <style>@keyframes legA { from{transform:translateY(-3px);} to{transform:translateY(3px);} }</style>
     <div class="features-grid">
-      <div class="feat">🌍 Infinite World</div><div class="feat">🏘️ Villages</div><div class="feat">🏰 Dungeons</div><div class="feat">⛏️ Tool Tiers</div><div class="feat">👁️ 55+ Mob Types</div><div class="feat">📋 75+ Recipes</div><div class="feat">✨ Enchanting Table</div><div class="feat">☄️ Totem of Undying</div><div class="feat">💀 Death Drops</div><div class="feat">🌊 Bucket Pickup</div><div class="feat">🔥 The Nether</div><div class="feat">🏯 Nether Fortress</div><div class="feat">🏴 Bastion Remnant</div><div class="feat">🔴 Ancient Debris</div><div class="feat">⚫ Netherite Armor</div><div class="feat">🍎🥇 Golden Apples</div><div class="feat">✨ Absorption Hearts</div><div class="feat">💎 Obsidian</div><div class="feat">🪂 Real Fall Damage</div><div class="feat">🌙 Day/Night Cycle</div><div class="feat">💾 Save Worlds</div>
+      <div class="feat">🌍 Infinite World</div><div class="feat">🏘️ Villages</div><div class="feat">🏰 Dungeons</div><div class="feat">⛏️ Tool Tiers</div><div class="feat">👁️ 55+ Mob Types</div><div class="feat">📋 75+ Recipes</div><div class="feat">✨ Enchanting Table</div><div class="feat">☄️ Totem of Undying</div><div class="feat">💀 Death Drops</div><div class="feat">🌊 Bucket Pickup</div><div class="feat">🔥 The Nether</div><div class="feat">🏯 Nether Fortress</div><div class="feat">🏴 Bastion Remnant</div><div class="feat">🔴 Ancient Debris</div><div class="feat">⚫ Netherite Armor</div><div class="feat">🍎🥇 Golden Apples</div><div class="feat">✨ Absorption Hearts</div><div class="feat">💎 Obsidian</div><div class="feat">🪂 Real Fall Damage</div><div class="feat">🌙 Day/Night Cycle</div><div class="feat">🔊 Sound FX</div>
     </div>
     <div class="mode-cards">
       <div class="mode-card survival" id="survivalBtn">
@@ -269,7 +272,7 @@ canvas { display:block; width:100%; height:100%; }
   <div class="hud-pill hud-totem" id="hudTotem" style="display:none">☄️ Totem Ready</div>
   <div class="hud-pill hud-nether" id="hudNether" style="display:none">🔥 THE NETHER</div>
 </div>
-<div class="controls-strip" id="controlsStrip">WASD Move | Space Jump<br>LClick Mine/Attack | RClick Place/Pickup<br>🪣 RClick water/lava with bucket to scoop!<br>1-9 Blocks | I Inventory | C Craft<br>X Enchant | E Eat | Q Potion | R Respawn<br>P = Save/Load World Menu<br>G = Golden Apple (+2♥) | H = Ench. Apple (Full heal!)<br>🔥 Lava burns! 🌊 Water slows! 🪂 5+ block fall = damage!<br>💎 Water+Lava=Obsidian | N=Nether Portal / Teleport Home<br>🏯 Nether Fortress: Blaze Rods & Chests!<br>🏴 Bastion Remnant: Ancient Debris & Netherite!</div>
+<div class="controls-strip" id="controlsStrip">WASD Move | Space Jump<br>LClick Mine/Attack | RClick Place/Pickup<br>🪣 RClick water/lava with bucket to scoop!<br>1-9 Blocks | I Inventory | C Craft<br>X Enchant | E Eat | Q Potion | R Respawn<br>G = Golden Apple (+2♥) | H = Ench. Apple (Full heal!)<br>🔥 Lava burns! 🌊 Water slows! 🪂 5+ block fall = damage!<br>💎 Water+Lava=Obsidian | N=Nether Portal / Teleport Home<br>🏯 Nether Fortress: Blaze Rods & Chests!<br>🏴 Bastion Remnant: Ancient Debris & Netherite!<br>🔊 M = Mute Sound</div>
 <div id="inventoryPanel"><div class="inv-title">🎒 INVENTORY</div><div id="invContent"></div></div>
 <div id="craftingPanel">
   <div class="craft-title">🔨 CRAFTING</div>
@@ -291,6 +294,7 @@ canvas { display:block; width:100%; height:100%; }
   <button class="saveslot-close-btn" id="saveSlotCloseBtn">✕ Close (P)</button>
 </div>
 <div id="hotbar" style="display:none;flex-direction:row;"></div>
+<div id="soundToggle" title="Mute/Unmute (M)">🔊</div>
 
 <script>
 (function(){
@@ -303,6 +307,7 @@ document.getElementById('enchantCloseBtn').onclick=()=>toggleEnchant();
 
 function startGame(mode){
   gameMode=mode;
+  SFX.unlock();
   const intro=document.getElementById('introScreen');
   intro.classList.add('fade-out');
   setTimeout(()=>{
@@ -310,10 +315,257 @@ function startGame(mode){
     document.getElementById('gameRoot').style.display='block';
     document.getElementById('hud').style.display=mode==='survival'?'flex':'none';
     document.getElementById('controlsStrip').style.display='block';
+    document.getElementById('soundToggle').style.display='flex';
     initHotbar();initGame(mode);
   },800);
 }
 function showNotif(msg,color){let n=document.createElement('div');n.className='notif';n.innerText=msg;if(color)n.style.color=color;document.body.appendChild(n);setTimeout(()=>n.remove(),2800);}
+
+// =====================================================================
+// ===== SOUND SYSTEM (Web Audio API — fully synthesized, no files) =====
+// =====================================================================
+const SFX=(function(){
+  let ctxA=null,master=null,musicGain=null,unlocked=false,muted=false;
+  function ensureCtx(){
+    if(ctxA)return ctxA;
+    try{
+      ctxA=new (window.AudioContext||window.webkitAudioContext)();
+      master=ctxA.createGain();master.gain.value=0.55;master.connect(ctxA.destination);
+      musicGain=ctxA.createGain();musicGain.gain.value=0.16;musicGain.connect(master);
+    }catch(e){ctxA=null;}
+    return ctxA;
+  }
+  function unlock(){
+    const c=ensureCtx();if(!c)return;
+    if(c.state==='suspended')c.resume();
+  }
+  function now(){return ctxA?ctxA.currentTime:0;}
+  // Generic oscillator-based "blip" with envelope
+  function tone(freq,dur,opts){
+    if(muted)return;const c=ensureCtx();if(!c)return;
+    opts=opts||{};
+    const type=opts.type||'sine';
+    const vol=opts.vol!==undefined?opts.vol:0.5;
+    const t0=now()+(opts.delay||0);
+    const osc=c.createOscillator();osc.type=type;
+    const g=c.createGain();
+    osc.frequency.setValueAtTime(freq,t0);
+    if(opts.freqEnd!==undefined)osc.frequency.exponentialRampToValueAtTime(Math.max(1,opts.freqEnd),t0+dur);
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.exponentialRampToValueAtTime(vol,t0+(opts.attack||0.008));
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    osc.connect(g);g.connect(opts.bus||master);
+    osc.start(t0);osc.stop(t0+dur+0.02);
+  }
+  // White-noise burst (good for digging/breaking/explosions)
+  function noise(dur,opts){
+    if(muted)return;const c=ensureCtx();if(!c)return;
+    opts=opts||{};
+    const vol=opts.vol!==undefined?opts.vol:0.4;
+    const t0=now()+(opts.delay||0);
+    const bufSize=Math.max(1,Math.floor(c.sampleRate*dur));
+    const buf=c.createBuffer(1,bufSize,c.sampleRate);
+    const data=buf.getChannelData(0);
+    for(let i=0;i<bufSize;i++)data[i]=(Math.random()*2-1)*(1-i/bufSize);
+    const src=c.createBufferSource();src.buffer=buf;
+    const filt=c.createBiquadFilter();
+    filt.type=opts.filterType||'lowpass';
+    filt.frequency.value=opts.filterFreq!==undefined?opts.filterFreq:1800;
+    if(opts.filterFreqEnd!==undefined){
+      filt.frequency.setValueAtTime(filt.frequency.value,t0);
+      filt.frequency.exponentialRampToValueAtTime(Math.max(40,opts.filterFreqEnd),t0+dur);
+    }
+    const g=c.createGain();
+    g.gain.setValueAtTime(vol,t0);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    src.connect(filt);filt.connect(g);g.connect(opts.bus||master);
+    src.start(t0);src.stop(t0+dur+0.02);
+  }
+  // Quick layered "click" used for UI feedback
+  function click(freq,vol){tone(freq||700,0.06,{type:'square',vol:vol!==undefined?vol:0.18,attack:0.002});}
+
+  // ---- specific sound designs ----
+  function mine(blockType){
+    // dull thud + crackle, pitch varies a touch by hardness
+    const hard=['stone','coal_ore','iron_ore','diamond_ore','gold_ore','cobble','bedrock','netherrack','nether_brick','bastion_block','ancient_debris'].includes(blockType);
+    noise(hard?0.16:0.12,{vol:0.34,filterType:'lowpass',filterFreq:hard?2200:3200,filterFreqEnd:300});
+    tone(hard?110:160,0.09,{type:'triangle',vol:0.22,delay:0.01,freqEnd:60});
+  }
+  function breakBlock(blockType){
+    noise(0.22,{vol:0.4,filterType:'lowpass',filterFreq:2600,filterFreqEnd:200});
+    tone(140,0.14,{type:'triangle',vol:0.28,freqEnd:50});
+  }
+  function place(){
+    noise(0.1,{vol:0.28,filterType:'lowpass',filterFreq:1400,filterFreqEnd:300});
+    tone(220,0.08,{type:'triangle',vol:0.22,freqEnd:140});
+  }
+  function chop(){ // wood
+    noise(0.1,{vol:0.3,filterType:'bandpass',filterFreq:900});
+    tone(180,0.08,{type:'square',vol:0.18,freqEnd:90});
+  }
+  function swordSwing(){
+    noise(0.09,{vol:0.22,filterType:'highpass',filterFreq:1800});
+  }
+  function hitMob(){
+    tone(180,0.08,{type:'sawtooth',vol:0.3,freqEnd:90});
+    noise(0.06,{vol:0.22,filterType:'bandpass',filterFreq:1200});
+  }
+  function mobDeath(){
+    tone(220,0.22,{type:'sawtooth',vol:0.3,freqEnd:40,attack:0.005});
+    noise(0.18,{vol:0.22,filterType:'lowpass',filterFreq:1000,filterFreqEnd:100,delay:0.03});
+  }
+  function playerHurt(){
+    tone(300,0.16,{type:'sawtooth',vol:0.32,freqEnd:110});
+    noise(0.12,{vol:0.2,filterType:'bandpass',filterFreq:700,delay:0.02});
+  }
+  function playerDeath(){
+    tone(260,0.5,{type:'sawtooth',vol:0.35,freqEnd:40,attack:0.01});
+    tone(180,0.6,{type:'sine',vol:0.25,freqEnd:30,delay:0.1});
+  }
+  function jump(){
+    tone(330,0.12,{type:'triangle',vol:0.2,freqEnd:520,attack:0.003});
+  }
+  function land(){
+    noise(0.07,{vol:0.18,filterType:'lowpass',filterFreq:900,filterFreqEnd:200});
+  }
+  function fallDamage(){
+    noise(0.18,{vol:0.32,filterType:'lowpass',filterFreq:1100,filterFreqEnd:120});
+    tone(140,0.18,{type:'sawtooth',vol:0.26,freqEnd:50});
+  }
+  function eat(){
+    for(let i=0;i<3;i++){
+      noise(0.06,{vol:0.16,delay:i*0.09,filterType:'bandpass',filterFreq:900+Math.random()*300});
+    }
+  }
+  function drinkPotion(){
+    tone(500,0.1,{type:'sine',vol:0.18,delay:0,freqEnd:700});
+    tone(700,0.12,{type:'sine',vol:0.16,delay:0.08,freqEnd:900});
+  }
+  function craftSuccess(){
+    tone(523,0.09,{type:'square',vol:0.22,delay:0});
+    tone(659,0.09,{type:'square',vol:0.2,delay:0.07});
+    tone(784,0.13,{type:'square',vol:0.2,delay:0.14});
+  }
+  function craftFail(){
+    tone(200,0.14,{type:'square',vol:0.2,freqEnd:120});
+  }
+  function uiOpen(){click(660,0.16);}
+  function uiClose(){click(420,0.14);}
+  function inventoryToggle(){click(540,0.15);}
+  function pickupItem(){
+    tone(700,0.07,{type:'sine',vol:0.16,freqEnd:1000,attack:0.002});
+  }
+  function lootChest(){
+    tone(440,0.08,{type:'square',vol:0.22,delay:0});
+    tone(660,0.1,{type:'square',vol:0.22,delay:0.06});
+    tone(880,0.14,{type:'square',vol:0.22,delay:0.12});
+  }
+  function enchant(){
+    for(let i=0;i<5;i++)tone(600+Math.random()*900,0.18,{type:'sine',vol:0.12,delay:i*0.05,freqEnd:1400+Math.random()*400});
+  }
+  function totem(){
+    tone(220,0.4,{type:'sawtooth',vol:0.3,freqEnd:880,delay:0});
+    tone(330,0.45,{type:'sine',vol:0.26,freqEnd:1200,delay:0.05});
+    noise(0.3,{vol:0.22,filterType:'highpass',filterFreq:2000,delay:0.05});
+  }
+  function explosion(){
+    noise(0.45,{vol:0.5,filterType:'lowpass',filterFreq:1600,filterFreqEnd:80});
+    tone(80,0.4,{type:'sawtooth',vol:0.35,freqEnd:30,delay:0.01});
+  }
+  function obsidianForm(){
+    tone(180,0.3,{type:'sine',vol:0.22,freqEnd:600,delay:0});
+    noise(0.25,{vol:0.2,filterType:'bandpass',filterFreq:1000,delay:0.05});
+  }
+  function fireBurn(){
+    noise(0.14,{vol:0.18,filterType:'bandpass',filterFreq:1400,delay:0});
+  }
+  function splash(){
+    noise(0.16,{vol:0.22,filterType:'bandpass',filterFreq:1100,delay:0});
+    tone(380,0.12,{type:'sine',vol:0.14,freqEnd:180,delay:0.01});
+  }
+  function bucketScoop(){
+    tone(280,0.16,{type:'sine',vol:0.2,freqEnd:480,delay:0});
+    noise(0.12,{vol:0.18,filterType:'bandpass',filterFreq:900,delay:0.02});
+  }
+  function portal(){
+    for(let i=0;i<6;i++)tone(150+i*90,0.5,{type:'sine',vol:0.1,delay:i*0.04,freqEnd:60+i*20});
+    noise(0.6,{vol:0.18,filterType:'bandpass',filterFreq:500,delay:0.05});
+  }
+  function teleport(){
+    tone(900,0.3,{type:'sine',vol:0.22,freqEnd:200,attack:0.003});
+    tone(1400,0.25,{type:'sine',vol:0.15,freqEnd:300,delay:0.04});
+  }
+  function levelEvent(positive){
+    if(positive){
+      tone(523,0.1,{type:'triangle',vol:0.24,delay:0});
+      tone(659,0.1,{type:'triangle',vol:0.24,delay:0.09});
+      tone(784,0.1,{type:'triangle',vol:0.24,delay:0.18});
+      tone(1046,0.18,{type:'triangle',vol:0.26,delay:0.27});
+    } else {
+      tone(300,0.2,{type:'square',vol:0.22,freqEnd:140,delay:0});
+    }
+  }
+  function bowShoot(){
+    noise(0.1,{vol:0.18,filterType:'highpass',filterFreq:2200});
+    tone(440,0.1,{type:'sawtooth',vol:0.16,freqEnd:880});
+  }
+  function creeperHiss(){
+    noise(0.5,{vol:0.16,filterType:'bandpass',filterFreq:1800});
+  }
+  function ghastShriek(){
+    tone(700,0.5,{type:'sawtooth',vol:0.18,freqEnd:300,attack:0.05});
+  }
+  function dayNightChime(isDay){
+    if(isDay){
+      tone(880,0.3,{type:'sine',vol:0.16,delay:0});
+      tone(1100,0.35,{type:'sine',vol:0.13,delay:0.12});
+    } else {
+      tone(440,0.3,{type:'sine',vol:0.14,delay:0});
+      tone(330,0.4,{type:'sine',vol:0.12,delay:0.12});
+    }
+  }
+  // ---- ambient ----
+  let ambientTimer=null;
+  function startAmbient(getState){
+    stopAmbient();
+    ambientTimer=setInterval(()=>{
+      if(muted)return;
+      const st=getState?getState():{};
+      const c=ensureCtx();if(!c)return;
+      const r=Math.random();
+      if(st.inNether){
+        if(r<0.4)ghastDistant();
+      } else if(st.night){
+        if(r<0.5)ambientNightChirp();
+      } else {
+        if(r<0.35)ambientBird();
+      }
+    },3200);
+  }
+  function stopAmbient(){if(ambientTimer){clearInterval(ambientTimer);ambientTimer=null;}}
+  function ambientBird(){tone(1800+Math.random()*900,0.08,{type:'sine',vol:0.05,freqEnd:2600,delay:0});tone(1600+Math.random()*700,0.06,{type:'sine',vol:0.04,freqEnd:2200,delay:0.12});}
+  function ambientNightChirp(){tone(2200+Math.random()*400,0.05,{type:'square',vol:0.035,delay:0});}
+  function ghastDistant(){tone(500+Math.random()*200,0.6,{type:'sine',vol:0.045,freqEnd:250,attack:0.1});}
+
+  function setMuted(m){
+    muted=m;
+    if(master)master.gain.value=m?0:0.55;
+  }
+  function isMuted(){return muted;}
+  return {
+    unlock,mine,breakBlock,place,chop,swordSwing,hitMob,mobDeath,playerHurt,playerDeath,
+    jump,land,fallDamage,eat,drinkPotion,craftSuccess,craftFail,uiOpen,uiClose,inventoryToggle,
+    pickupItem,lootChest,enchant,totem,explosion,obsidianForm,fireBurn,splash,bucketScoop,
+    portal,teleport,levelEvent,bowShoot,creeperHiss,ghastShriek,dayNightChime,
+    startAmbient,stopAmbient,setMuted,isMuted,click
+  };
+})();
+
+// Sound mute toggle UI
+const soundToggleEl=document.getElementById('soundToggle');
+function refreshSoundIcon(){soundToggleEl.innerText=SFX.isMuted()?'🔇':'🔊';soundToggleEl.classList.toggle('muted',SFX.isMuted());}
+soundToggleEl.addEventListener('click',()=>{SFX.setMuted(!SFX.isMuted());refreshSoundIcon();SFX.click(660,0.15);});
+refreshSoundIcon();
 
 // ===== DAY/NIGHT =====
 const DAY_TICKS=7200,NIGHT_TICKS=3600,FULL_CYCLE=10800;
@@ -443,6 +695,7 @@ function enterNether(){
   document.getElementById('hudNether').style.display='block';
   for(let i=0;i<6;i++){let sx2=player.x+(Math.random()*600-300),sy2=(getNetherlandSurface(Math.floor(sx2/TILE_SIZE))-3)*TILE_SIZE;entities.push(new Mob(sx2,sy2,NETHER_MOB_POOL[Math.floor(Math.random()*NETHER_MOB_POOL.length)]));}
   showNotif("🔥 Welcome to The Nether! Explore for Fortress & Bastion! N to teleport home.",'#FF4400');
+  SFX.portal();
 }
 function exitNether(){
   if(!inNether)return;
@@ -452,6 +705,7 @@ function exitNether(){
   let fl=document.getElementById('netherPortalFlash');fl.style.display='block';setTimeout(()=>{fl.style.display='none';},1200);
   document.getElementById('hudNether').style.display='none';
   showNotif("🌍 Returned to Overworld!",'#44FF88');
+  SFX.portal();
 }
 function teleportHome(){
   // N now instantly teleports the player from the Nether straight back to the original
@@ -465,12 +719,14 @@ function teleportHome(){
   document.getElementById('hudNether').style.display='none';
   for(let i=0;i<18;i++)particles.push(new Particle(player.x+Math.random()*40-20,player.y+Math.random()*40-20,"#9FE8FF"));
   showNotif("🏠 Teleported home to spawn!",'#44FF88');
+  SFX.teleport();
 }
 function buildNetherPortal(wx,wy){
   for(let dx=0;dx<4;dx++){forceBlock(wx+dx,wy,'obsidian');forceBlock(wx+dx,wy-4,'obsidian');}
   for(let dy=1;dy<4;dy++){forceBlock(wx,wy-dy,'obsidian');forceBlock(wx+3,wy-dy,'obsidian');}
   for(let dy=1;dy<4;dy++)for(let dx=1;dx<3;dx++)forceBlock(wx+dx,wy-dy,'nether_portal');
   showNotif("🌑 Nether Portal built! Step on purple to enter.",'#AA44FF');
+  SFX.portal();
 }
 
 // ===== WORLD =====
@@ -502,6 +758,7 @@ function checkWaterLavaMix(wx,wy){
       setBlockAtWorld(wx+dx2,wy+dy2,'obsidian');
       for(let i=0;i<12;i++)particles.push(new Particle((wx+0.5)*TILE_SIZE+Math.random()*TILE_SIZE-16,(wy+0.5)*TILE_SIZE+Math.random()*TILE_SIZE-16,"#554466"));
       particles.push(new FloatingText((wx+0.5)*TILE_SIZE,(wy-1)*TILE_SIZE,"💎 Obsidian!","#AA88FF"));
+      SFX.obsidianForm();
     }
   }
 }
@@ -566,7 +823,7 @@ function hasEnchant(key,ench){return !!(enchantments[key]&&enchantments[key][enc
 function applyEnchant(key,ench){if(!enchantments[key])enchantments[key]={};enchantments[key][ench]=true;}
 function isAnvilNearby(){let px=Math.floor(player.x/TILE_SIZE),py=Math.floor(player.y/TILE_SIZE);for(let dy=-5;dy<=5;dy++)for(let dx=-5;dx<=5;dx++)if(getBlockAtWorld(px+dx,py+dy)==='anvil_block')return true;return false;}
 let enchantOpen=false;
-function toggleEnchant(){if(gameMode!=='survival'){showNotif("✨ Enchanting is Survival only!");return;}enchantOpen=!enchantOpen;document.getElementById('enchantPanel').style.display=enchantOpen?'block':'none';if(enchantOpen)renderEnchantPanel();}
+function toggleEnchant(){if(gameMode!=='survival'){showNotif("✨ Enchanting is Survival only!");return;}enchantOpen=!enchantOpen;document.getElementById('enchantPanel').style.display=enchantOpen?'block':'none';if(enchantOpen){renderEnchantPanel();SFX.uiOpen();}else SFX.uiClose();}
 function renderEnchantPanel(){
   const c=document.getElementById('enchantContent'),sb=document.getElementById('enchantStatus');if(!c)return;
   let hasAnvil=isAnvilNearby();
@@ -607,6 +864,7 @@ function renderEnchantPanel(){
           for(let i=0;i<15;i++)particles.push(new Particle(player.x+Math.random()*50-25,player.y+Math.random()*50-25,"#AA44FF"));
           particles.push(new FloatingText(player.x,player.y-40,`✨ ${edef.name}!`,"#cc88ff"));
           showNotif(`✨ Enchanted: ${edef.name} on ${item.name}`);
+          SFX.enchant();
           updateInventoryUI();renderEnchantPanel();
         };
       }
@@ -664,6 +922,7 @@ function checkPickupDeathDrop(){
     if(graveNotifEl){graveNotifEl.remove();graveNotifEl=null;}
     showNotif("📦 Grave recovered! All items restored.",'#44FF88');
     for(let i=0;i<20;i++)particles.push(new Particle(player.x+Math.random()*40-20,player.y+Math.random()*40-20,"#FFD700"));
+    SFX.lootChest();
     updateInventoryUI();
   }
 }
@@ -740,7 +999,7 @@ const INV_DISPLAY=[
   ]},
 ];
 let inventoryOpen=false,craftingOpen=false;
-function toggleInventory(){inventoryOpen=!inventoryOpen;document.getElementById('inventoryPanel').style.display=inventoryOpen?'block':'none';if(inventoryOpen)renderInventory();}
+function toggleInventory(){inventoryOpen=!inventoryOpen;document.getElementById('inventoryPanel').style.display=inventoryOpen?'block':'none';if(inventoryOpen)renderInventory();SFX.inventoryToggle();}
 function renderInventory(){
   const c=document.getElementById('invContent');c.innerHTML='';
   for(let sec of INV_DISPLAY){
@@ -877,7 +1136,7 @@ function updateCraftingPanel(){
   if(filtered.length===0){let d=document.createElement('div');d.style.cssText='color:#334466;font-size:10px;text-align:center;padding:10px;';d.innerText='No recipes found';c.appendChild(d);}
 }
 function craftRecipe(r){
-  if(r.needsTable&&!isCraftingTableNearby()){particles.push(new FloatingText(player.x,player.y-40,"⚠️ Need Crafting Table!","#ff8844"));return;}
+  if(r.needsTable&&!isCraftingTableNearby()){particles.push(new FloatingText(player.x,player.y-40,"⚠️ Need Crafting Table!","#ff8844"));SFX.craftFail();return;}
   for(let[k,a] of Object.entries(r.cost))if((inventory[k]||0)<a)return;
   for(let[k,a] of Object.entries(r.cost))inventory[k]-=a;
   if(r.special==='portal'){
@@ -887,9 +1146,9 @@ function craftRecipe(r){
     for(let[k,a] of Object.entries(r.result))inventory[k]=(inventory[k]||0)+a;
   }
   for(let i=0;i<12;i++)particles.push(new Particle(player.x+Math.random()*40-20,player.y+Math.random()*40-20,"#FFD966"));
-  showNotif(`✓ Crafted: ${r.name}`);updateInventoryUI();
+  showNotif(`✓ Crafted: ${r.name}`);SFX.craftSuccess();updateInventoryUI();
 }
-function toggleCrafting(){if(gameMode!=='survival')return;craftingOpen=!craftingOpen;document.getElementById('craftingPanel').style.display=craftingOpen?'block':'none';if(craftingOpen){updateCraftingPanel();setTimeout(()=>document.getElementById('craftSearch').focus(),50);}}
+function toggleCrafting(){if(gameMode!=='survival')return;craftingOpen=!craftingOpen;document.getElementById('craftingPanel').style.display=craftingOpen?'block':'none';if(craftingOpen){updateCraftingPanel();setTimeout(()=>document.getElementById('craftSearch').focus(),50);SFX.uiOpen();}else SFX.uiClose();}
 
 // ===== PLAYER =====
 let player={x:256,y:-100,w:28,h:28,vx:0,vy:0,speed:4.2,jumpPower:-10.2,onGround:false,facingRight:true,invincibleTimer:0,lastFallVY:0};
@@ -904,6 +1163,7 @@ const LIQUID_DAMAGE_BLOCKS=new Set(['lava']);
 let playerInLava=false,playerInWater=false;
 let lavaOverlayEl=null,waterOverlayEl=null,netherOverlayEl=null;
 let lavaDmgTimer=0;
+let wasInWaterLast=false;
 
 function checkFluidContact(){
   let px=Math.floor(player.x/TILE_SIZE),py=Math.floor(player.y/TILE_SIZE);
@@ -913,6 +1173,8 @@ function checkFluidContact(){
     if(b==='lava')playerInLava=true;
     if(b==='water')playerInWater=true;
   }
+  if(playerInWater&&!wasInWaterLast)SFX.splash();
+  wasInWaterLast=playerInWater;
   if(playerInLava&&gameMode==='survival'&&survivalStats.alive){
     let hasFireRes=inventory.fire_resistance>0||hasEnchant('iron_chestplate','fire_protection')||hasEnchant('diamond_chestplate','fire_protection')||hasEnchant('iron_helmet','fire_protection')||hasEnchant('diamond_helmet','fire_protection')||hasEnchant('netherite_chestplate','fire_protection')||hasEnchant('netherite_helmet','fire_protection');
     // Netherite armor gives natural fire resistance
@@ -923,6 +1185,7 @@ function checkFluidContact(){
         damagePlayer(2);
         let fl=document.createElement('div');fl.className='lava-flash';document.body.appendChild(fl);setTimeout(()=>fl.remove(),400);
         particles.push(new FloatingText(player.x,player.y-20,"🔥 BURNING!","#FF4400"));
+        SFX.fireBurn();
       }
     }
   } else lavaDmgTimer=0;
@@ -1124,6 +1387,7 @@ class Mob{
     this.bodyColor=def.color;this.eyeColor=def.eyes;this.label=def.label||type;
     this.vx=0;this.vy=0;this.onGround=false;this.attackCooldown=0;this.facingRight=true;
     this.animTimer=0;this.wanderTimer=0;this.wanderDir=1;this.aggro=false;this.explodeTimer=0;
+    this.wasAggro=false;
   }
   update(){
     this.animTimer++;
@@ -1134,24 +1398,29 @@ class Mob{
       this.vx=this.wanderDir*this.speed*0.5;if(night&&dist<150)this.vx=-Math.sign(dxP)*this.speed*1.2;
     } else if(this.type==='iron_golem'){
       let nm=null,nd=Infinity;for(let m of entities){if(m===this)continue;if(ALL_HOSTILE.has(m.type)){let d=Math.abs(m.x-this.x)+Math.abs(m.y-this.y);if(d<nd){nd=d;nm=m;}}}
-      if(nm&&nd<300){this.vx=Math.sign(nm.x-this.x)*this.speed;if(nd<50&&this.attackCooldown===0){if(nm.takeDamage(5)){entities.splice(entities.indexOf(nm),1);}this.attackCooldown=50;}}
+      if(nm&&nd<300){this.vx=Math.sign(nm.x-this.x)*this.speed;if(nd<50&&this.attackCooldown===0){if(nm.takeDamage(5)){entities.splice(entities.indexOf(nm),1);SFX.mobDeath();}this.attackCooldown=50;}}
       else{if(dist>150)this.vx=Math.sign(dxP)*this.speed*0.6;else if(dist<80)this.vx=-Math.sign(dxP)*0.3;else this.vx=0;}
     } else if(this.type==='creeper'){
       if(night&&dist<180)this.aggro=true;
+      if(this.aggro&&!this.wasAggro&&dist<200)SFX.creeperHiss();
       if(this.aggro){
         if(dist<250)this.vx=Math.sign(dxP)*this.speed;
         if(dist<40&&this.attackCooldown===0){
           this.explodeTimer++;
+          if(this.explodeTimer===1)SFX.creeperHiss();
           if(this.explodeTimer>80){
             if(gameMode==='survival')damagePlayer(4-getShieldReduction()-getArmorBonus());
             for(let i=0;i<20;i++)particles.push(new Particle(this.x+Math.random()*40-20,this.y+Math.random()*40-20,"#88FF44"));
             particles.push(new FloatingText(this.x,this.y,"💥 BOOM!","#ff8800"));
             let bx2=Math.floor(this.x/TILE_SIZE),by2=Math.floor(this.y/TILE_SIZE);
             for(let dy=-2;dy<=2;dy++)for(let dx2=-2;dx2<=2;dx2++){let b=getBlockAtWorld(bx2+dx2,by2+dy);if(b!=='bedrock'&&b!=='obsidian'&&b!=='air'&&Math.random()<0.4)setBlockAtWorld(bx2+dx2,by2+dy,'air');}
-            entities.splice(entities.indexOf(this),1);return;
+            entities.splice(entities.indexOf(this),1);
+            SFX.explosion();
+            return;
           }
         } else this.explodeTimer=Math.max(0,this.explodeTimer-1);
       }
+      this.wasAggro=this.aggro;
     } else if(this.type==='enderman'){
       if(dist<250&&night){this.aggro=true;if(Math.random()<0.002&&dist>60){this.x=player.x+(Math.random()*100-50);this.y=player.y-50;}this.vx=Math.sign(dxP)*this.speed;}else this.vx*=0.8;
       if(Math.random()<0.3)particles.push(new Particle(this.x+Math.random()*this.w,this.y+Math.random()*this.h,"#8800FF"));
@@ -1162,6 +1431,7 @@ class Mob{
       if(!night&&!['cave_spider','silverfish','shulker'].includes(this.type))this.aggro=false;
       if(this.aggro){this.vx=Math.sign(dxP)*this.speed;if(isFly)this.vy=Math.sign(dyP)*this.speed;}
       else{this.wanderTimer--;if(this.wanderTimer<=0){this.wanderDir=Math.random()<0.5?-1:1;this.wanderTimer=80+Math.floor(Math.random()*100);}this.vx=this.wanderDir*this.speed*0.3;}
+      if(this.type==='ghast'&&dist<400&&Math.random()<0.002)SFX.ghastShriek();
     }
     if(this.vx!==0)this.facingRight=this.vx>0;
     if(!isFly){
@@ -1233,22 +1503,25 @@ function damagePlayer(amount){
   if(gameMode!=='survival'||!survivalStats.alive||player.invincibleTimer>0)return;
   survivalStats.health=Math.max(0,survivalStats.health-amount);player.invincibleTimer=25;
   particles.push(new FloatingText(player.x,player.y-20,`-${amount}❤️`,"#ff6666"));
+  SFX.playerHurt();
   if(survivalStats.health<=0){
     if(inventory.totem_of_undying>0){
       inventory.totem_of_undying--;survivalStats.health=4;player.invincibleTimer=100;
       let fl=document.createElement('div');fl.className='totem-flash';document.body.appendChild(fl);setTimeout(()=>fl.remove(),1000);
       for(let i=0;i<30;i++)particles.push(new Particle(player.x+Math.random()*60-30,player.y+Math.random()*60-30,"#FFD700"));
       showNotif("☄️ TOTEM OF UNDYING — You survived!",'#FFD700');
+      SFX.totem();
       updateInventoryUI();return;
     }
     survivalStats.alive=false;dropInventoryOnDeath();
     let d=document.createElement('div');d.className='death-msg';
     d.innerHTML="💀 YOU DIED!<br><span style='font-size:14px;color:#ff8888;'>Press R to respawn<br>Return to 💀 grave to recover items!</span>";
     document.body.appendChild(d);setTimeout(()=>d.remove(),5000);
+    SFX.playerDeath();
   }
   updateInventoryUI();
 }
-function respawn(){survivalStats.health=10;survivalStats.maxHealth=10;survivalStats.hunger=8;survivalStats.alive=true;player.x=256;player.y=-100;player.vx=player.vy=0;player.invincibleTimer=40;if(inNether)exitNether();updateInventoryUI();}
+function respawn(){survivalStats.health=10;survivalStats.maxHealth=10;survivalStats.hunger=8;survivalStats.alive=true;player.x=256;player.y=-100;player.vx=player.vy=0;player.invincibleTimer=40;if(inNether)exitNether();SFX.levelEvent(true);updateInventoryUI();}
 
 function getMouseWorldPos(e){const rect=canvas.getBoundingClientRect();let mx=(e.clientX-rect.left)*(canvas.width/rect.width)+cameraX,my=(e.clientY-rect.top)*(canvas.height/rect.height)+cameraY;return{x:Math.floor(mx/TILE_SIZE),y:Math.floor(my/TILE_SIZE)};}
 
@@ -1263,10 +1536,13 @@ function mineBlock(e){
       if(!hasPickaxe(needsLevel)){
         if(block==='ancient_debris')showNotif("⛏️ Need Diamond+ Pickaxe for Ancient Debris!");
         else showNotif(needsLevel>=2?"⛏️ Need Iron+ Pickaxe!":"⛏️ Need any Pickaxe!");
+        SFX.craftFail();
         return;
       }
     }
     let bonus=Math.max(0,getPickaxeBonus());
+    let isWood=(block==="wood"||block==="mine_support"||block==="plank_block"||block==="village_wall"||block==="village_roof");
+    let lootedSomething=false;
     if(block==="stone"||block==="cobble"||block==="well_stone")inventory.stone+=1+bonus;
     else if(block==="coal_ore"){inventory.coal+=1+bonus;if(Math.random()<0.3)inventory.flint++;}
     else if(block==="iron_ore")inventory.iron+=1+bonus;
@@ -1274,12 +1550,12 @@ function mineBlock(e){
     else if(block==="gold_ore")inventory.gold+=1+Math.floor(bonus/2);
     else if(block==="wood"||block==="mine_support"){inventory.wood++;inventory.stick+=2;}
     else if(block==="leaves"){inventory.leaves++;if(Math.random()<0.3)inventory.string++;
-      if(Math.random()<0.08){inventory.apple++;particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🍏 Apple!","#88FF44"));showNotif("🍏 Found an Apple! Craft with 8 Gold = Golden Apple (C key)",'#88FF44');}
+      if(Math.random()<0.08){inventory.apple++;particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🍏 Apple!","#88FF44"));showNotif("🍏 Found an Apple! Craft with 8 Gold = Golden Apple (C key)",'#88FF44');SFX.pickupItem();}
     }
     else if(block==="wheat"){inventory.wheat++;if(Math.random()<0.5)inventory.food++;}
     else if(block==="crafting_table")inventory.crafting_table++;
     else if(block==="anvil_block"){inventory.anvil_block++;showNotif("⚙️ Anvil picked up!",'#cc88ff');}
-    else if(block==="obsidian"){if(hasPickaxe(2)){inventory.obsidian++;showNotif("🟣 Obsidian! Use 10 to build Nether Portal (C key)",'#AA44FF');}else{showNotif("⛏️ Need Iron+ Pickaxe for Obsidian!");return;}}
+    else if(block==="obsidian"){if(hasPickaxe(2)){inventory.obsidian++;showNotif("🟣 Obsidian! Use 10 to build Nether Portal (C key)",'#AA44FF');}else{showNotif("⛏️ Need Iron+ Pickaxe for Obsidian!");SFX.craftFail();return;}}
     else if(block==="netherrack")inventory.stone++;
     else if(block==="nether_gold_ore"){inventory.nether_gold+=1+Math.floor(bonus/2);inventory.gold+=Math.floor(bonus/2);}
     else if(block==="ancient_debris"){
@@ -1288,6 +1564,7 @@ function mineBlock(e){
       for(let i=0;i<10;i++)particles.push(new Particle(pos.x*TILE_SIZE+Math.random()*TILE_SIZE,pos.y*TILE_SIZE+Math.random()*TILE_SIZE,"#5A3030"));
       particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🔴 Ancient Debris!","#AA4444"));
       showNotif("🔴 Ancient Debris! Smelt it to get Netherite Scrap! (C key)",'#AA4444');
+      lootedSomething=true;
     }
     else if(block==="nether_brick")inventory.stone+=1;
     else if(block==="bastion_block"){inventory.stone++;if(Math.random()<0.08)inventory.ancient_debris++;}
@@ -1303,6 +1580,7 @@ function mineBlock(e){
       if(Math.random()<0.2){inventory.totem_of_undying++;particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"☄️ Totem!","#FFD700"));}
       particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🔥 Fortress Loot!","#FF8800"));
       showNotif("🏯 Fortress chest: Blaze Rods + Nether Wart!",'#FF8800');
+      lootedSomething=true;
     }
     else if(block==="bastion_chest"){
       // Bastion chest: rare netherite loot!
@@ -1315,27 +1593,35 @@ function mineBlock(e){
       if(Math.random()<0.08){inventory.netherite_scrap+=2;showNotif("⚫ Found Netherite Scraps in Bastion!",'#884444');}
       particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"💎 Bastion Loot!","#AA4444"));
       showNotif("🏴 Bastion chest: Ancient Debris & Netherite!",'#AA4444');
+      lootedSomething=true;
     }
     else if(block==="blaze_spawner"){
       inventory.blaze_rod++;inventory.blaze_powder+=2;inventory.coal++;
       particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🔥 Blaze Rod!","#FF8800"));
     }
-    else if(block==="chest_block"){inventory.iron+=1+Math.floor(Math.random()*3);inventory.coal+=Math.floor(Math.random()*3);if(Math.random()<0.35)inventory.diamond++;if(Math.random()<0.4)inventory.gold++;if(Math.random()<0.12){inventory.totem_of_undying++;particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"☄️ Totem!","#FFD700"));}if(Math.random()<0.08){inventory.obsidian+=2;showNotif("🟣 Found Obsidian in chest!",'#AA44FF');}particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🎁 Loot!","#FFD700"));}
+    else if(block==="chest_block"){inventory.iron+=1+Math.floor(Math.random()*3);inventory.coal+=Math.floor(Math.random()*3);if(Math.random()<0.35)inventory.diamond++;if(Math.random()<0.4)inventory.gold++;if(Math.random()<0.12){inventory.totem_of_undying++;particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"☄️ Totem!","#FFD700"));}if(Math.random()<0.08){inventory.obsidian+=2;showNotif("🟣 Found Obsidian in chest!",'#AA44FF');}particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🎁 Loot!","#FFD700"));lootedSomething=true;}
     else if(block==="dirt"){if(Math.random()<0.3)inventory.wood++;}
     else if(block==="plank_block"||block==="village_wall"||block==="village_roof")inventory.wood++;
     else if(block==="dungeon_wall"||block==="temple_wall")inventory.stone+=1+bonus;
     setBlockAtWorld(pos.x,pos.y,"air");
     for(let i=0;i<8;i++)particles.push(new Particle(pos.x*TILE_SIZE+Math.random()*TILE_SIZE,pos.y*TILE_SIZE+Math.random()*TILE_SIZE,"#AA8866"));
+    if(lootedSomething)SFX.lootChest();
+    else if(isWood)SFX.chop();
+    else SFX.breakBlock(block);
     updateInventoryUI();if(craftingOpen)updateCraftingPanel();if(enchantOpen)renderEnchantPanel();
   }
   // Attack mobs
+  let hitAnyMob=false;
   for(let i=0;i<entities.length;i++){
     let mob=entities[i];if(mob.type==='iron_golem')continue;
     if(Math.abs(mob.x-pos.x*TILE_SIZE)<55&&Math.abs(mob.y-pos.y*TILE_SIZE)<55){
+      hitAnyMob=true;
       let dmg=getSwordDamage();
       for(let p=0;p<6;p++)particles.push(new Particle(mob.x,mob.y,"#FF4444"));
+      SFX.hitMob();
       if(mob.takeDamage(dmg)){
         particles.push(new FloatingText(mob.x,mob.y,"💀","#ff8888"));
+        SFX.mobDeath();
         if(mob.type==='villager')showNotif("😱 You killed a villager!");
         else{
           if(Math.random()<0.4)inventory.food++;if(Math.random()<0.2)inventory.iron++;if(Math.random()<0.15)inventory.coal++;if(Math.random()<0.1)inventory.string++;
@@ -1364,11 +1650,11 @@ function mineBlock(e){
             if(Math.random()<0.1){inventory.ancient_debris++;particles.push(new FloatingText(mob.x,mob.y-20,"🔴 Ancient Debris!","#AA4444"));}
           }
           if(TOTEM_DROPPERS.has(mob.type)&&Math.random()<0.65){inventory.totem_of_undying++;particles.push(new FloatingText(mob.x,mob.y-20,"☄️ Totem!","#FFD700"));showNotif(`☄️ Got Totem from ${mob.type}!`,'#FFD700');}
-          if(mob.type==='ender_dragon'){inventory.diamond+=5;inventory.magic_orb+=3;inventory.star_shard+=2;showNotif("🐉 Dragon slain! Epic loot!");}
+          if(mob.type==='ender_dragon'){inventory.diamond+=5;inventory.magic_orb+=3;inventory.star_shard+=2;showNotif("🐉 Dragon slain! Epic loot!");SFX.levelEvent(true);}
           if(mob.type==='wither'){
             inventory.diamond+=4;inventory.iron+=5;inventory.nether_gold+=5;
             inventory.ancient_debris+=2;inventory.netherite_ingot+=1;
-            showNotif("☠️ Wither slain! Got Netherite Ingot!");}
+            showNotif("☠️ Wither slain! Got Netherite Ingot!");SFX.levelEvent(true);}
           updateInventoryUI();
         }
         entities.splice(i,1);
@@ -1376,6 +1662,7 @@ function mineBlock(e){
       break;
     }
   }
+  if(!hitAnyMob&&(block==='air'||LIQUID_BLOCKS.has(block)))SFX.swordSwing();
 }
 
 // ===== PLACE BLOCK =====
@@ -1391,13 +1678,13 @@ function placeBlock(e){
       setBlockAtWorld(pos.x,pos.y,'air');
       for(let i=0;i<8;i++)particles.push(new Particle(pos.x*TILE_SIZE+Math.random()*TILE_SIZE,pos.y*TILE_SIZE+Math.random()*TILE_SIZE,"#4488FF"));
       particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🪣 Water scooped!","#44AAFF"));
-      showNotif("🪣 Water collected!",'#44AAFF');updateInventoryUI();return;
+      showNotif("🪣 Water collected!",'#44AAFF');SFX.bucketScoop();updateInventoryUI();return;
     } else if(clickedBlock==='lava'){
       inventory.bucket--;inventory.bucket_lava++;
       setBlockAtWorld(pos.x,pos.y,'air');
       for(let i=0;i<8;i++)particles.push(new Particle(pos.x*TILE_SIZE+Math.random()*TILE_SIZE,pos.y*TILE_SIZE+Math.random()*TILE_SIZE,"#FF6600"));
       particles.push(new FloatingText(pos.x*TILE_SIZE,pos.y*TILE_SIZE-10,"🪣 Lava scooped!","#FF8800"));
-      showNotif("🪣 Lava collected!",'#FF8800');updateInventoryUI();return;
+      showNotif("🪣 Lava collected!",'#FF8800');SFX.bucketScoop();updateInventoryUI();return;
     }
   }
 
@@ -1405,31 +1692,32 @@ function placeBlock(e){
   if(gameMode==='survival'&&selectedBlock==='bucket_water'&&inventory.bucket_water>0&&clickedBlock==='air'){
     let px2=pos.x*TILE_SIZE,py2=pos.y*TILE_SIZE;
     let hit=(player.x<px2+TILE_SIZE&&player.x+player.w>px2&&player.y<py2+TILE_SIZE&&player.y+player.h>py2);
-    if(!hit){inventory.bucket_water--;inventory.bucket++;setBlockAtWorld(pos.x,pos.y,'water');for(let i=0;i<8;i++)particles.push(new Particle(px2+Math.random()*TILE_SIZE,py2+Math.random()*TILE_SIZE,"#4488FF"));updateInventoryUI();}
+    if(!hit){inventory.bucket_water--;inventory.bucket++;setBlockAtWorld(pos.x,pos.y,'water');for(let i=0;i<8;i++)particles.push(new Particle(px2+Math.random()*TILE_SIZE,py2+Math.random()*TILE_SIZE,"#4488FF"));SFX.splash();updateInventoryUI();}
     return;
   }
   if(gameMode==='survival'&&selectedBlock==='bucket_lava'&&inventory.bucket_lava>0&&clickedBlock==='air'){
     let px2=pos.x*TILE_SIZE,py2=pos.y*TILE_SIZE;
     let hit=(player.x<px2+TILE_SIZE&&player.x+player.w>px2&&player.y<py2+TILE_SIZE&&player.y+player.h>py2);
-    if(!hit){inventory.bucket_lava--;inventory.bucket++;setBlockAtWorld(pos.x,pos.y,'lava');for(let i=0;i<8;i++)particles.push(new Particle(px2+Math.random()*TILE_SIZE,py2+Math.random()*TILE_SIZE,"#FF6600"));updateInventoryUI();}
+    if(!hit){inventory.bucket_lava--;inventory.bucket++;setBlockAtWorld(pos.x,pos.y,'lava');for(let i=0;i<8;i++)particles.push(new Particle(px2+Math.random()*TILE_SIZE,py2+Math.random()*TILE_SIZE,"#FF6600"));SFX.place();updateInventoryUI();}
     return;
   }
 
   // Nether portal entry
   if(clickedBlock==='nether_portal'){if(!inNether)enterNether();else exitNether();return;}
-  if(clickedBlock==='anvil_block'){enchantOpen=true;document.getElementById('enchantPanel').style.display='block';renderEnchantPanel();showNotif("✨ Enchanting opened!",'#cc88ff');return;}
+  if(clickedBlock==='anvil_block'){enchantOpen=true;document.getElementById('enchantPanel').style.display='block';renderEnchantPanel();showNotif("✨ Enchanting opened!",'#cc88ff');SFX.uiOpen();return;}
   if(clickedBlock==='air'){
     let px2=pos.x*TILE_SIZE,py2=pos.y*TILE_SIZE;
     let hit=(player.x<px2+TILE_SIZE&&player.x+player.w>px2&&player.y<py2+TILE_SIZE&&player.y+player.h>py2);
     if(!hit){
       if(gameMode==='survival'){
-        if(selectedBlock==='crafting_table'){if(inventory.crafting_table<=0){showNotif("❌ No Crafting Table!");return;}inventory.crafting_table--;}
-        else if(selectedBlock==='anvil_block'){if(inventory.anvil_block<=0){showNotif("❌ No Anvil!");return;}inventory.anvil_block--;}
-        else if(selectedBlock==='lava'){if(inventory.lava<=0){showNotif("❌ No Lava! Mine lava blocks.");return;}inventory.lava--;}
-        else if(selectedBlock==='water'){if(inventory.water<=0){showNotif("❌ No Water! Find a water pool.");return;}inventory.water--;}
+        if(selectedBlock==='crafting_table'){if(inventory.crafting_table<=0){showNotif("❌ No Crafting Table!");SFX.craftFail();return;}inventory.crafting_table--;}
+        else if(selectedBlock==='anvil_block'){if(inventory.anvil_block<=0){showNotif("❌ No Anvil!");SFX.craftFail();return;}inventory.anvil_block--;}
+        else if(selectedBlock==='lava'){if(inventory.lava<=0){showNotif("❌ No Lava! Mine lava blocks.");SFX.craftFail();return;}inventory.lava--;}
+        else if(selectedBlock==='water'){if(inventory.water<=0){showNotif("❌ No Water! Find a water pool.");SFX.craftFail();return;}inventory.water--;}
         else if(selectedBlock==='bucket'||selectedBlock==='bucket_water'||selectedBlock==='bucket_lava'){return;}
       }
       setBlockAtWorld(pos.x,pos.y,selectedBlock);
+      SFX.place();
       if(selectedBlock==='water'||selectedBlock==='lava'){
         const dirs=[[0,-1],[0,1],[-1,0],[1,0]];
         for(let[dx2,dy2] of dirs){
@@ -1440,6 +1728,7 @@ function placeBlock(e){
               for(let i=0;i<16;i++)particles.push(new Particle((pos.x+0.5)*TILE_SIZE+Math.random()*TILE_SIZE-16,(pos.y+0.5)*TILE_SIZE+Math.random()*TILE_SIZE-16,"#554466"));
               particles.push(new FloatingText((pos.x+0.5)*TILE_SIZE,(pos.y-1)*TILE_SIZE,"💎 Obsidian!","#AA88FF"));
               showNotif("🌊🔥 Water + Lava = 💎 Obsidian!",'#AA88FF');
+              SFX.obsidianForm();
             },500);
           }
         }
@@ -1460,16 +1749,18 @@ function updateMovement(){
   if(playerInWater)spd*=0.45;
   let moveX=(keys["a"]||keys["ArrowLeft"]?-1:0)+(keys["d"]||keys["ArrowRight"]?1:0);
   player.vx=moveX*spd;if(moveX!==0)player.facingRight=moveX===1;
+  let jumpPressed=false;
   if(gameMode==='creative'){let moveY=(keys["w"]||keys["ArrowUp"]?-1:0)+(keys["s"]||keys["ArrowDown"]?1:0);if(keys[" "])moveY=-1;player.vy=moveY*spd;}
   else{
     if(playerInWater){
       if(keys[" "]||keys["w"]||keys["ArrowUp"])player.vy=Math.max(-3,player.vy-0.5);
       player.vy+=0.15;player.vy=Math.min(2,player.vy);
     } else {
-      if((keys[" "]||keys["w"]||keys["ArrowUp"])&&player.onGround){player.vy=player.jumpPower;player.onGround=false;}
+      if((keys[" "]||keys["w"]||keys["ArrowUp"])&&player.onGround){player.vy=player.jumpPower;player.onGround=false;jumpPressed=true;}
       player.vy=Math.min(20,player.vy+0.55);
     }
   }
+  if(jumpPressed)SFX.jump();
   let wasOnGround=player.onGround;
   if(player.vy>0&&!playerInWater){player.lastFallVY=Math.max(player.lastFallVY,player.vy);}
   player.onGround=false;player.x+=player.vx;if(player.x<0)player.x=0;
@@ -1481,9 +1772,9 @@ function updateMovement(){
       let hasFf=hasEnchant('iron_boots','feather_falling')||hasEnchant('diamond_boots','feather_falling')||hasEnchant('netherite_boots','feather_falling');
       if(!hasFf&&!playerInWater){
         let fallDmg=Math.floor((player.lastFallVY-FALL_DMG_THRESHOLD)*0.8);
-        if(fallDmg>0){damagePlayer(fallDmg);particles.push(new FloatingText(player.x,player.y-20,`🪂 -${fallDmg} Fall!`,"#ff8844"));for(let i=0;i<8;i++)particles.push(new Particle(player.x+Math.random()*player.w,player.y+player.h,"#AA6633"));}
+        if(fallDmg>0){damagePlayer(fallDmg);particles.push(new FloatingText(player.x,player.y-20,`🪂 -${fallDmg} Fall!`,"#ff8844"));for(let i=0;i<8;i++)particles.push(new Particle(player.x+Math.random()*player.w,player.y+player.h,"#AA6633"));SFX.fallDamage();}
       }
-    }
+    } else if(!wasOnGround&&player.lastFallVY>4){SFX.land();}
     player.lastFallVY=0;player.y=by2-player.h;player.vy=0;player.onGround=true;}else if(player.vy<0){player.y=by2+TILE_SIZE;player.vy=0;}}}}
   if(player.y<WORLD_MIN_Y*TILE_SIZE){player.y=WORLD_MIN_Y*TILE_SIZE;player.vy=0;}
   if(player.y+player.h>(WORLD_MAX_Y-1)*TILE_SIZE){player.y=(WORLD_MAX_Y-1)*TILE_SIZE-player.h;player.vy=0;player.onGround=true;}
@@ -1804,10 +2095,11 @@ window.addEventListener("keydown",(e)=>{
     {key:"5",b:"iron_ore"},{key:"6",b:"wood"},{key:"7",b:"crafting_table"},{key:"8",b:"anvil_block"},
     {key:"9",b:"lava"},{key:"0",b:"water"},{key:"-",b:"bucket"},{key:"=",b:"bucket_water"},{key:"\\",b:"bucket_lava"}
   ];
-  for(let b of bd)if(e.key===b.key){selectedBlock=b.b;e.preventDefault();}
+  for(let b of bd)if(e.key===b.key){selectedBlock=b.b;SFX.click(500,0.1);e.preventDefault();}
   if(e.key==="c"||e.key==="C"){toggleCrafting();e.preventDefault();}
   if(e.key==="i"||e.key==="I"){toggleInventory();e.preventDefault();}
   if(e.key==="x"||e.key==="X"){toggleEnchant();e.preventDefault();}
+  if(e.key==="m"||e.key==="M"){SFX.setMuted(!SFX.isMuted());refreshSoundIcon();SFX.click(660,0.15);e.preventDefault();}
   // N key: if already in the Nether, instantly teleport home to spawn (no portal/obsidian needed).
   // If in the Overworld, behaves as before — auto-builds a portal from 10 Obsidian if available.
   if(e.key==="n"||e.key==="N"){
@@ -1815,12 +2107,12 @@ window.addEventListener("keydown",(e)=>{
       teleportHome();
     } else if(gameMode==='survival'){
       if(inventory.obsidian>=10){inventory.obsidian-=10;let px2=Math.floor(player.x/TILE_SIZE),py2=Math.floor(player.y/TILE_SIZE);buildNetherPortal(px2,py2);}
-      else showNotif("🟣 Need 10 Obsidian to build Nether Portal!",'#AA44FF');
+      else {showNotif("🟣 Need 10 Obsidian to build Nether Portal!",'#AA44FF');SFX.craftFail();}
     }
     e.preventDefault();
   }
-  if(e.key==="e"&&gameMode==='survival'&&inventory.food>0&&survivalStats.hunger<10){inventory.food--;survivalStats.hunger=Math.min(10,survivalStats.hunger+3);updateInventoryUI();particles.push(new FloatingText(player.x,player.y-10,"🍗 +3","#88ff88"));e.preventDefault();}
-  if(e.key==="q"&&gameMode==='survival'&&inventory.health_potion>0&&survivalStats.health<survivalStats.maxHealth){inventory.health_potion--;survivalStats.health=Math.min(survivalStats.maxHealth,survivalStats.health+5);updateInventoryUI();particles.push(new FloatingText(player.x,player.y-10,"💊 +5❤️","#ff88ff"));e.preventDefault();}
+  if(e.key==="e"&&gameMode==='survival'&&inventory.food>0&&survivalStats.hunger<10){inventory.food--;survivalStats.hunger=Math.min(10,survivalStats.hunger+3);updateInventoryUI();particles.push(new FloatingText(player.x,player.y-10,"🍗 +3","#88ff88"));SFX.eat();e.preventDefault();}
+  if(e.key==="q"&&gameMode==='survival'&&inventory.health_potion>0&&survivalStats.health<survivalStats.maxHealth){inventory.health_potion--;survivalStats.health=Math.min(survivalStats.maxHealth,survivalStats.health+5);updateInventoryUI();particles.push(new FloatingText(player.x,player.y-10,"💊 +5❤️","#ff88ff"));SFX.drinkPotion();e.preventDefault();}
   // G = Golden Apple: +2 absorption hearts for 30 seconds
   if(e.key==="g"&&gameMode==='survival'&&inventory.golden_apple>0){
     inventory.golden_apple--;
@@ -1831,6 +2123,7 @@ window.addEventListener("keydown",(e)=>{
     particles.push(new FloatingText(player.x,player.y-20,"🍎🥇 +2♥ Absorption!","#FFD700"));
     for(let i=0;i<12;i++)particles.push(new Particle(player.x+Math.random()*60-30,player.y+Math.random()*60-30,"#FFD700"));
     showNotif("🍎🥇 Golden Apple! +2 bonus hearts! (30s)",'#FFD700');
+    SFX.eat();SFX.levelEvent(true);
     setTimeout(()=>{survivalStats.maxHealth=Math.max(10,survivalStats.maxHealth-absorption);survivalStats.health=Math.min(survivalStats.health,survivalStats.maxHealth);updateInventoryUI();showNotif("⌛ Golden Apple effect faded",'#AAAAAA');},30000);
     e.preventDefault();
   }
@@ -1844,10 +2137,11 @@ window.addEventListener("keydown",(e)=>{
     particles.push(new FloatingText(player.x,player.y-30,"✨🍎 FULL HEAL + +4♥!","#FFD700"));
     for(let i=0;i<25;i++)particles.push(new Particle(player.x+Math.random()*80-40,player.y+Math.random()*60-30,Math.random()<0.5?"#FFD700":"#FFFFFF"));
     showNotif("✨🍎 Enchanted Golden Apple! FULL HEAL + 4 extra hearts! (2min)",'#FFD700');
+    SFX.eat();SFX.levelEvent(true);
     setTimeout(()=>{survivalStats.maxHealth=Math.max(10,survivalStats.maxHealth-absorption);survivalStats.health=Math.min(survivalStats.health,survivalStats.maxHealth);updateInventoryUI();showNotif("⌛ Enchanted Golden Apple effect faded",'#AAAAAA');},120000);
     e.preventDefault();
   }
-  if(e.key==="f"&&gameMode==='survival'&&inventory.fire_resistance>0){inventory.fire_resistance--;showNotif("🔥 Fire Resistance active!",'#FF8800');particles.push(new FloatingText(player.x,player.y-20,"🔥 Protected!","#FF8800"));e.preventDefault();}
+  if(e.key==="f"&&gameMode==='survival'&&inventory.fire_resistance>0){inventory.fire_resistance--;showNotif("🔥 Fire Resistance active!",'#FF8800');particles.push(new FloatingText(player.x,player.y-20,"🔥 Protected!","#FF8800"));SFX.drinkPotion();e.preventDefault();}
   if(e.key==="r"&&gameMode==='survival'&&!survivalStats.alive)respawn();
   if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key))e.preventDefault();
 });
@@ -1860,6 +2154,7 @@ let lastDayPhase=false;
 function gameLoop(){
   dayTimer=(dayTimer+1)%FULL_CYCLE;
   let wasNight=lastDayPhase;lastDayPhase=isNight();
+  if(wasNight!==lastDayPhase){SFX.dayNightChime(!lastDayPhase);}
   if(wasNight&&!isNight()&&!inNether)clearNightMobs();
   cameraX=player.x+player.w/2-canvas.width/2;cameraY=player.y+player.h/2-canvas.height/2;
   if(!inNether){
@@ -1886,7 +2181,7 @@ function gameLoop(){
 function initGame(mode){
   gameMode=mode;worldChunks.clear();structureSeeds.clear();netherWorldChunks.clear();netherStructureSeeds.clear();dayTimer=0;lastDayPhase=false;entities=[];particles=[];
   enchantments={};deathDropPos=null;deathDropItems=null;if(graveNotifEl){graveNotifEl.remove();graveNotifEl=null;}
-  inNether=false;playerInLava=false;playerInWater=false;lavaAnimTimer=0;lavaDmgTimer=0;
+  inNether=false;playerInLava=false;playerInWater=false;lavaAnimTimer=0;lavaDmgTimer=0;wasInWaterLast=false;
   if(lavaOverlayEl){lavaOverlayEl.remove();lavaOverlayEl=null;}
   if(waterOverlayEl){waterOverlayEl.remove();waterOverlayEl=null;}
   if(netherOverlayEl){netherOverlayEl.remove();netherOverlayEl=null;}
@@ -1910,6 +2205,7 @@ function initGame(mode){
     document.getElementById('enchantPanel').style.display='none';
   } else {document.getElementById('hud').style.display='none';}
   updateInventoryUI();gameLoop();
+  SFX.startAmbient(()=>({inNether,night:isNight()}));
   setTimeout(()=>showNotif(mode==='survival'?"🍏 Mine leaves for Apples! G=Golden Apple (+2♥) H=Ench.Apple (full heal!) N=Nether/Teleport Home":"✨ Creative! WASD to fly!"),300);
 }
 })();
