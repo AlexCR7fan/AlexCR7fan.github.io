@@ -197,6 +197,16 @@ canvas { display:block; width:100%; height:100%; }
 .saveslot-close-btn { display:block; margin:12px auto 0; background:#1a3a1a; border:1px solid #2a5a2a; color:#7CFC00; padding:6px 22px; border-radius:8px; cursor:pointer; font-size:10px; font-family:'Courier New',monospace; }
 .saveslot-close-btn:hover { background:#2a5a2a; }
 .saveslot-status { text-align:center; font-size:9px; margin-bottom:8px; padding:4px 6px; border-radius:6px; color:#7a9a7a; background:rgba(0,0,0,0.3); }
+.saveslot-section-label { color:#7a9a7a; font-size:9px; letter-spacing:1px; margin:10px 0 6px; text-transform:uppercase; border-bottom:1px solid #1a3a1a; padding-bottom:4px; }
+.saveslot-divider { height:1px; background:#1a3a1a; margin:14px 0; }
+.saveslot-code-box { width:100%; background:rgba(0,0,0,0.5); border:1px solid #2a5a2a; border-radius:8px; color:#7CFC00; font-family:'Courier New',monospace; font-size:11px; padding:8px; resize:none; outline:none; margin-bottom:8px; word-break:break-all; line-height:1.5; }
+.saveslot-code-box:focus { border-color:#7CFC00; }
+.saveslot-code-box::placeholder { color:#3a5a3a; }
+.saveslot-btn.save-action-btn { display:block; width:100%; padding:9px 0; font-size:11px; text-align:center; margin-bottom:8px; background:#1a4a1a; border-color:#3a7a3a; }
+.saveslot-btn.save-action-btn:hover { background:#2a6a2a; }
+.saveslot-btn.copy-btn { display:block; width:100%; padding:7px 0; font-size:10px; text-align:center; margin-bottom:4px; }
+.saveslot-btn.load-btn-main { display:block; width:100%; padding:9px 0; font-size:11px; text-align:center; background:#1a2a4a; border-color:#3a5a8a; color:#7FAAFF; }
+.saveslot-btn.load-btn-main:hover { background:#2a3a6a; }
 #soundToggle { position:fixed; bottom:12px; right:12px; z-index:100; display:none; background:rgba(8,15,8,0.9); border:2px solid #2a4a2a; border-radius:10px; width:42px; height:42px; align-items:center; justify-content:center; cursor:pointer; font-size:18px; user-select:none; backdrop-filter:blur(8px); transition:all 0.15s; }
 #soundToggle:hover { border-color:#4a7a4a; background:rgba(20,40,20,0.9); }
 #soundToggle.muted { color:#665; opacity:0.6; }
@@ -272,7 +282,7 @@ canvas { display:block; width:100%; height:100%; }
   <div class="hud-pill hud-totem" id="hudTotem" style="display:none">☄️ Totem Ready</div>
   <div class="hud-pill hud-nether" id="hudNether" style="display:none">🔥 THE NETHER</div>
 </div>
-<div class="controls-strip" id="controlsStrip">WASD Move | Space Jump<br>LClick Mine/Attack | RClick Place/Pickup<br>🪣 RClick water/lava with bucket to scoop!<br>1-9 Blocks | I Inventory | C Craft<br>X Enchant | E Eat | Q Potion | R Respawn<br>G = Golden Apple (+2♥) | H = Ench. Apple (Full heal!)<br>🔥 Lava burns! 🌊 Water slows! 🪂 5+ block fall = damage!<br>💎 Water+Lava=Obsidian | N=Nether Portal / Teleport Home<br>🏯 Nether Fortress: Blaze Rods & Chests!<br>🏴 Bastion Remnant: Ancient Debris & Netherite!<br>🔊 M = Mute Sound</div>
+<div class="controls-strip" id="controlsStrip">WASD Move | Space Jump<br>LClick Mine/Attack | RClick Place/Pickup<br>🪣 RClick water/lava with bucket to scoop!<br>1-9 Blocks | I Inventory | C Craft<br>X Enchant | E Eat | Q Potion | R Respawn<br>G = Golden Apple (+2♥) | H = Ench. Apple (Full heal!)<br>🔥 Lava burns! 🌊 Water slows! 🪂 5+ block fall = damage!<br>💎 Water+Lava=Obsidian | N=Nether Portal / Teleport Home<br>🏯 Nether Fortress: Blaze Rods & Chests!<br>🏴 Bastion Remnant: Ancient Debris & Netherite!<br>🔊 M = Mute Sound | 💾 P = Save/Load World Code</div>
 <div id="inventoryPanel"><div class="inv-title">🎒 INVENTORY</div><div id="invContent"></div></div>
 <div id="craftingPanel">
   <div class="craft-title">🔨 CRAFTING</div>
@@ -289,8 +299,17 @@ canvas { display:block; width:100%; height:100%; }
 </div>
 <div id="saveSlotPanel">
   <div class="saveslot-title">💾 SAVE / LOAD WORLD</div>
-  <div class="saveslot-status" id="saveSlotStatus">Choose a slot to save or load</div>
-  <div id="saveSlotList"></div>
+  <div class="saveslot-status" id="saveSlotStatus">Generate a code to save, or paste a code to load</div>
+  <div class="saveslot-section-label">📤 SAVE — generate your world code</div>
+  <button class="saveslot-btn save-action-btn" id="generateCodeBtn">🔢 Generate Save Code</button>
+  <div id="saveCodeOutputWrap" style="display:none;">
+    <textarea class="saveslot-code-box" id="saveCodeOutput" readonly rows="3"></textarea>
+    <button class="saveslot-btn copy-btn" id="copyCodeBtn">📋 Copy Code</button>
+  </div>
+  <div class="saveslot-divider"></div>
+  <div class="saveslot-section-label">📥 LOAD — paste a world code</div>
+  <textarea class="saveslot-code-box" id="loadCodeInput" rows="3" placeholder="Paste your save code here..."></textarea>
+  <button class="saveslot-btn load-btn-main" id="loadCodeBtn">📂 Load World</button>
   <button class="saveslot-close-btn" id="saveSlotCloseBtn">✕ Close (P)</button>
 </div>
 <div id="hotbar" style="display:none;flex-direction:row;"></div>
@@ -2089,6 +2108,8 @@ function initHotbar(){document.getElementById('hotbar').style.display='flex';}
 // ===== INPUT =====
 window.addEventListener("keydown",(e)=>{
   if(document.activeElement===document.getElementById('craftSearch'))return;
+  if(document.activeElement===document.getElementById('loadCodeInput'))return;
+  if(document.activeElement===document.getElementById('saveCodeOutput'))return;
   keys[e.key]=true;
   const bd=[
     {key:"1",b:"dirt"},{key:"2",b:"grass"},{key:"3",b:"stone"},{key:"4",b:"coal_ore"},
@@ -2099,6 +2120,7 @@ window.addEventListener("keydown",(e)=>{
   if(e.key==="c"||e.key==="C"){toggleCrafting();e.preventDefault();}
   if(e.key==="i"||e.key==="I"){toggleInventory();e.preventDefault();}
   if(e.key==="x"||e.key==="X"){toggleEnchant();e.preventDefault();}
+  if(e.key==="p"||e.key==="P"){toggleSaveSlotPanel();e.preventDefault();}
   if(e.key==="m"||e.key==="M"){SFX.setMuted(!SFX.isMuted());refreshSoundIcon();SFX.click(660,0.15);e.preventDefault();}
   // N key: if already in the Nether, instantly teleport home to spawn (no portal/obsidian needed).
   // If in the Overworld, behaves as before — auto-builds a portal from 10 Obsidian if available.
@@ -2148,6 +2170,293 @@ window.addEventListener("keydown",(e)=>{
 window.addEventListener("keyup",(e)=>{keys[e.key]=false;});
 canvas.addEventListener("click",mineBlock);
 canvas.addEventListener("contextmenu",(e)=>{e.preventDefault();placeBlock(e);});
+
+// =====================================================================
+// ===== WORLD SAVE / LOAD — encodes full world state into a numeric code =====
+// =====================================================================
+// Strategy: collect a compact JS object describing every piece of mutable
+// state (player, inventory, enchantments, survival stats, day/night timer,
+// nether flag, every chunk that has ever been touched/generated in both the
+// overworld and nether, mob entities, structure seeds, death-drop info),
+// JSON-stringify it, run it through a small LZW-style compressor to shrink
+// it, then encode the compressed byte stream as a base-10 BigInt string so
+// the player ends up with a plain "number" they can copy/paste.
+const SAVE_BLOCK_DICT_VERSION=1;
+function buildBlockDictionary(){
+  // Collect every distinct block string currently in use across both worlds
+  // plus all known palette/color-map keys, so the dictionary covers anything
+  // that could appear. Index 0 is reserved for 'air' for compactness.
+  const set=new Set(['air']);
+  for(let k in colorMap)set.add(k);
+  for(let k in BLOCK_PIXELS)set.add(k);
+  set.add('nether_portal');set.add('chest_block');set.add('fortress_chest');set.add('bastion_chest');
+  set.add('blaze_spawner');set.add('soul_sand');set.add('nether_wart');set.add('wheat');
+  set.add('village_wall');set.add('village_roof');set.add('well_stone');set.add('dungeon_wall');
+  set.add('mine_support');set.add('temple_wall');set.add('cobble');set.add('plank_block');
+  const arr=Array.from(set);
+  const dict={};arr.forEach((b,i)=>dict[b]=i);
+  return {arr,dict};
+}
+function encodeChunkRLE(chunk,dict){
+  // Flatten 16x16 -> 256 entries, run-length encode as [index,count,index,count,...]
+  const flat=[];
+  for(let ly=0;ly<16;ly++)for(let lx=0;lx<16;lx++)flat.push(dict[chunk[ly][lx]]!==undefined?dict[chunk[ly][lx]]:0);
+  const out=[];let i=0;
+  while(i<flat.length){
+    let v=flat[i],run=1;
+    while(i+run<flat.length&&flat[i+run]===v)run++;
+    out.push(v,run);i+=run;
+  }
+  return out;
+}
+function decodeChunkRLE(rle,arr){
+  const flat=[];
+  for(let i=0;i<rle.length;i+=2){const v=rle[i],run=rle[i+1];for(let r=0;r<run;r++)flat.push(arr[v]!==undefined?arr[v]:'air');}
+  const chunk=Array(16).fill(null).map(()=>Array(16).fill('air'));
+  for(let ly=0;ly<16;ly++)for(let lx=0;lx<16;lx++)chunk[ly][lx]=flat[ly*16+lx]||'air';
+  return chunk;
+}
+function serializeWorldState(){
+  const {arr,dict}=buildBlockDictionary();
+  const overworldChunks={};
+  for(let[key,chunk] of worldChunks.entries())overworldChunks[key]=encodeChunkRLE(chunk,dict);
+  const netherChunks={};
+  for(let[key,chunk] of netherWorldChunks.entries())netherChunks[key]=encodeChunkRLE(chunk,dict);
+  const entitySnap=entities.map(en=>({x:Math.round(en.x),y:Math.round(en.y),type:en.type,health:en.health}));
+  const state={
+    v:SAVE_BLOCK_DICT_VERSION,
+    mode:gameMode,
+    dict:arr,
+    ow:overworldChunks,
+    nw:netherChunks,
+    structSeeds:Array.from(structureSeeds.keys()),
+    netherStructSeeds:Array.from(netherStructureSeeds.keys()),
+    player:{x:player.x,y:player.y,facingRight:player.facingRight},
+    overWorldPos:overWorldPos,
+    inNether:inNether,
+    dayTimer:dayTimer,
+    survivalStats:survivalStats,
+    inventory:inventory,
+    enchantments:enchantments,
+    selectedBlock:selectedBlock,
+    entities:entitySnap,
+    deathDropPos:deathDropPos,
+    deathDropItems:deathDropItems,
+  };
+  return state;
+}
+function applyWorldState(state){
+  if(!state||typeof state!=='object')throw new Error('bad state');
+  gameMode=state.mode||'survival';
+  const arr=state.dict||['air'];
+  worldChunks.clear();netherWorldChunks.clear();structureSeeds.clear();netherStructureSeeds.clear();
+  for(let key in (state.ow||{})){
+    worldChunks.set(key,decodeChunkRLE(state.ow[key],arr));
+  }
+  for(let key in (state.nw||{})){
+    netherWorldChunks.set(key,decodeChunkRLE(state.nw[key],arr));
+  }
+  for(let key of (state.structSeeds||[]))structureSeeds.set(key,true);
+  for(let key of (state.netherStructSeeds||[]))netherStructureSeeds.set(key,true);
+  player.x=state.player?state.player.x:8*TILE_SIZE;
+  player.y=state.player?state.player.y:-100;
+  player.vx=0;player.vy=0;player.onGround=false;player.invincibleTimer=0;player.lastFallVY=0;
+  if(state.player&&typeof state.player.facingRight==='boolean')player.facingRight=state.player.facingRight;
+  overWorldPos=state.overWorldPos||{x:player.x,y:player.y};
+  inNether=!!state.inNether;
+  dayTimer=state.dayTimer||0;lastDayPhase=isNight();
+  survivalStats=state.survivalStats||{health:10,maxHealth:10,hunger:10,maxHunger:10,alive:true};
+  for(let k in inventory)inventory[k]=0;
+  if(state.inventory)for(let k in state.inventory)inventory[k]=state.inventory[k];
+  enchantments=state.enchantments||{};
+  selectedBlock=state.selectedBlock||'dirt';
+  entities=[];particles=[];
+  for(let es of (state.entities||[])){
+    const m=new Mob(es.x,es.y,es.type);
+    if(typeof es.health==='number')m.health=es.health;
+    entities.push(m);
+  }
+  deathDropPos=state.deathDropPos||null;
+  deathDropItems=state.deathDropItems||null;
+  if(graveNotifEl){graveNotifEl.remove();graveNotifEl=null;}
+  if(deathDropPos){
+    graveNotifEl=document.createElement('div');graveNotifEl.className='grave-notif';
+    graveNotifEl.innerText=`💀 Items dropped at X:${deathDropPos.x} Y:${deathDropPos.y} — return to recover!`;
+    document.body.appendChild(graveNotifEl);
+  }
+  playerInLava=false;playerInWater=false;wasInWaterLast=false;lavaDmgTimer=0;
+  cameraX=0;cameraY=0;
+  document.getElementById('hud').style.display=gameMode==='survival'?'flex':'none';
+  document.getElementById('hudNether').style.display=inNether?'block':'none';
+  craftingOpen=false;inventoryOpen=false;enchantOpen=false;
+  document.getElementById('craftingPanel').style.display='none';
+  document.getElementById('inventoryPanel').style.display='none';
+  document.getElementById('enchantPanel').style.display='none';
+  updateInventoryUI();
+}
+
+// ---- LZW-style compressor (string -> array of ints -> back) ----
+function lzwCompress(input){
+  const dict={};let dictSize=256;
+  for(let i=0;i<256;i++)dict[String.fromCharCode(i)]=i;
+  let w='';const result=[];
+  for(let i=0;i<input.length;i++){
+    const c=input[i],wc=w+c;
+    if(dict.hasOwnProperty(wc))w=wc;
+    else{
+      result.push(dict[w]);
+      dict[wc]=dictSize++;
+      w=c;
+    }
+  }
+  if(w!=='')result.push(dict[w]);
+  return result;
+}
+function lzwDecompress(codes){
+  let dictSize=256;const dict={};
+  for(let i=0;i<256;i++)dict[i]=String.fromCharCode(i);
+  let w=dict[codes[0]];let result=w;
+  for(let i=1;i<codes.length;i++){
+    const k=codes[i];let entry;
+    if(dict[k]!==undefined)entry=dict[k];
+    else if(k===dictSize)entry=w+w[0];
+    else throw new Error('bad compressed data');
+    result+=entry;
+    dict[dictSize++]=w+entry[0];
+    w=entry;
+  }
+  return result;
+}
+// Pack an array of integer codes (variable size, can exceed 255) into a byte
+// stream using a simple 2-byte-per-code scheme (codes can grow large with
+// big saves, so use 3 bytes per code to be safe up to ~16.7M dictionary size).
+function packCodes(codes){
+  const bytes=new Uint8Array(codes.length*3);
+  for(let i=0;i<codes.length;i++){
+    const v=codes[i];
+    bytes[i*3]=(v>>16)&0xFF;
+    bytes[i*3+1]=(v>>8)&0xFF;
+    bytes[i*3+2]=v&0xFF;
+  }
+  return bytes;
+}
+function unpackCodes(bytes){
+  const codes=[];
+  for(let i=0;i<bytes.length;i+=3){
+    codes.push((bytes[i]<<16)|(bytes[i+1]<<8)|bytes[i+2]);
+  }
+  return codes;
+}
+// ---- Bytes <-> base-10 BigInt string, so the final save code is all digits ----
+function bytesToDigitString(bytes){
+  let big=0n;
+  for(let i=0;i<bytes.length;i++)big=(big<<8n)|BigInt(bytes[i]);
+  // Prefix with the byte-length (fixed 8-digit field) so we know how many
+  // leading zero-bytes to restore when converting back from BigInt, since
+  // BigInt drops leading zero bytes.
+  const lenField=String(bytes.length).padStart(8,'0');
+  return lenField+big.toString(10);
+}
+function digitStringToBytes(str){
+  str=str.trim().replace(/[^0-9]/g,'');
+  if(str.length<=8)throw new Error('code too short');
+  const lenField=str.slice(0,8);
+  const byteLen=parseInt(lenField,10);
+  const numPart=str.slice(8)||'0';
+  let big=BigInt(numPart);
+  const bytes=new Uint8Array(byteLen);
+  for(let i=byteLen-1;i>=0;i--){
+    bytes[i]=Number(big&0xFFn);
+    big>>=8n;
+  }
+  return bytes;
+}
+function generateSaveCode(){
+  const state=serializeWorldState();
+  const json=JSON.stringify(state);
+  const codes=lzwCompress(json);
+  const bytes=packCodes(codes);
+  return bytesToDigitString(bytes);
+}
+function loadSaveCode(code){
+  const bytes=digitStringToBytes(code);
+  const codes=unpackCodes(bytes);
+  const json=lzwDecompress(codes);
+  const state=JSON.parse(json);
+  applyWorldState(state);
+}
+
+// ---- Save/Load panel wiring ----
+let saveSlotOpen=false;
+function toggleSaveSlotPanel(){
+  if(gameMode===null)return; // not in a game yet
+  saveSlotOpen=!saveSlotOpen;
+  document.getElementById('saveSlotPanel').style.display=saveSlotOpen?'block':'none';
+  if(saveSlotOpen){
+    SFX.uiOpen();
+    document.getElementById('saveSlotStatus').innerText='Generate a code to save, or paste a code to load';
+    document.getElementById('saveSlotStatus').style.color='#7a9a7a';
+    document.getElementById('saveCodeOutputWrap').style.display='none';
+    document.getElementById('saveCodeOutput').value='';
+  } else SFX.uiClose();
+}
+document.getElementById('saveSlotCloseBtn').addEventListener('click',()=>toggleSaveSlotPanel());
+document.getElementById('generateCodeBtn').addEventListener('click',()=>{
+  try{
+    const code=generateSaveCode();
+    document.getElementById('saveCodeOutput').value=code;
+    document.getElementById('saveCodeOutputWrap').style.display='block';
+    document.getElementById('saveSlotStatus').innerText=`✅ Code generated (${code.length} digits) — copy it somewhere safe!`;
+    document.getElementById('saveSlotStatus').style.color='#7CFC00';
+    SFX.craftSuccess();
+    document.getElementById('saveCodeOutput').focus();
+    document.getElementById('saveCodeOutput').select();
+  }catch(err){
+    document.getElementById('saveSlotStatus').innerText='❌ Failed to generate code: '+err.message;
+    document.getElementById('saveSlotStatus').style.color='#ff8888';
+    SFX.craftFail();
+  }
+});
+document.getElementById('copyCodeBtn').addEventListener('click',()=>{
+  const box=document.getElementById('saveCodeOutput');
+  box.focus();box.select();
+  let copied=false;
+  try{copied=document.execCommand('copy');}catch(e){copied=false;}
+  if(!copied&&navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(box.value).then(()=>{
+      showNotif('📋 Code copied to clipboard!','#7CFC00');
+    }).catch(()=>{
+      showNotif('⚠️ Copy failed — select & copy manually','#ff8844');
+    });
+  } else if(copied){
+    showNotif('📋 Code copied to clipboard!','#7CFC00');
+  } else {
+    showNotif('⚠️ Copy failed — select & copy manually','#ff8844');
+  }
+  SFX.click(700,0.15);
+});
+document.getElementById('loadCodeBtn').addEventListener('click',()=>{
+  const input=document.getElementById('loadCodeInput').value;
+  if(!input||!input.trim()){
+    document.getElementById('saveSlotStatus').innerText='⚠️ Paste a save code first!';
+    document.getElementById('saveSlotStatus').style.color='#ff8844';
+    SFX.craftFail();
+    return;
+  }
+  try{
+    loadSaveCode(input);
+    document.getElementById('saveSlotStatus').innerText='✅ World loaded successfully!';
+    document.getElementById('saveSlotStatus').style.color='#7CFC00';
+    showNotif('💾 World loaded from code!','#7CFC00');
+    SFX.levelEvent(true);
+    setTimeout(()=>toggleSaveSlotPanel(),650);
+  }catch(err){
+    document.getElementById('saveSlotStatus').innerText='❌ Invalid or corrupted code';
+    document.getElementById('saveSlotStatus').style.color='#ff8888';
+    SFX.craftFail();
+  }
+});
+document.getElementById('loadCodeInput').addEventListener('keydown',e=>e.stopPropagation());
 
 // ===== GAME LOOP =====
 let lastDayPhase=false;
