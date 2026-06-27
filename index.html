@@ -89,17 +89,22 @@ body { background:#0a0f0a; min-height:100vh; display:flex; justify-content:cente
 .mode-card.survival::after { background:linear-gradient(90deg,#FF6B1A,#FFB347); }
 .mode-card.creative::before { background:radial-gradient(ellipse at 50% 110%, rgba(95,232,214,0.14) 0%, transparent 70%); }
 .mode-card.creative::after { background:linear-gradient(90deg,#5FE8D6,#9FF0E0); }
+.mode-card.skywars::before { background:radial-gradient(ellipse at 50% 110%, rgba(120,170,255,0.16) 0%, transparent 70%); }
+.mode-card.skywars::after { background:linear-gradient(90deg,#5A8CFF,#BFE0FF); }
 .mode-card:hover::before { opacity:1; }
 .mode-card.survival:hover { border-color:#FF6B1A; transform:translateY(-6px) scale(1.02); box-shadow:0 18px 44px -8px rgba(255,107,26,0.3); }
 .mode-card.creative:hover { border-color:#5FE8D6; transform:translateY(-6px) scale(1.02); box-shadow:0 18px 44px -8px rgba(95,232,214,0.22); }
+.mode-card.skywars:hover { border-color:#5A8CFF; transform:translateY(-6px) scale(1.02); box-shadow:0 18px 44px -8px rgba(90,140,255,0.28); }
 .mode-icon { font-size:34px; margin-bottom:10px; display:block; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5)); }
 .mode-title { font-weight:800; font-size:14px; letter-spacing:3.5px; margin-bottom:7px; }
 .mode-card.survival .mode-title { color:#FFB347; }
 .mode-card.creative .mode-title { color:#5FE8D6; }
+.mode-card.skywars .mode-title { color:#8CB4FF; }
 .mode-hint { color:#5a6e54; font-size:9.5px; line-height:1.85; }
 .mode-badge { display:inline-block; margin-top:10px; font-size:8px; padding:3px 9px; border-radius:3px; letter-spacing:1px; font-weight:700; }
 .mode-card.survival .mode-badge { background:rgba(255,107,26,0.14); color:#FFB347; border:1px solid rgba(255,107,26,0.35); }
 .mode-card.creative .mode-badge { background:rgba(95,232,214,0.1); color:#5FE8D6; border:1px solid rgba(95,232,214,0.3); }
+.mode-card.skywars .mode-badge { background:rgba(90,140,255,0.12); color:#8CB4FF; border:1px solid rgba(90,140,255,0.35); }
 #introScreen.fade-out { animation:introFade 0.7s ease-in forwards; }
 @keyframes introFade { from{opacity:1;filter:brightness(1);} to{opacity:0;transform:scale(1.04);filter:brightness(2);} }
 #gameRoot { display:none; position:fixed; inset:0; }
@@ -216,9 +221,31 @@ canvas { display:block; width:100%; height:100%; }
 .continue-card:hover { border-color:#7CFC00; transform:translateY(-3px); box-shadow:0 14px 30px -8px rgba(124,252,0,0.25); }
 .continue-card .cc-title { color:#7CFC00; font-weight:800; font-size:13px; letter-spacing:2.5px; margin-bottom:4px; }
 .continue-card .cc-meta { color:#5a7a5a; font-size:9px; letter-spacing:0.5px; }
+#skywarsHud { position:fixed; top:12px; right:12px; z-index:100; display:none; flex-direction:column; gap:5px; font-family:'Courier New',monospace; align-items:flex-end; }
+.sw-pill { background:rgba(10,16,28,0.7); border:1px solid rgba(120,170,255,0.3); border-radius:8px; padding:4px 12px; font-size:11px; color:#BFE0FF; font-weight:700; letter-spacing:0.5px; }
+.sw-pill.sw-border { border-color:rgba(255,80,80,0.4); color:#ffaaaa; }
+.sw-pill.sw-border.sw-urgent { background:rgba(60,10,10,0.85); animation:swUrgentPulse 0.6s ease-in-out infinite; }
+@keyframes swUrgentPulse { 0%,100%{box-shadow:0 0 0 rgba(255,60,60,0);} 50%{box-shadow:0 0 18px 2px rgba(255,60,60,0.6);} }
+#killFeed { position:fixed; top:70px; right:12px; z-index:100; display:none; flex-direction:column; gap:4px; align-items:flex-end; font-family:'Courier New',monospace; pointer-events:none; }
+.kill-feed-entry { background:rgba(0,0,0,0.78); border:1px solid rgba(255,255,255,0.12); border-radius:6px; padding:4px 10px; font-size:10px; color:#ddd; white-space:nowrap; animation:killFeedIn 0.25s ease-out, killFeedOut 0.5s ease-in 3.5s forwards; }
+@keyframes killFeedIn { from{opacity:0;transform:translateX(20px);} to{opacity:1;transform:translateX(0);} }
+@keyframes killFeedOut { from{opacity:1;} to{opacity:0;} }
+.sw-border-vignette { position:fixed; inset:0; z-index:90; pointer-events:none; display:none; box-shadow:inset 0 0 120px 40px rgba(255,40,40,0.55); }
+#matchResultScreen { position:fixed; inset:0; z-index:900; display:none; background:rgba(4,6,4,0.92); flex-direction:column; align-items:center; justify-content:center; text-align:center; backdrop-filter:blur(6px); }
+#matchResultScreen .mr-title { font-size:42px; font-weight:800; letter-spacing:4px; margin-bottom:14px; animation:fadeSlideUp 0.5s both; }
+#matchResultScreen .mr-title.win { color:#FFD700; text-shadow:0 0 30px rgba(255,215,0,0.5); }
+#matchResultScreen .mr-title.lose { color:#ff5555; text-shadow:0 0 30px rgba(255,60,60,0.4); }
+#matchResultScreen .mr-sub { color:#9aac8a; font-size:13px; letter-spacing:1px; margin-bottom:26px; animation:fadeSlideUp 0.5s 0.1s both; }
+#matchResultScreen .mr-btn { background:#1a3a1a; border:1px solid #2a5a2a; color:#7CFC00; padding:10px 28px; border-radius:8px; cursor:pointer; font-size:12px; font-family:'Courier New',monospace; letter-spacing:1px; animation:fadeSlideUp 0.5s 0.2s both; }
+#matchResultScreen .mr-btn:hover { background:#2a5a2a; }
 </style>
 </head>
 <body>
+<div id="matchResultScreen">
+  <div class="mr-title" id="mrTitle">VICTORY</div>
+  <div class="mr-sub" id="mrSub">You were the last one standing!</div>
+  <button class="mr-btn" id="mrBackBtn">⬅ Back to Menu</button>
+</div>
 <div id="introScreen">
   <div class="intro-bg"></div>
   <div class="stars-layer" id="starsLayer"></div>
@@ -275,12 +302,19 @@ canvas { display:block; width:100%; height:100%; }
         <div class="mode-hint">Fly freely · No damage<br>Unlimited resources<br>Build anything you imagine</div>
         <div class="mode-badge">🕊️ CHILL MODE</div>
       </div>
+      <div class="mode-card skywars" id="skywarsBtn">
+        <span class="mode-icon">🏆</span>
+        <div class="mode-title">SKYWARS</div>
+        <div class="mode-hint">Floating islands · Bridge gaps<br>Loot chests · Fight bots<br>Last one standing wins!</div>
+        <div class="mode-badge">⚔️ PVP ARENA</div>
+      </div>
     </div>
   </div>
 </div>
 
 <div id="gameRoot"><canvas id="gameCanvas"></canvas></div>
 <div id="netherPortalFlash"></div>
+<div class="sw-border-vignette" id="swBorderVignette"></div>
 <div id="hud">
   <div class="hud-bar-row"><div class="hud-bar-label">❤️</div><div class="hud-bar-bg"><div id="healthFill" class="hud-bar-fill" style="width:100%"></div></div><div class="hud-bar-val" id="healthVal">10/10</div></div>
   <div class="hud-bar-row"><div class="hud-bar-label">🍗</div><div class="hud-bar-bg"><div id="hungerFill" class="hud-bar-fill" style="width:100%"></div></div><div class="hud-bar-val" id="hungerVal">10/10</div></div>
@@ -289,7 +323,13 @@ canvas { display:block; width:100%; height:100%; }
   <div class="hud-pill hud-totem" id="hudTotem" style="display:none">☄️ Totem Ready</div>
   <div class="hud-pill hud-nether" id="hudNether" style="display:none">🔥 THE NETHER</div>
 </div>
+<div id="skywarsHud">
+  <div class="sw-pill" id="swPlayersLeft">🏆 8 Players Left</div>
+  <div class="sw-pill sw-border" id="swBorderTimer">🌀 Border shrinks in 60s</div>
+</div>
+<div id="killFeed"></div>
 <div class="controls-strip" id="controlsStrip">WASD Move | Space Jump<br>LClick Mine/Attack | RClick Place/Pickup<br>🪣 RClick water/lava with bucket to scoop!<br>1-9 Blocks | I Inventory | C Craft<br>X Enchant | E Eat | Q Potion | R Respawn<br>G = Golden Apple (+2♥) | H = Ench. Apple (Full heal!)<br>🔥 Lava burns! 🌊 Water slows! 🪂 5+ block fall = damage!<br>💎 Water+Lava=Obsidian | N=Nether Portal / Teleport Home<br>🏯 Nether Fortress: Blaze Rods & Chests!<br>🏴 Bastion Remnant: Ancient Debris & Netherite!<br>🔊 M = Mute Sound | 💾 P = Save/Load World Code</div>
+<div class="controls-strip" id="swControlsStrip" style="display:none;">WASD Move | Space Jump<br>LClick Mine/Attack | RClick Place Block<br>1-9 Blocks | I Inventory<br>🌉 Bridge gaps with your blocks!<br>📦 Loot island chests for gear<br>🌀 Border shrinks — don't get caught outside!<br>💀 Falling off = elimination<br>🏆 Last one standing wins!<br>🔊 M = Mute Sound</div>
 <div id="inventoryPanel"><div class="inv-title">🎒 INVENTORY</div><div id="invContent"></div></div>
 <div id="craftingPanel">
   <div class="craft-title">🔨 CRAFTING</div>
@@ -330,6 +370,7 @@ canvas { display:block; width:100%; height:100%; }
 let gameMode=null;
 document.getElementById('survivalBtn').onclick=()=>startGame('survival');
 document.getElementById('creativeBtn').onclick=()=>startGame('creative');
+document.getElementById('skywarsBtn').onclick=()=>startGame('skywars');
 document.getElementById('enchantCloseBtn').onclick=()=>toggleEnchant();
 
 function startGame(mode){
@@ -340,10 +381,13 @@ function startGame(mode){
   setTimeout(()=>{
     intro.style.display='none';
     document.getElementById('gameRoot').style.display='block';
-    document.getElementById('hud').style.display=mode==='survival'?'flex':'none';
-    document.getElementById('controlsStrip').style.display='block';
+    document.getElementById('hud').style.display=(mode==='survival'||mode==='skywars')?'flex':'none';
+    document.getElementById('controlsStrip').style.display=mode==='skywars'?'none':'block';
+    document.getElementById('swControlsStrip').style.display=mode==='skywars'?'block':'none';
+    document.getElementById('skywarsHud').style.display=mode==='skywars'?'flex':'none';
+    document.getElementById('killFeed').style.display=mode==='skywars'?'flex':'none';
     document.getElementById('soundToggle').style.display='flex';
-    document.getElementById('resetSaveBtn').style.display='flex';
+    document.getElementById('resetSaveBtn').style.display=mode==='skywars'?'none':'flex'; // Skywars matches aren't autosaved
     initHotbar();initGame(mode);
   },800);
 }
@@ -2320,12 +2364,12 @@ const AUTOSAVE_DEBOUNCE_MS=1500;
 let autosaveTimer=null;
 
 function queueAutosave(){
-  if(gameMode===null)return; // nothing to save before a game starts
+  if(gameMode===null||gameMode==='skywars')return; // nothing to save before a game starts, and matches aren't persisted
   if(autosaveTimer)clearTimeout(autosaveTimer);
   autosaveTimer=setTimeout(doAutosave,AUTOSAVE_DEBOUNCE_MS);
 }
 function doAutosave(){
-  if(gameMode===null)return;
+  if(gameMode===null||gameMode==='skywars')return;
   try{
     const state=serializeWorldState();
     const json=JSON.stringify(state);
@@ -2516,6 +2560,7 @@ function loadSaveCode(code){
 let saveSlotOpen=false;
 function toggleSaveSlotPanel(){
   if(gameMode===null)return; // not in a game yet
+  if(gameMode==='skywars'){showNotif("💾 Save/Load isn't available in Skywars matches");return;}
   saveSlotOpen=!saveSlotOpen;
   document.getElementById('saveSlotPanel').style.display=saveSlotOpen?'block':'none';
   if(saveSlotOpen){
